@@ -288,3 +288,201 @@ TEST_CASE("CC120 releases existing channel tails while another channel remains "
   REQUIRE(e.snapshot()["heldNotes"].size() == 1);
   REQUIRE(e.snapshot()["heldNotes"][0]["channel"] == 4);
 }
+TEST_CASE("Restore rejects dense owners and queue pressure truthfully",
+          "[review-restore]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  auto n = s["notes"][1];
+  n["startTick"] = 0;
+  n["endTick"] = 1920;
+  s["notes"] = json::array();
+  for (unsigned i = 0; i < 1100; ++i) {
+    n["id"] = i + 1;
+    s["notes"].push_back(n);
+  }
+  t.load(s);
+  t.command("transport.seek", {{"tick", 480}}, 0);
+  REQUIRE_THROWS(t.command("transport.play", {}, 0));
+  REQUIRE(t.snapshot(0)["state"] != "playing");
+  REQUIRE_FALSE(t.snapshot(0)["error"].get<std::string>().empty());
+  t.load(model());
+  t.command("transport.seek", {{"tick", 480}}, 0);
+  e.submit({EventType::On, Bus::Live, 1, 0, 76, 100, 99});
+  e.submit({EventType::On, Bus::Playback, AccompanimentSource, 0, 60, 100, 100});
+  std::vector<float> audio(256); e.render(audio.data(),128);
+  unsigned accepted = 0;
+  while (e.submit(
+      {EventType::Controller, Bus::Playback, SongSource, 0, 7, 100, 0, 999999}))
+    ++accepted;
+  REQUIRE(accepted > 0);
+  REQUIRE_THROWS(t.command("transport.play", {}, 0));
+  REQUIRE(t.snapshot(0)["state"] != "playing");
+  e.render(audio.data(),128);
+  auto held=e.snapshot()["heldNotes"];
+  REQUIRE(held.size()==2);
+  REQUIRE(std::any_of(held.begin(),held.end(),[](const auto &n){return n["sourceId"]==AccompanimentSource;}));
+  REQUIRE(std::any_of(held.begin(),held.end(),[](const auto &n){return n["bus"]=="live";}));
+}
+TEST_CASE("Restart and seek select fresh scoring groups", "[review-score]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  t.command("transport.play", {}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 1, 24256});
+  REQUIRE(t.snapshot(24256)["misses"] == 1);
+  t.command("transport.restart", {}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 2, 24256});
+  REQUIRE(t.snapshot(24256)["misses"] == 1);
+  t.command("transport.seek", {{"tick", 480}}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 3, 256});
+  REQUIRE(t.snapshot(256)["misses"] == 2);
+}
+TEST_CASE("Playback controller owners isolate identical accompaniment channel",
+          "[review-source]") {
+  EngineOptions o;
+  o.pianoPath = std::string(SR_ROOT) + "/native/tests/fixture.sfz";
+  o.preloadSynchronously = true;
+  Engine e(o);
+  std::vector<float> a(9600);
+  e.submit({EventType::On, Bus::Playback, SongSource, 0, 60, 100, 1});
+  e.submit({EventType::On, Bus::Playback, AccompanimentSource, 0, 60, 100, 2});
+  e.render(a.data(), 128);
+  e.submit({EventType::Controller, Bus::Playback, SongSource, 0, 123, 0});
+  e.render(a.data(), 128);
+  REQUIRE(e.snapshot()["heldNotes"].size() == 1);
+  REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"] == AccompanimentSource);
+  REQUIRE_FALSE(e.submit({EventType::On, Bus::Playback, 1, 0, 60, 100, 3}));
+}
+TEST_CASE("Dense tempo metadata consumes bounded pump budget",
+          "[review-metadata]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  s["tempoMap"] = json::array();
+  for (unsigned i = 0; i < 5000; ++i)
+    s["tempoMap"].push_back({{"tick", i * .001}, {"microseconds", 500000}});
+  t.load(s);
+  t.command("transport.play", {}, 0);
+  t.tick(0);
+  REQUIRE(t.snapshot(0)["pumpEntries"] == 2048);
+}
+TEST_CASE("Late sparse seek ignores more than65536 prior notes",
+          "[review-restore]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  auto n = s["notes"][1];
+  s["notes"] = json::array();
+  for (unsigned i = 0; i < 66000; ++i) {
+    n["id"] = i + 1;
+    n["startTick"] = i * 2;
+    n["endTick"] = i * 2 + 1;
+    s["notes"].push_back(n);
+  }
+  s["durationTicks"] = 140000;
+  s["durationSeconds"] = 140000. / 960;
+  t.load(s);
+  t.command("transport.seek", {{"tick", 132001}}, 0);
+  REQUIRE_NOTHROW(t.command("transport.play", {}, 0));
+  REQUIRE(t.snapshot(0)["state"] == "playing");
+}
+TEST_CASE("Frozen retry retains its one miss while pause resume and loop "
+          "select fresh groups",
+          "[review-score]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  t.command("transport.configure", {{"mode", "pauseOnMiss"}}, 0);
+  t.command("transport.play", {}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 1, 24256});
+  t.command("transport.play", {}, 25000);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 2, 25256});
+  REQUIRE(t.snapshot(25256)["misses"] == 1);
+  t.load(model());
+  t.command("transport.configure",
+            {{"mode", "continuous"}, {"loop", true}, {"a", 480}, {"b", 960}},
+            0);
+  t.command("transport.seek", {{"tick", 480}}, 0);
+  t.command("transport.play", {}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 3, 256});
+  t.tick(25000);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 4, 25001});
+  REQUIRE(t.snapshot(25001)["misses"] == 2);
+}
+TEST_CASE(
+    "Delayed source stereo curves affect held and release layers independently",
+    "[review-source]") {
+  EngineOptions o;
+  o.pianoPath = std::string(SR_ROOT) + "/native/tests/fixture.sfz";
+  o.preloadSynchronously = true;
+  Engine e(o);
+  std::vector<float> a(9600);
+  e.submit({EventType::Controller, Bus::Playback, SongSource, 0, 10, 0});
+  e.submit(
+      {EventType::Controller, Bus::Playback, AccompanimentSource, 0, 10, 127});
+  e.submit({EventType::On, Bus::Playback, SongSource, 0, 60, 100, 1});
+  e.submit({EventType::On, Bus::Playback, AccompanimentSource, 0, 60, 100, 2});
+  e.render(a.data(), 4800);
+  e.submit({EventType::Controller, Bus::Playback, SongSource, 0, 7, 0, 0,
+            e.sampleFrame() + 64});
+  e.render(a.data(), 128);
+  double left = 0, right = 0;
+  for (unsigned i = 64; i < 128; ++i) {
+    left += std::abs(a[i * 2]);
+    right += std::abs(a[i * 2 + 1]);
+  }
+  REQUIRE(left < .00001);
+  REQUIRE(right > .001);
+  e.submit({EventType::Off, Bus::Playback, AccompanimentSource, 0, 60, 0, 2});
+  e.render(a.data(), 128);
+  e.submit({EventType::Controller, Bus::Playback, SongSource, 0, 120, 0});
+  e.render(a.data(), 128);
+  right = 0;
+  for (unsigned i = 0; i < 128; ++i)
+    right += std::abs(a[i * 2 + 1]);
+  REQUIRE(right > .001);
+  e.submit({EventType::Disconnect, Bus::Playback, SongSource});
+  e.render(a.data(), 128);
+  right = 0;
+  for (unsigned i = 0; i < 128; ++i)
+    right += std::abs(a[i * 2 + 1]);
+  REQUIRE(right > .001);
+  e.submit({EventType::Disconnect, Bus::Playback, AccompanimentSource});
+  e.render(a.data(), 4800);
+  right = 0;
+  for (unsigned i = 3600; i < 4800; ++i)
+    right += std::abs(a[i * 2 + 1]);
+  REQUIRE(right < .00001);
+}
+TEST_CASE(
+    "Loop restoration overload stops truthfully without touching live owner",
+    "[review-restore]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  auto n = s["notes"][1];
+  s["notes"] = json::array();
+  for (unsigned i = 0; i < 1100; ++i) {
+    n["id"] = i + 1;
+    n["startTick"] = 0;
+    n["endTick"] = 1920;
+    s["notes"].push_back(n);
+  }
+  t.load(s);
+  t.command("transport.configure", {{"loop", true}, {"a", 480}, {"b", 960}}, 0);
+  t.command("transport.play", {}, 0);
+  t.tick(47000);
+  REQUIRE(t.snapshot(47000)["state"] != "playing");
+  REQUIRE_FALSE(t.snapshot(47000)["error"].get<std::string>().empty());
+}
+TEST_CASE("Source recovery cancels newly spawned release-trigger layers", "[review-source]") {
+ EngineOptions o;o.pianoPath=std::string(SR_ROOT)+"/native/tests/fixture-release.sfz";o.preloadSynchronously=true;Engine e(o);std::vector<float>a(9600);
+ e.submit({EventType::Controller,Bus::Playback,SongSource,0,10,0});
+ e.submit({EventType::Controller,Bus::Playback,AccompanimentSource,0,10,127});
+ e.submit({EventType::On,Bus::Playback,SongSource,0,60,100,1});
+ e.submit({EventType::On,Bus::Playback,AccompanimentSource,0,60,100,2});e.render(a.data(),4800);
+ e.submit({EventType::Disconnect,Bus::Playback,SongSource});e.render(a.data(),4800);
+ double left=0,right=0;for(unsigned i=3600;i<4800;++i){left+=std::abs(a[i*2]);right+=std::abs(a[i*2+1]);}
+ REQUIRE(left<.00001);REQUIRE(right>.001);
+}

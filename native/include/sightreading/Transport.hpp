@@ -51,19 +51,26 @@ private:
   std::map<unsigned, uint64_t> attempt_;
   size_t cursor_{}, group_{};
   uint64_t origin_{}, generation_{}, revision_{}, cycle_{};
-  uint64_t clockOrigin_{};
+  uint64_t clockOrigin_{}, scoreCycle_{};
   double clockStart_{}, lastScorePosition_{};
   std::map<std::pair<unsigned, uint64_t>, InputEvent> active_;
   double position_{}, cycleStart_{}, cycleEnd_{};
   bool playing_{}, retry_{};
   bool groupFailed_{};
-  unsigned hits_{}, misses_{};
+  unsigned hits_{}, misses_{}, pumpEntries_{};
   std::string error_;
   std::string accompanimentError_, followError_;
   struct InferenceNote {
     double start, end;
     unsigned pc;
   };
+  struct RestoreNote {
+    double start, end;
+    size_t index;
+  };
+  std::vector<RestoreNote> restoreNotes_;
+  std::vector<double> restoreEnds_;
+  size_t restoreBase_{};
   std::vector<InferenceNote> inferenceNotes_;
   std::vector<double> inferenceEnds_;
   size_t inferenceBase_{};
@@ -84,10 +91,11 @@ private:
   void follow(double seconds, uint64_t frame);
   void cancel();
   void resume(uint64_t frame);
-  void restore(double seconds, uint64_t frame);
+  bool restore(double seconds, uint64_t frame, unsigned budget = 2048);
   double position(uint64_t frame) const;
   double frameSeconds(uint64_t frame) const;
   void fail(uint64_t frame);
+  void selectScoreCycle(uint64_t frame);
   bool audible(unsigned track) const;
 };
 } // namespace sightreading

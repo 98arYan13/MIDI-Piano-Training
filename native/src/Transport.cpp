@@ -163,6 +163,48 @@ void Transport::build() {
          c["trackId"].get<unsigned>(),
          c.value("order", uint64_t{})});
   }
+  // Point-query index includes pedal-extended tails and channel kill
+  // boundaries.
+  restoreNotes_.clear();
+  std::array<std::vector<double>, 16> ups;
+  for (unsigned ch = 0; ch < 16; ++ch)
+    for (const auto &c : controls_[ch][64])
+      if (c.value < 64)
+        ups[ch].push_back(c.tick);
+  for (size_t i = 0; i < song_["notes"].size(); ++i) {
+    const auto &n = song_["notes"][i];
+    if (!audible(n["trackId"]) || n["midiNote"] < 21 || n["midiNote"] > 108)
+      continue;
+    double start = n["startTick"], end = n["endTick"];
+    unsigned ch = n["channel"];
+    const auto &pedals = controls_[ch][64];
+    auto at =
+        std::upper_bound(pedals.begin(), pedals.end(), end,
+                         [](double t, const Control &c) { return t < c.tick; });
+    if (at != pedals.begin() && std::prev(at)->value >= 64) {
+      auto up = std::upper_bound(ups[ch].begin(), ups[ch].end(), end);
+      end = up == ups[ch].end() ? song_["durationTicks"].get<double>() : *up;
+    }
+    for (unsigned cc : {120u, 123u}) {
+      const auto &v = controls_[ch][cc];
+      auto kill = std::upper_bound(
+          v.begin(), v.end(), start,
+          [](double t, const Control &c) { return t < c.tick; });
+      if (kill != v.end())
+        end = std::min(end, kill->tick);
+    }
+    restoreNotes_.push_back({start, end, i});
+  }
+  std::sort(restoreNotes_.begin(), restoreNotes_.end(),
+            [](const auto &a, const auto &b) { return a.start < b.start; });
+  restoreBase_ = 1;
+  while (restoreBase_ < restoreNotes_.size())
+    restoreBase_ *= 2;
+  restoreEnds_.assign(restoreBase_ * 2, -1);
+  for (size_t i = 0; i < restoreNotes_.size(); ++i)
+    restoreEnds_[restoreBase_ + i] = restoreNotes_[i].end;
+  for (size_t i = restoreBase_ - 1; i > 0; --i)
+    restoreEnds_[i] = std::max(restoreEnds_[i * 2], restoreEnds_[i * 2 + 1]);
   std::stable_sort(timeline_.begin(), timeline_.end(), [](auto &a, auto &b) {
     if (a.seconds != b.seconds)
       return a.seconds < b.seconds;
@@ -413,11 +455,26 @@ void Transport::accompany(uint64_t frame, double until) {
     engine_.submit({EventType::Disconnect, Bus::Playback, AccompanimentSource});
   }
 }
-void Transport::restore(double seconds, uint64_t frame) {
+bool Transport::restore(double seconds, uint64_t frame, unsigned budget) {
+  std::vector<InputEvent> pending;
+  std::map<std::pair<unsigned, uint64_t>, InputEvent> restored;
+  auto reject = [&]() {
+    error_ = "Playback restoration capacity exceeded; reduce active tracks or "
+             "choose a less dense seek position.";
+    engine_.submit({EventType::Disconnect, Bus::Playback, SongSource});
+    active_.clear();
+    playing_ = false;
+    retry_ = false;
+    return false;
+  };
+
+  auto stage = [&](InputEvent e) { pending.push_back(e); };
   const double seekTick = secondsTick(song_, seconds);
-  auto latest = [&](unsigned channel, unsigned cc, double tick) -> const Control * {
+  auto latest = [&](unsigned channel, unsigned cc,
+                    double tick) -> const Control * {
     const auto &v = controls_[channel][cc];
-    auto it = std::upper_bound(v.begin(), v.end(), tick,
+    auto it = std::upper_bound(
+        v.begin(), v.end(), tick,
         [](double at, const Control &c) { return at < c.tick; });
     return it == v.begin() ? nullptr : &*std::prev(it);
   };
@@ -427,20 +484,47 @@ void Transport::restore(double seconds, uint64_t frame) {
       if (auto c = latest(channel, cc, seekTick))
         controls[{channel, cc}] = c->value;
   for (unsigned channel = 0; channel < 16; ++channel) {
-    engine_.submit({EventType::Controller, Bus::Playback, SongSource,
-                    uint8_t(channel), 7, 100, 0, frame});
-    engine_.submit({EventType::Controller, Bus::Playback, SongSource,
-                    uint8_t(channel), 11, 127, 0, frame});
-    engine_.submit({EventType::Controller, Bus::Playback, SongSource,
-                    uint8_t(channel), 10, 64, 0, frame});
+    stage({EventType::Controller, Bus::Playback, SongSource, uint8_t(channel),
+           7, 100, 0, frame});
+    stage({EventType::Controller, Bus::Playback, SongSource, uint8_t(channel),
+           11, 127, 0, frame});
+    stage({EventType::Controller, Bus::Playback, SongSource, uint8_t(channel),
+           10, 64, 0, frame});
   }
   for (auto &[key, value] : controls)
     if (key.second != 120 && key.second != 123)
-      engine_.submit(
-          {key.second == 64 ? EventType::Pedal : EventType::Controller,
-           Bus::Playback, SongSource, uint8_t(key.first), uint8_t(key.second),
-           uint8_t(value), 0, frame});
-  for (auto &n : song_["notes"]) {
+      stage({key.second == 64 ? EventType::Pedal : EventType::Controller,
+             Bus::Playback, SongSource, uint8_t(key.first), uint8_t(key.second),
+             uint8_t(value), 0, frame});
+  std::vector<size_t> candidates;
+  if (seconds > 0) {
+    struct Node {
+      size_t node, left, right;
+    };
+    std::vector<Node> stack{{1, 0, restoreBase_}};
+    unsigned inspected = 0;
+    while (!stack.empty()) {
+      auto q = stack.back();
+      stack.pop_back();
+      if (q.left >= restoreNotes_.size() ||
+          restoreNotes_[q.left].start >= seekTick ||
+          restoreEnds_[q.node] <= seekTick)
+        continue;
+      if (++inspected > 65536)
+        return reject();
+      if (q.right - q.left == 1) {
+        candidates.push_back(restoreNotes_[q.left].index);
+        if (candidates.size() > 1024)
+          return reject();
+      } else {
+        auto middle = (q.left + q.right) / 2;
+        stack.push_back({q.node * 2 + 1, middle, q.right});
+        stack.push_back({q.node * 2, q.left, middle});
+      }
+    }
+  }
+  for (auto index : candidates) {
+    const auto &n = song_["notes"][index];
     if (!audible(n["trackId"]) || n["midiNote"].get<unsigned>() < 21 ||
         n["midiNote"].get<unsigned>() > 108)
       continue;
@@ -453,8 +537,8 @@ void Transport::restore(double seconds, uint64_t frame) {
       auto atSeek = latest(ch, 64, seekTick);
       const auto &pedals = controls_[ch][64];
       sustained = atEnd && atEnd->value >= 64 && atSeek &&
-          (atSeek->lastUp < 0 || pedals[size_t(atSeek->lastUp)].tick <= n["endTick"].get<double>());
-
+                  (atSeek->lastUp < 0 || pedals[size_t(atSeek->lastUp)].tick <=
+                                             n["endTick"].get<double>());
     }
     bool killed = false;
     for (unsigned cc : {120u, 123u})
@@ -469,14 +553,23 @@ void Transport::restore(double seconds, uint64_t frame) {
                     uint8_t(n["velocity"].get<unsigned>()),
                     n["id"].get<uint64_t>(),
                     frame};
-      engine_.submit(on);
-      active_[{on.source, on.instance}] = on;
+      stage(on);
+      restored[{on.source, on.instance}] = on;
+      if (restored.size() > 1024 || pending.size() > budget)
+        return reject();
       if (sustained) {
         on.type = EventType::Off;
-        engine_.submit(on);
+        stage(on);
       }
     }
   }
+  if (pending.size() > budget)
+    return reject();
+  for (const auto &e : pending)
+    if (!engine_.submit(e))
+      return reject();
+  active_ = std::move(restored);
+  return true;
 }
 void Transport::resume(uint64_t frame) {
   origin_ = frame + 256;
@@ -487,6 +580,7 @@ void Transport::resume(uint64_t frame) {
     cycleStart_ = position_ =
         config_["loop"] == true ? tickSeconds(song_, config_["a"]) : 0;
   clockOrigin_ = origin_;
+  scoreCycle_ = 0;
   clockStart_ = cycleStart_;
   lastScorePosition_ = cycleStart_;
   nextAccompanimentTick_ = secondsTick(song_, cycleStart_);
@@ -494,10 +588,16 @@ void Transport::resume(uint64_t frame) {
   cursor_ = std::lower_bound(timeline_.begin(), timeline_.end(), cycleStart_,
                              [](auto &e, double v) { return e.seconds < v; }) -
             timeline_.begin();
+  const auto previousGroup = group_;
+  const bool frozenRetry = retry_;
   group_ = std::lower_bound(groups_.begin(), groups_.end(), cycleStart_,
                             [](auto &g, double v) { return g.seconds < v; }) -
            groups_.begin();
-  restore(cycleStart_, origin_);
+  if (!restore(cycleStart_, origin_))
+    throw std::runtime_error(error_);
+  if (!frozenRetry || previousGroup != group_)
+    groupFailed_ = false;
+  attempt_.clear();
   playing_ = true;
   retry_ = false;
   error_.clear();
@@ -519,6 +619,8 @@ json Transport::command(const std::string &type, const json &params,
     position_ = 0;
     retry_ = false;
     group_ = 0;
+    groupFailed_ = false;
+    attempt_.clear();
   } else if (type == "transport.restart") {
     cancel();
     position_ = 0;
@@ -533,6 +635,8 @@ json Transport::command(const std::string &type, const json &params,
     cancel();
     position_ = tickSeconds(song_, tick);
     retry_ = false;
+    groupFailed_ = false;
+    attempt_.clear();
     if (running)
       resume(frame);
   } else if (type == "transport.tempo") {
@@ -596,10 +700,15 @@ void Transport::tick(uint64_t frame) {
          lookahead = .05 * speed;
   double now = frameSeconds(frame), until = now + lookahead;
   unsigned submitted = 0;
+  pumpEntries_ = 0;
   while (playing_) {
     while (cursor_ < timeline_.size() &&
            timeline_[cursor_].seconds < cycleEnd_ &&
            timeline_[cursor_].seconds <= until) {
+      if (submitted >= 2048)
+        return;
+      ++submitted;
+      pumpEntries_ = submitted;
       auto e = timeline_[cursor_++];
       e.input.frame =
           origin_ +
@@ -621,8 +730,6 @@ void Transport::tick(uint64_t frame) {
         active_[key] = e.input;
       else if (e.input.type == EventType::Off)
         active_.erase(key);
-      if (++submitted >= 2048)
-        return;
     }
     accompany(frame, std::min(until, cycleEnd_));
     if (until < cycleEnd_)
@@ -643,16 +750,31 @@ void Transport::tick(uint64_t frame) {
       auto off = e;
       off.type = EventType::Off;
       off.frame = boundary;
-      engine_.submit(off);
+      if (++submitted > 2048 || !engine_.submit(off)) {
+        error_ = "Playback loop restoration queue capacity exceeded.";
+        engine_.submit({EventType::Disconnect, Bus::Playback, SongSource});
+        playing_ = false;
+        active_.clear();
+        return;
+      }
     }
     active_.clear();
-    for (unsigned channel = 0; channel < 16; channel++)
-      engine_.submit({EventType::Pedal, Bus::Playback, SongSource,
-                      uint8_t(channel), 0, 0, 0, boundary});
+    for (unsigned channel = 0; channel < 16; channel++) {
+      if (++submitted > 2048 ||
+          !engine_.submit({EventType::Pedal, Bus::Playback, SongSource,
+                           uint8_t(channel), 0, 0, 0, boundary})) {
+        error_ = "Playback loop restoration queue capacity exceeded.";
+        engine_.submit({EventType::Disconnect, Bus::Playback, SongSource});
+        playing_ = false;
+        return;
+      }
+    }
     cycleStart_ = tickSeconds(song_, config_["a"]);
     origin_ = boundary;
     nextAccompanimentTick_ = config_["a"];
-    restore(cycleStart_, boundary);
+    if (!restore(cycleStart_, boundary, 2048 - submitted))
+      return;
+    // Restoration has its own bounded batch; defer further events to next pump.
     cursor_ =
         std::lower_bound(timeline_.begin(), timeline_.end(), cycleStart_,
                          [](auto &e, double v) { return e.seconds < v; }) -
@@ -660,16 +782,17 @@ void Transport::tick(uint64_t frame) {
     ++cycle_;
     until = frameSeconds(frame) + lookahead;
     now = frameSeconds(frame);
-    if (cycleEnd_ - cycleStart_ < .01)
-      break;
+    break;
   }
   now = position(frame);
+  selectScoreCycle(frame);
   if (now < lastScorePosition_) {
     group_ = std::lower_bound(groups_.begin(), groups_.end(),
                               tickSeconds(song_, config_["a"]),
                               [](auto &g, double p) { return g.seconds < p; }) -
              groups_.begin();
     attempt_.clear();
+    groupFailed_ = false;
   }
   lastScorePosition_ = now;
   if (config_["practiceEnabled"] != true || group_ >= groups_.size())
@@ -684,6 +807,27 @@ void Transport::tick(uint64_t frame) {
     groupFailed_ = false;
     attempt_.clear();
   }
+}
+void Transport::selectScoreCycle(uint64_t frame) {
+  if (!playing_ || config_["loop"] != true)
+    return;
+  double unwrapped =
+      clockStart_ + std::max(0.0, double(frame) - double(clockOrigin_)) *
+                        config_["speed"].get<double>() / engine_.sampleRate();
+  double a = tickSeconds(song_, config_["a"]), span = cycleEnd_ - a;
+  uint64_t current =
+      unwrapped < cycleEnd_
+          ? 0
+          : 1 + uint64_t(std::floor((unwrapped - cycleEnd_) / span));
+  if (current == scoreCycle_)
+    return;
+  scoreCycle_ = current;
+  group_ =
+      std::lower_bound(groups_.begin(), groups_.end(), a,
+                       [](const auto &g, double p) { return g.seconds < p; }) -
+      groups_.begin();
+  groupFailed_ = false;
+  attempt_.clear();
 }
 void Transport::fail(uint64_t frame) {
   if (!groupFailed_)
@@ -721,6 +865,7 @@ void Transport::input(const InputEvent &e) {
   if (e.type != EventType::On)
     return;
   held_[key] = e.note;
+  selectScoreCycle(e.frame);
   if (config_["practiceEnabled"] != true || (!playing_ && !retry_) ||
       group_ >= groups_.size())
     return;
@@ -758,7 +903,11 @@ void Transport::input(const InputEvent &e) {
   groupFailed_ = false;
   attempt_.clear();
   if (retry_) {
-    resume(e.frame);
+    try {
+      resume(e.frame);
+    } catch (const std::exception &) {
+      return;
+    }
     group_ = std::upper_bound(groups_.begin(), groups_.end(), position_,
                               [](double v, auto &g) { return v < g.seconds; }) -
              groups_.begin();
@@ -796,6 +945,7 @@ json Transport::snapshot(uint64_t frame) const {
           {"title", song_.is_null() ? std::string{}
                                     : song_.value("title", std::string{})},
           {"generation", generation_},
+          {"pumpEntries", pumpEntries_},
           {"revision", revision_},
           {"sampleFrame", frame},
           {"sampleRate", engine_.sampleRate()},

@@ -1,0 +1,3 @@
+// Reuse attributed Salamander sample to exercise attack and note-off layers.
+<region> sample=../../assets/piano/Samples/C4v8.flac note_selfmask=off ampeg_release=1
+<region> sample=../../assets/piano/Samples/C4v8.flac trigger=release note_selfmask=off ampeg_release=1
