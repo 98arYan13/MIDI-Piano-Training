@@ -8,7 +8,7 @@ namespace sightreading {
 inline constexpr uint16_t FirstReservedSource=125;
 inline constexpr uint16_t ExampleSource=125, SongSource=126, AccompanimentSource=127;
 enum class Bus : uint8_t { Live, Playback, Example, Click };
-enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic, ResetLive, Controller };
+enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic, ResetLive, Controller, PitchWheel };
 struct InputEvent {
     EventType type{};
     Bus bus{Bus::Live};
@@ -27,7 +27,7 @@ public:
         std::lock_guard guard(producers_);
         auto write = write_.load(std::memory_order_relaxed);
         auto used = write-read_.load(std::memory_order_acquire);
-        const auto limit = event.type==EventType::On ? Capacity-ReleaseReserve : Capacity;
+        const auto limit = (event.type==EventType::On||event.type==EventType::PitchWheel) ? Capacity-ReleaseReserve : Capacity;
         if(used >= limit) return false;
         events_[write%Capacity] = event;
         write_.store(write+1,std::memory_order_release);

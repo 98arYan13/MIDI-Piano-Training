@@ -41,6 +41,8 @@ export type Device = {
   connected: boolean;
 };
 export type NativeState = {
+  ear: EarSnapshot;
+  flash: FlashSnapshot;
   practice: PracticeSnapshot;
   transport: TransportSnapshot;
   generation: number;
@@ -87,6 +89,78 @@ export type NativeState = {
     bar: number;
     settings: MetronomeSettings;
   };
+};
+export type EarConfig = {
+  mode: "interval" | "melody";
+  intervals: string[];
+  directions: string[];
+  root: number;
+  randomRoot: boolean;
+  transpose: number;
+  tempo: number;
+  order: "ordered" | "random";
+  playOrder: "forward" | "reverse" | "harmonic";
+  groups: number;
+  pitches: number;
+  range: { min: number; max: number };
+  melodyDirection: "ascending" | "descending" | "any";
+  continuous: boolean;
+  pitchWheel: boolean;
+};
+export type EarSnapshot = {
+  config: EarConfig;
+  target: null | {
+    mode: string;
+    root: number;
+    interval?: string;
+    direction?: string;
+    key?: string;
+    groups: number[][];
+  };
+  playing: boolean;
+  paused: boolean;
+  autoplay: boolean;
+  answerLocked: boolean;
+  index: number;
+  hits: number;
+  misses: number;
+  accuracy: number;
+  elapsed: number;
+  feedback: string;
+  error: string;
+  answered: boolean;
+  notes: import("./notationModel").TimelineNote[];
+  endFrame: number;
+  pauseFrame: number;
+  revision: number;
+};
+export type FlashConfig = {
+  mode: "noteMath" | "chord";
+  roots: string[];
+  distances: number[];
+  keys: string[];
+  inversions: number[];
+  staff: "treble" | "bass" | "grand";
+};
+export type ChordAnswer = { root: string; accidental: string; quality: string };
+export type FlashSnapshot = {
+  answerLocked: boolean;
+  config: FlashConfig;
+  target: null | {
+    mode: string;
+    root?: string;
+    distance?: number;
+    key?: string;
+    inversion?: number;
+    answer: string | ChordAnswer;
+    notes?: import("./notationModel").TimelineNote[];
+  };
+  hits: number;
+  misses: number;
+  accuracy: number;
+  feedback: string;
+  answered: boolean;
+  revision: number;
 };
 export type Command = {
   version: 1;

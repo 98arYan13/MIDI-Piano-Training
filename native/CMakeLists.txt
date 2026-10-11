@@ -14,6 +14,8 @@ target_sources(native_tests PRIVATE tests/metronome.cpp)
 
 target_sources(sightreading_engine PRIVATE src/Metronome.cpp)
 target_sources(sightreading_engine PRIVATE src/Practice.cpp)
+target_sources(sightreading_engine PRIVATE src/EarFlash.cpp)
+target_sources(native_tests PRIVATE tests/ear_flash.cpp)
 target_sources(native_tests PRIVATE tests/practice.cpp)
 target_sources(sightreading_engine PRIVATE src/Song.cpp)
 set(SR_MIDIFILE "${CMAKE_SOURCE_DIR}/.tools/deps/midifile/midifile-98917df5b1bf0d6e8d4c0e5fff86d6b05343e793")

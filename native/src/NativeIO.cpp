@@ -27,7 +27,7 @@ void Engine::Impl::midiCallback(double,std::vector<unsigned char>* msg,void* con
     if(msg->size()<3||note>127||velocity>127)return;InputEvent event{};event.source=port.source;event.channel=channel;event.note=note;event.velocity=velocity;
     if(type==0x90&&velocity){event.type=EventType::On;if(port.instances[channel][note]){auto old=event;old.type=EventType::Off;old.instance=port.instances[channel][note];self.submit(old);}event.instance=port.instances[channel][note]=++port.counter;}
     else if(type==0x80||(type==0x90&&!velocity)){event.type=EventType::Off;event.instance=port.instances[channel][note];port.instances[channel][note]=0;}
-    else if(type==0xb0&&note==64)event.type=EventType::Pedal;else return;
+    else if(type==0xb0&&note==64)event.type=EventType::Pedal;else if(type==0xe0)event.type=EventType::PitchWheel;else return;
     self.submit(event);
 }
 void Engine::Impl::pollMidi(){

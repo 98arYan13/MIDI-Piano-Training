@@ -1,3 +1,4 @@
+import { EarTraining, FlashCards } from "./EarFlash";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NativeProvider, useNative } from "./native";
 import type { AudioSettings, MetronomeSettings } from "./types";
@@ -593,6 +594,10 @@ function Workspace({ route }: { route: string }) {
       <div className="workspace-stage">
         {route === "staff" ? (
           <StaffPractice />
+        ) : route === "ear" ? (
+          <EarTraining />
+        ) : route === "flash" ? (
+          <FlashCards />
         ) : route === "play" ? (
           <PlayAlong />
         ) : (

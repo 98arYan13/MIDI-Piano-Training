@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sightreading/Engine.hpp>
 #include <sightreading/Practice.hpp>
+#include <sightreading/EarFlash.hpp>
 #include <sightreading/Storage.hpp>
 #include <sightreading/Transport.hpp>
 #include <sightreading/LibraryRoutes.hpp>
@@ -87,6 +88,12 @@ int main(int argc, char **argv) {
     Engine engine(options);
     Practice practice(options.sampleRate);
     Transport transport(engine);
+    EarFlash exercises(engine);
+    std::mutex exercisesMutex;
+    for(auto pair:{std::pair{"ear","ear.configure"},std::pair{"flash","flash.configure"}}){
+      auto saved=storage.load(pair.first);
+      if(!saved.is_null())exercises.command(pair.second,saved,engine.sampleFrame());
+    }
     std::mutex transportMutex;
     std::mutex practiceMutex;
     auto savedPractice = storage.load("practice");
@@ -138,6 +145,7 @@ int main(int argc, char **argv) {
         s["practice"] = practice.snapshot(engine.sampleFrame());
       }
       {std::lock_guard lock(transportMutex);s["transport"]=transport.snapshot(engine.sampleFrame());s["transport"]["engineTimeNs"]=s["engineTimeNs"];}
+      {std::lock_guard lock(exercisesMutex);s["ear"]=exercises.ear(engine.sampleFrame());s["flash"]=exercises.flash();}
       return s;
 
     };
@@ -152,6 +160,14 @@ int main(int argc, char **argv) {
                     {"result", state()},
                     {"error", nullptr}};
       json reply;
+      if(req.is_object()&&req.contains("id")&&req.value("version",json())==1&&req.value("type",json()).is_string()&&(req["type"].get<std::string>().starts_with("ear.")||req["type"].get<std::string>().starts_with("flash."))){
+        json result;
+        auto type=req["type"].get<std::string>();
+        try{std::lock_guard lock(exercisesMutex);result=exercises.command(type,req.value("params",json::object()),engine.sampleFrame());}
+        catch(const std::exception& e){return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},{"error",{{"code","invalid_exercise"},{"message",e.what()}}}};}
+        if(type=="ear.configure"||type=="flash.configure"||type=="ear.option"||type=="flash.option")try{storage.save(type.starts_with("ear.")?"ear":"flash",result["config"]);}catch(const std::exception&){result["accepted"]=true;result["applied"]=true;result["persisted"]=false;return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",result},{"error",{{"code","storage_error"},{"message","Exercise settings accepted but not saved. Resolve local storage and retry saving."}}}};}
+        return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};
+      }
       if(req.is_object()&&req.contains("id")&&req.value("version",json())==1&&req.value("type",json()).is_string()&&req["type"].get<std::string>().starts_with("transport.")){
         try{std::lock_guard lock(transportMutex);auto type=req["type"].get<std::string>();auto params=req.value("params",json::object());json result;if(type=="transport.load"){auto id=params.at("id").get<std::string>();auto song=storage.song(id);if(song["trashed"]==true)throw std::invalid_argument("Restore this song from trash first.");transport.load(song);storage.patchSong(id,{{"recent",uint64_t(std::chrono::system_clock::now().time_since_epoch().count())}});result=transport.snapshot(engine.sampleFrame());}else result=transport.command(type,params,engine.sampleFrame());return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};}catch(const std::exception &e){return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},{"error",{{"code","invalid_transport"},{"message",e.what()}}}};}
       }
@@ -355,6 +371,7 @@ int main(int argc, char **argv) {
             practice.input(e);
           }
           {std::lock_guard lock(transportMutex);transport.input(e);}
+          {std::lock_guard lock(exercisesMutex);exercises.input(e);}
           additions.push_back({{"type", "note"},
                                {"event",
                                 {{"kind", unsigned(e.type)},
@@ -373,6 +390,7 @@ int main(int argc, char **argv) {
             practiceDrops = drops;
             practice.recoverHeld(engine.snapshot()["heldNotes"], tickFrame);
             {std::lock_guard lock(transportMutex);transport.recover(tickFrame);}
+            {std::lock_guard lock(exercisesMutex);exercises.recoverInput();}
           }
           practice.tick(tickFrame);
           if (practice.revision() != practiceRevision) {
@@ -389,6 +407,7 @@ int main(int argc, char **argv) {
           }
         }
         {std::lock_guard lock(transportMutex);transport.tick(tickFrame);}
+        {std::lock_guard lock(exercisesMutex);exercises.tick(tickFrame);}
         while (hooks.beats.pop(b))
 
           additions.push_back({{"type", "beat"},
