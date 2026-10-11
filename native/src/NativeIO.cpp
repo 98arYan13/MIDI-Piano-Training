@@ -47,9 +47,18 @@ void Engine::Impl::pollMidi(){
 void Engine::Impl::applySettings(){
     volume=settings["volume"].get<float>();monitoring=settings["monitoring"].get<bool>();velocityCurve=settings["velocityCurve"].get<float>();auto mode=settings["outputMode"].get<std::string>();outputMode=mode=="internal"?0:mode=="external"?1:2;
     uint16_t mask=0;for(const auto& c:settings["channels"])mask|=1u<<c.get<unsigned>();channelMask=mask;
-    std::lock_guard outputLock(externalControl);int external=settings["externalDevice"].get<int>();if(external>=0){try{midiOut=std::make_unique<RtMidiOut>(RtMidi::WINDOWS_MM,"Sight Reading external");if(unsigned(external)>=midiOut->getPortCount())throw std::runtime_error("External MIDI output unavailable");midiOut->openPort(external);}catch(const std::exception& e){midiOut.reset();error=e.what();}}else midiOut.reset();
+    std::lock_guard outputLock(externalControl);int external=settings["externalDevice"].get<int>();if(external>=0&&(!midiOut||external!=openedExternal)){try{midiOut=std::make_unique<RtMidiOut>(RtMidi::WINDOWS_MM,"Sight Reading external");if(unsigned(external)>=midiOut->getPortCount())throw std::runtime_error("External MIDI output unavailable");midiOut->openPort(external);openedExternal=external;++externalPortOpens;}catch(const std::exception& e){midiOut.reset();openedExternal=-1;error=e.what();}}else if(external<0){midiOut.reset();openedExternal=-1;}
 }
-bool Engine::Impl::applyPending(bool now){if(pending.is_null())return true;if((liveHeld||livePedals)&&!now)return false;if(now){submit({EventType::Panic});closeAudio();panic();}settings=pending;pending=nullptr;applySettings();if(running)openAudio();return true;}
+bool Engine::Impl::applyPending(bool now){
+ if(pending.is_null())return true;
+ if((liveHeld||livePedals)&&!now)return false;
+ bool rebuild=pending["outputDevice"]!=settings["outputDevice"]||pending["exclusive"]!=settings["exclusive"];
+ if(now){liveReconfiguring.store(true,std::memory_order_release);submit({EventType::ResetLive,Bus::Live});}
+ settings=pending;pending=nullptr;applySettings();
+ if(rebuild&&running)openAudio();
+ if(now)liveReconfiguring.store(false,std::memory_order_release);
+ return true;
+}
 void Engine::start(){
     auto& s=*impl_;std::lock_guard lock(s.control);if(s.running.exchange(true))return;s.pollMidi();
     s.openAudio();if(!s.pianoReady){s.pianoLoading=true;s.loader=std::thread([&s]{s.loadPiano();std::lock_guard guard(s.control);if(s.running&&!s.audioReady)s.openAudio();});}

@@ -6,7 +6,7 @@
 
 namespace sightreading {
 enum class Bus : uint8_t { Live, Playback, Example, Click };
-enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic };
+enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic, ResetLive };
 struct InputEvent {
     EventType type{};
     Bus bus{Bus::Live};

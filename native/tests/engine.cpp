@@ -145,3 +145,50 @@ TEST_CASE("Virtual commands cannot claim a reserved physical MIDI source name", 
     audio(e);REQUIRE(e.snapshot()["heldNotes"].size()==1);
     REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127);REQUIRE(e.snapshot()["heldNotes"][0]["sustained"]==true);
 }
+TEST_CASE("Saved disabled MIDI identities exist before native discovery") {
+ auto options=fixture();options.disabledInputs={"Saved Keyboard#0"};Engine e(options);
+ REQUIRE(e.snapshot().contains("disabledInputs"));REQUIRE(e.snapshot()["disabledInputs"]["Saved Keyboard#0"]==true);
+}
+TEST_CASE("Apply now clears live ownership without clearing other buses or metronome") {
+ Engine e(fixture());cmd(e,"metronome.config",{{"countIn",0}});cmd(e,"metronome.start");
+ REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));
+ REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127,0}));
+ REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,100,2}));
+ REQUIRE(e.submit({EventType::On,Bus::Example,125,0,67,100,3}));
+ InputEvent future{EventType::On,Bus::Playback,126,0,72,100,4};future.frame=512;REQUIRE(e.submit(future));audio(e);
+ auto frame=e.sampleFrame();REQUIRE(cmd(e,"audio.settings",{{"outputMode","silent"}})["result"]["deferred"]==true);
+ REQUIRE(cmd(e,"audio.applyPending",{{"applyNow",true}})["result"]["applied"]==true);
+ REQUIRE(e.snapshot()["metronome"]["running"]==true);
+ audio(e);auto preserved=e.snapshot()["heldNotes"];REQUIRE(preserved.size()==2);for(auto& n:preserved)REQUIRE(n["bus"]!="live");
+ audio(e,8);REQUIRE(e.sampleFrame()>frame);REQUIRE(e.snapshot()["heldNotes"].size()==3);REQUIRE(e.snapshot()["metronome"]["running"]==true);
+}
+
+TEST_CASE("Apply now has reserved live recovery under a full event queue") {
+ Engine e(fixture());cmd(e,"metronome.config",{{"countIn",0}});cmd(e,"metronome.start");
+ REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,100,2}));audio(e);
+ InputEvent stale{EventType::On,Bus::Live,127,0,72,100,3};stale.frame=2048;REQUIRE(e.submit(stale));
+ for(unsigned i=0;i<4095;i++)REQUIRE(e.submit({EventType::Pedal,Bus::Example,125,0,0,0,0}));
+ REQUIRE(cmd(e,"audio.settings",{{"monitoring",false}})["result"]["deferred"]==true);
+ REQUIRE(cmd(e,"audio.applyPending",{{"applyNow",true}})["ok"]==true);audio(e,20);
+ auto notes=e.snapshot()["heldNotes"];REQUIRE(notes.size()==1);REQUIRE(notes[0]["bus"]=="playback");REQUIRE(e.snapshot()["metronome"]["running"]==true);
+}
+TEST_CASE("Apply now releases external live notes and sustain") {
+ struct Capture{std::array<std::array<uint8_t,3>,128> messages{};unsigned count{};} capture;
+ Engine e(fixture());e.setExternalMessageHook([](const uint8_t* bytes,unsigned size,void* ptr)noexcept{auto& c=*static_cast<Capture*>(ptr);if(size==3&&c.count<c.messages.size()){std::copy_n(bytes,3,c.messages[c.count++].begin());}},&capture);
+ cmd(e,"audio.settings",{{"outputMode","external"}});REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127,0}));audio(e);
+ REQUIRE(cmd(e,"audio.settings",{{"outputMode","silent"}})["result"]["deferred"]==true);cmd(e,"audio.applyPending",{{"applyNow",true}});audio(e);
+ bool off=false,pedalUp=false;for(unsigned i=0;i<capture.count;i++){auto m=capture.messages[i];off|=m[0]==0x80&&m[1]==60;pedalUp|=m[0]==0xb0&&m[1]==64&&m[2]==0;}
+ REQUIRE(off);REQUIRE(pedalUp);REQUIRE(e.snapshot()["heldNotes"].empty());
+}
+TEST_CASE("Rapid metronome field edits merge canonical native requested state") {
+ Engine e(fixture());REQUIRE(cmd(e,"metronome.meter",{{"denominator",8}})["ok"]==true);REQUIRE(cmd(e,"metronome.meter",{{"numerator",6}})["ok"]==true);
+ REQUIRE(cmd(e,"metronome.accent",{{"beat",1},{"accent","mute"}})["ok"]==true);REQUIRE(cmd(e,"metronome.accent",{{"beat",2},{"accent","strong"}})["ok"]==true);
+ auto settings=e.snapshot()["metronome"]["settings"];REQUIRE(settings["meter"]["denominator"]==8);REQUIRE(settings["meter"]["numerator"]==6);REQUIRE(settings["accents"][1]=="mute");REQUIRE(settings["accents"][2]=="strong");
+ REQUIRE(cmd(e,"metronome.meter",{{"numerator",13}})["ok"]==false);REQUIRE(cmd(e,"metronome.meter",{{"denominator",3}})["ok"]==false);REQUIRE(cmd(e,"metronome.meter",{{"unknown",1}})["ok"]==false);REQUIRE(cmd(e,"metronome.accent",{{"beat",6},{"accent","mute"}})["ok"]==false);REQUIRE(cmd(e,"metronome.accent",{{"beat",1},{"accent","bad"}})["ok"]==false);
+ REQUIRE(e.snapshot()["metronome"]["settings"]==settings);
+}
+TEST_CASE("Rapid audio channel edits merge native settings without lost channels") {
+ Engine e(fixture());REQUIRE(cmd(e,"audio.channel",{{"channel",0},{"enabled",false}})["ok"]==true);REQUIRE(cmd(e,"audio.channel",{{"channel",1},{"enabled",false}})["ok"]==true);
+ auto channels=e.snapshot()["settings"]["channels"];REQUIRE(channels.size()==14);for(auto& channel:channels)REQUIRE((channel!=0&&channel!=1));
+ REQUIRE(cmd(e,"audio.channel",{{"channel",16},{"enabled",false}})["ok"]==false);REQUIRE(cmd(e,"audio.channel",{{"channel",1},{"enabled","bad"}})["ok"]==false);REQUIRE(cmd(e,"audio.channel",{{"channel",1},{"enabled",true},{"unknown",true}})["ok"]==false);REQUIRE(e.snapshot()["settings"]["channels"]==channels);
+}

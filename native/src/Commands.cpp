@@ -21,6 +21,23 @@ json Engine::command(const json& request){
     try{
         if(!request.is_object()||!request.contains("id")||!request.contains("version")||request["version"]!=1||!request.contains("type")||!request["type"].is_string())return reply(false,nullptr,{{"code","invalid_request"},{"message","Expected version 1 request with id and type"}});
         auto type=request["type"].get<std::string>();json p=request.value("params",json::object());if(p.is_null())p=json::object();if(!p.is_object())throw std::invalid_argument("params must be an object");std::lock_guard lock(s.control);
+        if(type=="audio.channel"){
+            for(auto i=p.begin();i!=p.end();++i)if(i.key()!="channel"&&i.key()!="enabled")throw std::invalid_argument("Unknown channel field");
+            if(!p.contains("channel")||!p.contains("enabled")||!p["enabled"].is_boolean())throw std::invalid_argument("channel and boolean enabled are required");auto channel=integer(p,"channel",0,15,0);auto channels=s.pending.is_null()?s.settings["channels"]:s.pending["channels"];auto result=json::array();for(auto& c:channels)if(c!=channel)result.push_back(c);if(p["enabled"].get<bool>())result.push_back(channel);p={{"channels",result}};type="audio.settings";
+        }
+        if(type=="metronome.meter"||type=="metronome.accent"){
+            auto current=s.metronome.snapshot()["settings"];auto meter=current["meter"];auto accents=current["accents"];
+            if(type=="metronome.meter"){
+                for(auto i=p.begin();i!=p.end();++i)if(i.key()!="numerator"&&i.key()!="denominator")throw std::invalid_argument("Unknown meter field");
+                auto numerator=integer(p,"numerator",1,12,meter["numerator"].get<unsigned>());auto denominator=integer(p,"denominator",2,16,meter["denominator"].get<unsigned>());
+                if(denominator!=2&&denominator!=4&&denominator!=8&&denominator!=16)throw std::invalid_argument("Invalid meter denominator");meter={{"numerator",numerator},{"denominator",denominator}};
+                while(accents.size()>numerator)accents.erase(accents.end()-1);while(accents.size()<numerator)accents.push_back("weak");
+            }else{
+                for(auto i=p.begin();i!=p.end();++i)if(i.key()!="beat"&&i.key()!="accent")throw std::invalid_argument("Unknown accent field");
+                if(!p.contains("beat")||!p.contains("accent"))throw std::invalid_argument("beat and accent are required");auto beat=integer(p,"beat",0,unsigned(accents.size()-1),0);accents[beat]=p["accent"];
+            }
+            return reply(true,s.metronome.command("metronome.config",type=="metronome.meter"?json{{"meter",meter},{"accents",accents}}:json{{"accents",accents}}),nullptr);
+        }
         if(type=="metronome.config"||type=="metronome.start"||type=="metronome.stop")return reply(true,s.metronome.command(type,p),nullptr);
         if(type=="status")return reply(true,snapshot(),nullptr);
         if(type=="panic"){s.submit({EventType::Panic});return reply(true,json::object(),nullptr);}
@@ -41,7 +58,7 @@ json Engine::command(const json& request){
             json proposed=s.pending.is_null()?s.settings:s.pending;for(auto i=p.begin();i!=p.end();++i){if(!proposed.contains(i.key()))throw std::invalid_argument("Unknown audio setting: "+i.key());proposed[i.key()]=i.value();}validateSettings(proposed);
             bool disruptive=false;for(auto key:{"outputDevice","exclusive","outputMode","monitoring","externalDevice"})if(proposed[key]!=s.settings[key])disruptive=true;
             if(disruptive&&(s.liveHeld||s.livePedals)){s.pending=proposed;return reply(true,{{"deferred",true}},nullptr);}
-            s.settings=proposed;s.pending=nullptr;s.applySettings();if(disruptive&&s.running)s.openAudio();return reply(true,{{"deferred",false}},nullptr);
+            bool rebuild=proposed["outputDevice"]!=s.settings["outputDevice"]||proposed["exclusive"]!=s.settings["exclusive"];s.settings=proposed;s.pending=nullptr;s.applySettings();if(rebuild&&s.running)s.openAudio();return reply(true,{{"deferred",false}},nullptr);
         }
         return reply(false,nullptr,{{"code","unknown_command"},{"message","Unknown native command"}});
     }catch(const std::exception& e){return reply(false,nullptr,{{"code","invalid_params"},{"message",e.what()}});}
@@ -50,6 +67,6 @@ json Engine::snapshot()const{
     auto& s=*impl_;std::lock_guard lock(s.control);json held=json::array();
     for(const auto& p:s.published){auto before=p.sequence.load(std::memory_order_acquire);if(before&1)continue;auto bits=p.packed.load();auto instance=p.instance.load();if(before!=p.sequence.load(std::memory_order_acquire)||!(bits&1))continue;unsigned source=(bits>>24)&0xffff;Bus bus=static_cast<Bus>((bits>>44)&3);held.push_back({{"source",s.sourceNames[source].empty()?"native:"+std::to_string(source):s.sourceNames[source]},{"sourceId",source},{"channel",(bits>>40)&15},{"note",(bits>>8)&255},{"velocity",(bits>>16)&255},{"instance",instance},{"bus",busName(bus)},{"held",bool(bits&2)},{"sounding",bool(bits&4)},{"sustained",bool(bits&8)&&!(bits&2)}});}
     json messages=json::array();auto count=s.monitorCount.load();for(uint64_t i=count>64?count-64:0;i<count;++i){auto m=s.monitorMessages[i%64].load();messages.push_back({{"status",m&255},{"data1",(m>>8)&255},{"data2",(m>>16)&255},{"sourceId",(m>>24)&255},{"sampleFrame",m>>32}});}
-    return {{"metronome",s.metronome.snapshot()},{"audioReady",s.audioReady.load()},{"pianoReady",s.pianoReady.load()},{"pianoLoading",s.pianoLoading.load()},{"error",s.error.empty()?json(nullptr):json(s.error)},{"devices",s.devices},{"midiOutputs",s.outputs},{"audioOutputs",s.audioOutputs},{"heldNotes",held},{"monitor",messages},{"overload",s.overload.load()},{"voiceRefusals",s.voiceRefusals.load()},{"dropouts",s.dropouts.load()},{"externalErrors",s.externalErrors.load()},{"pendingChange",s.pending},{"settings",s.settings},{"sampleFrame",s.frame.load()},{"sampleRate",s.options.sampleRate},{"output",{{"backend","WASAPI"},{"requestedSampleRate",s.options.sampleRate},{"actualSampleRate",s.actualRate},{"requestedFrames",s.options.blockFrames},{"actualFrames",s.actualFrames.load()},{"latencyMs",s.outputLatency*1000},{"name",s.outputName},{"exclusive",s.settings["exclusive"]}}},{"livePool",{{"voices",1024},{"attackCapacity",960},{"releaseReserve",64},{"stealing",false}}}};
+    return {{"disabledInputs",s.disabled},{"externalPortOpens",s.externalPortOpens},{"metronome",s.metronome.snapshot()},{"audioReady",s.audioReady.load()},{"pianoReady",s.pianoReady.load()},{"pianoLoading",s.pianoLoading.load()},{"error",s.error.empty()?json(nullptr):json(s.error)},{"devices",s.devices},{"midiOutputs",s.outputs},{"audioOutputs",s.audioOutputs},{"heldNotes",held},{"monitor",messages},{"overload",s.overload.load()},{"voiceRefusals",s.voiceRefusals.load()},{"dropouts",s.dropouts.load()},{"externalErrors",s.externalErrors.load()},{"pendingChange",s.pending},{"settings",s.settings},{"sampleFrame",s.frame.load()},{"sampleRate",s.options.sampleRate},{"output",{{"backend","WASAPI"},{"requestedSampleRate",s.options.sampleRate},{"actualSampleRate",s.actualRate},{"requestedFrames",s.options.blockFrames},{"actualFrames",s.actualFrames.load()},{"latencyMs",s.outputLatency*1000},{"name",s.outputName},{"exclusive",s.settings["exclusive"]}}},{"livePool",{{"voices",1024},{"attackCapacity",960},{"releaseReserve",64},{"stealing",false}}}};
 }
 }

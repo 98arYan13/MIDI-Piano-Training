@@ -1,0 +1,14 @@
+{
+  "sqlite": {
+    "license": "Public domain",
+    "url": "https://www.sqlite.org/2026/sqlite-amalgamation-3530000.zip",
+    "sha256": "BF3733D7C71B3AB0F6FD8A9EA0052AD87FA037D94333E14CE09878BA3492C3B0",
+    "version": "3.53.0"
+  },
+  "httplib": {
+    "license": "MIT",
+    "url": "https://raw.githubusercontent.com/yhirose/cpp-httplib/fee592c2c2f2727c865169e32f45684abfd2d47b/httplib.h",
+    "sha256": "3806067B7CFFCD161C161DE33889C332962B9C09B9EAF44439D24D134CDAC6B6",
+    "revision": "fee592c2c2f2727c865169e32f45684abfd2d47b"
+  }
+}

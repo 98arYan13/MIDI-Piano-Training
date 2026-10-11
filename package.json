@@ -1,0 +1,12 @@
+{
+  "name": "sight-reading-workspace",
+  "private": true,
+  "scripts": {
+    "setup:web": "npm --prefix web ci --cache .tools/npm-cache",
+    "build:web": "npm --prefix web run build",
+    "typecheck": "npm --prefix web run typecheck",
+    "test:web": "npm --prefix web test",
+    "test:api": "node tests/service.mjs",
+    "test:e2e": "node tests/browser.mjs"
+  }
+}

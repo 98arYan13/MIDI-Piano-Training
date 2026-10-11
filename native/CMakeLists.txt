@@ -13,3 +13,13 @@ set_tests_properties(native_piano_render PROPERTIES WORKING_DIRECTORY "${CMAKE_S
 target_sources(native_tests PRIVATE tests/metronome.cpp)
 
 target_sources(sightreading_engine PRIVATE src/Metronome.cpp)
+add_library(sr_sqlite STATIC "${CMAKE_SOURCE_DIR}/.tools/deps/sqlite/sqlite-amalgamation-3530000/sqlite3.c")
+target_include_directories(sr_sqlite PUBLIC "${CMAKE_SOURCE_DIR}/.tools/deps/sqlite/sqlite-amalgamation-3530000")
+add_executable(sightreading src/Service.cpp)
+target_include_directories(sightreading PRIVATE "${CMAKE_SOURCE_DIR}/.tools/deps/httplib")
+target_link_libraries(sightreading PRIVATE sightreading_engine sr_sqlite ws2_32)
+target_compile_definitions(sightreading PRIVATE _WIN32_WINNT=0x0A00 WINVER=0x0A00)
+add_executable(storage_tests tests/storage.cpp)
+target_link_libraries(storage_tests PRIVATE sr_sqlite nlohmann_json::nlohmann_json Catch2::Catch2WithMain)
+target_include_directories(storage_tests PRIVATE include)
+add_test(NAME native_storage COMMAND storage_tests)

@@ -4,6 +4,7 @@
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <memory>
+#include <vector>
 
 namespace sightreading {
 struct EngineOptions {
@@ -12,6 +13,7 @@ struct EngineOptions {
     unsigned blockFrames{128};
     bool exclusive{};
     bool preloadSynchronously{};
+    std::vector<std::string> disabledInputs{};
 };
 
 class Engine {
