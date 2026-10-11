@@ -58,7 +58,7 @@ bool Engine::Impl::submit(InputEvent e){
 void Engine::Impl::publish(unsigned i){auto& n=notes[i];auto& p=published[i];p.sequence.fetch_add(1,std::memory_order_relaxed);uint64_t bits=n.active?1:0;if(n.active){bits|=(n.held?2:0)|(n.sounding?4:0)|(pedals[unsigned(n.event.bus)][n.event.source][n.event.channel]?8:0);bits|=uint64_t(n.event.note)<<8|uint64_t(n.event.velocity)<<16|uint64_t(n.event.source)<<24|uint64_t(n.event.channel)<<40|uint64_t(n.event.bus)<<44;}p.instance.store(n.event.instance,std::memory_order_relaxed);p.packed.store(bits,std::memory_order_relaxed);p.sequence.fetch_add(1,std::memory_order_release);}
 void Engine::Impl::off(unsigned i,int delay){auto& n=notes[i];if(n.sounding&&pianoReady)synths[unsigned(n.event.bus)]->protectedNoteOff(delay,n.event.note,n.token);if(n.event.bus==Bus::Live&&n.held)--liveHeld;n.active=false;n.held=false;publish(i);}
 void Engine::Impl::disconnect(unsigned source,int delay){for(unsigned b=0;b<3;++b)for(unsigned c=0;c<16;++c){if(pedals[b][source][c]&&b==0)--livePedals;pedals[b][source][c]=false;}for(unsigned i=0;i<NoteCount;++i)if(notes[i].active&&notes[i].event.source==source)off(i,delay);}
-void Engine::Impl::panic(uint64_t absolute){if(inputHook)inputHook({EventType::Panic},absolute==UINT64_MAX?frame.load():absolute,inputContext);if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths)s->allSoundOff();for(unsigned i=0;i<NoteCount;++i){notes[i].active=false;notes[i].held=false;publish(i);}for(auto& b:pedals)for(auto& s:b)s.fill(false);liveHeld=0;livePedals=0;scheduledSize=0;}
+void Engine::Impl::panic(uint64_t absolute){metronome.panic();if(inputHook)inputHook({EventType::Panic},absolute==UINT64_MAX?frame.load():absolute,inputContext);if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths)s->allSoundOff();for(unsigned i=0;i<NoteCount;++i){notes[i].active=false;notes[i].held=false;publish(i);}for(auto& b:pedals)for(auto& s:b)s.fill(false);liveHeld=0;livePedals=0;scheduledSize=0;}
 void Engine::Impl::dispatch(const InputEvent& e,int delay,uint64_t absolute){
     if(e.type==EventType::Panic){panic(absolute);return;}
     if(e.type!=EventType::Disconnect&&e.generation!=sourceGeneration[e.source].load())return;
@@ -84,7 +84,7 @@ void Engine::Impl::render(float* output,unsigned frames){
         std::fill_n(output,count*2,0.f);std::array<float,BlockFrames> left{},right{};float* channels[]{left.data(),right.data()};
         if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths){s->renderBlock(sfz::AudioSpan<float>(channels,2,0,count));for(unsigned i=0;i<count;++i){output[i*2]+=left[i]*0.25f;output[i*2+1]+=right[i]*0.25f;}}
         if(pianoReady){uint64_t refusals=0;for(auto& s:synths)refusals+=s->getProtectedRefusals();auto previous=voiceRefusals.exchange(refusals);overload.fetch_add(refusals-previous);}
-        if(renderHook)renderHook(output,count,begin,renderContext);float gain=volume.load();for(unsigned i=0;i<count*2;++i){float x=output[i]*gain;output[i]=std::isfinite(x)?x/(1.f+std::abs(x)):0.f;}
+        metronome.render(output,count,begin);if(renderHook)renderHook(output,count,begin,renderContext);float gain=volume.load();for(unsigned i=0;i<count*2;++i){float x=output[i]*gain;output[i]=std::isfinite(x)?x/(1.f+std::abs(x)):0.f;}
         frame.store(begin+count);frames-=count;output+=count*2;
     }
 }
@@ -99,3 +99,6 @@ void Engine::setInputHook(InputHook hook,void* context){if(impl_->running)throw 
 }
 
 void sightreading::Engine::setExternalMessageHook(ExternalMessageHook hook,void* context){if(impl_->running)throw std::logic_error("Register external message hook before start");std::lock_guard lock(impl_->externalControl);impl_->externalHook=hook;impl_->externalContext=context;}
+
+void sightreading::Engine::setBeatHook(Metronome::BeatHook hook,void* context){if(impl_->running)throw std::logic_error("Register beat hook before start");impl_->metronome.hook=hook;impl_->metronome.context=context;}
+void sightreading::Engine::followMetronome(double tempo,unsigned numerator,unsigned denominator,unsigned beat,uint64_t frame){std::lock_guard lock(impl_->control);impl_->metronome.follow(tempo,numerator,denominator,beat,frame);}

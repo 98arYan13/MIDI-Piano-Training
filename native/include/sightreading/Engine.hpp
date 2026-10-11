@@ -1,5 +1,6 @@
 #pragma once
 #include "EventQueue.hpp"
+#include "Metronome.hpp"
 #include <nlohmann/json.hpp>
 #include <filesystem>
 #include <memory>
@@ -36,6 +37,8 @@ public:
     // Native message sink for embedding/tests; overrides RtMidi delivery while set.
     using ExternalMessageHook = void(*)(const uint8_t*,unsigned,void*) noexcept;
     void setExternalMessageHook(ExternalMessageHook hook,void* context);
+    void setBeatHook(Metronome::BeatHook hook,void* context);
+    void followMetronome(double tempo,unsigned numerator,unsigned denominator,unsigned beat,uint64_t frame);
 private:
     struct Impl;
     std::unique_ptr<Impl> impl_;

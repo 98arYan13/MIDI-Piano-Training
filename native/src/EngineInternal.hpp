@@ -1,5 +1,6 @@
 #pragma once
 #include <sightreading/Engine.hpp>
+#include <sightreading/Metronome.hpp>
 #include <sfizz/Synth.h>
 #include <sfizz/AudioSpan.h>
 #include <portaudio.h>
@@ -17,7 +18,7 @@ using json=nlohmann::json;
 constexpr unsigned SourceCount=128, NoteCount=2048, BlockFrames=128, ScheduledCount=8192;
 struct Engine::Impl {
     explicit Impl(EngineOptions o);
-    EngineOptions options;
+    EngineOptions options; Metronome metronome{options.sampleRate};
     std::array<std::unique_ptr<sfz::Synth>,3> synths;
     EventQueue<> events;
     struct Note {bool active{},held{},sounding{}; InputEvent event{}; uint64_t token{};};
