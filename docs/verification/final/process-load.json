@@ -1,0 +1,370 @@
+{
+  "machineCpuPercent": 1.223587624150033,
+  "oneCorePercent": 19.577521310618295,
+  "elapsedMs": 60654,
+  "readings": [
+    {
+      "workingSetBytes": 483676160,
+      "elapsedMs": 1018,
+      "privateBytes": 471150592,
+      "cpuSeconds": 68.28125
+    },
+    {
+      "workingSetBytes": 483676160,
+      "elapsedMs": 2039,
+      "privateBytes": 471150592,
+      "cpuSeconds": 68.5
+    },
+    {
+      "workingSetBytes": 492490752,
+      "elapsedMs": 3050,
+      "privateBytes": 479973376,
+      "cpuSeconds": 68.609375
+    },
+    {
+      "workingSetBytes": 498741248,
+      "elapsedMs": 4056,
+      "privateBytes": 486232064,
+      "cpuSeconds": 68.859375
+    },
+    {
+      "workingSetBytes": 470257664,
+      "elapsedMs": 5063,
+      "privateBytes": 457711616,
+      "cpuSeconds": 68.96875
+    },
+    {
+      "workingSetBytes": 482275328,
+      "elapsedMs": 6070,
+      "privateBytes": 469745664,
+      "cpuSeconds": 69.296875
+    },
+    {
+      "workingSetBytes": 488484864,
+      "elapsedMs": 7090,
+      "privateBytes": 475967488,
+      "cpuSeconds": 69.53125
+    },
+    {
+      "workingSetBytes": 488484864,
+      "elapsedMs": 8098,
+      "privateBytes": 475967488,
+      "cpuSeconds": 69.609375
+    },
+    {
+      "workingSetBytes": 499519488,
+      "elapsedMs": 9115,
+      "privateBytes": 487018496,
+      "cpuSeconds": 69.828125
+    },
+    {
+      "workingSetBytes": 499519488,
+      "elapsedMs": 10121,
+      "privateBytes": 487018496,
+      "cpuSeconds": 69.984375
+    },
+    {
+      "workingSetBytes": 472797184,
+      "elapsedMs": 11142,
+      "privateBytes": 460247040,
+      "cpuSeconds": 70.140625
+    },
+    {
+      "workingSetBytes": 481611776,
+      "elapsedMs": 12161,
+      "privateBytes": 469078016,
+      "cpuSeconds": 70.3125
+    },
+    {
+      "workingSetBytes": 490164224,
+      "elapsedMs": 13174,
+      "privateBytes": 477650944,
+      "cpuSeconds": 70.5
+    },
+    {
+      "workingSetBytes": 490164224,
+      "elapsedMs": 14183,
+      "privateBytes": 477650944,
+      "cpuSeconds": 70.671875
+    },
+    {
+      "workingSetBytes": 502165504,
+      "elapsedMs": 15201,
+      "privateBytes": 489668608,
+      "cpuSeconds": 70.875
+    },
+    {
+      "workingSetBytes": 502165504,
+      "elapsedMs": 16219,
+      "privateBytes": 489668608,
+      "cpuSeconds": 71.015625
+    },
+    {
+      "workingSetBytes": 472887296,
+      "elapsedMs": 17235,
+      "privateBytes": 460353536,
+      "cpuSeconds": 71.140625
+    },
+    {
+      "workingSetBytes": 478171136,
+      "elapsedMs": 18242,
+      "privateBytes": 465641472,
+      "cpuSeconds": 71.3125
+    },
+    {
+      "workingSetBytes": 484134912,
+      "elapsedMs": 19247,
+      "privateBytes": 471617536,
+      "cpuSeconds": 71.546875
+    },
+    {
+      "workingSetBytes": 488566784,
+      "elapsedMs": 20254,
+      "privateBytes": 476053504,
+      "cpuSeconds": 71.734375
+    },
+    {
+      "workingSetBytes": 492490752,
+      "elapsedMs": 21261,
+      "privateBytes": 479981568,
+      "cpuSeconds": 71.828125
+    },
+    {
+      "workingSetBytes": 492490752,
+      "elapsedMs": 22269,
+      "privateBytes": 479981568,
+      "cpuSeconds": 72.0
+    },
+    {
+      "workingSetBytes": 469741568,
+      "elapsedMs": 23276,
+      "privateBytes": 457195520,
+      "cpuSeconds": 72.140625
+    },
+    {
+      "workingSetBytes": 475795456,
+      "elapsedMs": 24280,
+      "privateBytes": 463253504,
+      "cpuSeconds": 72.328125
+    },
+    {
+      "workingSetBytes": 488099840,
+      "elapsedMs": 25300,
+      "privateBytes": 475582464,
+      "cpuSeconds": 72.5625
+    },
+    {
+      "workingSetBytes": 493604864,
+      "elapsedMs": 26316,
+      "privateBytes": 481095680,
+      "cpuSeconds": 72.890625
+    },
+    {
+      "workingSetBytes": 498905088,
+      "elapsedMs": 27327,
+      "privateBytes": 486404096,
+      "cpuSeconds": 73.109375
+    },
+    {
+      "workingSetBytes": 498905088,
+      "elapsedMs": 28332,
+      "privateBytes": 486404096,
+      "cpuSeconds": 73.328125
+    },
+    {
+      "workingSetBytes": 477179904,
+      "elapsedMs": 29353,
+      "privateBytes": 464650240,
+      "cpuSeconds": 73.609375
+    },
+    {
+      "workingSetBytes": 481103872,
+      "elapsedMs": 30371,
+      "privateBytes": 468582400,
+      "cpuSeconds": 73.78125
+    },
+    {
+      "workingSetBytes": 489656320,
+      "elapsedMs": 31378,
+      "privateBytes": 477159424,
+      "cpuSeconds": 73.953125
+    },
+    {
+      "workingSetBytes": 495800320,
+      "elapsedMs": 32383,
+      "privateBytes": 483307520,
+      "cpuSeconds": 74.1875
+    },
+    {
+      "workingSetBytes": 501657600,
+      "elapsedMs": 33390,
+      "privateBytes": 489152512,
+      "cpuSeconds": 74.359375
+    },
+    {
+      "workingSetBytes": 501657600,
+      "elapsedMs": 34402,
+      "privateBytes": 489152512,
+      "cpuSeconds": 74.59375
+    },
+    {
+      "workingSetBytes": 478179328,
+      "elapsedMs": 35408,
+      "privateBytes": 465616896,
+      "cpuSeconds": 74.875
+    },
+    {
+      "workingSetBytes": 483479552,
+      "elapsedMs": 36420,
+      "privateBytes": 470921216,
+      "cpuSeconds": 75.125
+    },
+    {
+      "workingSetBytes": 489156608,
+      "elapsedMs": 37433,
+      "privateBytes": 476610560,
+      "cpuSeconds": 75.421875
+    },
+    {
+      "workingSetBytes": 493678592,
+      "elapsedMs": 38439,
+      "privateBytes": 481136640,
+      "cpuSeconds": 75.625
+    },
+    {
+      "workingSetBytes": 497668096,
+      "elapsedMs": 39447,
+      "privateBytes": 485126144,
+      "cpuSeconds": 75.90625
+    },
+    {
+      "workingSetBytes": 497668096,
+      "elapsedMs": 40456,
+      "privateBytes": 485126144,
+      "cpuSeconds": 76.109375
+    },
+    {
+      "workingSetBytes": 474968064,
+      "elapsedMs": 41462,
+      "privateBytes": 462405632,
+      "cpuSeconds": 76.40625
+    },
+    {
+      "workingSetBytes": 480866304,
+      "elapsedMs": 42472,
+      "privateBytes": 468307968,
+      "cpuSeconds": 76.578125
+    },
+    {
+      "workingSetBytes": 486813696,
+      "elapsedMs": 43480,
+      "privateBytes": 474267648,
+      "cpuSeconds": 76.75
+    },
+    {
+      "workingSetBytes": 492466176,
+      "elapsedMs": 44486,
+      "privateBytes": 479932416,
+      "cpuSeconds": 76.90625
+    },
+    {
+      "workingSetBytes": 497774592,
+      "elapsedMs": 45495,
+      "privateBytes": 485249024,
+      "cpuSeconds": 77.09375
+    },
+    {
+      "workingSetBytes": 497774592,
+      "elapsedMs": 46504,
+      "privateBytes": 485249024,
+      "cpuSeconds": 77.3125
+    },
+    {
+      "workingSetBytes": 470364160,
+      "elapsedMs": 47515,
+      "privateBytes": 457793536,
+      "cpuSeconds": 77.515625
+    },
+    {
+      "workingSetBytes": 474353664,
+      "elapsedMs": 48526,
+      "privateBytes": 461791232,
+      "cpuSeconds": 77.71875
+    },
+    {
+      "workingSetBytes": 482840576,
+      "elapsedMs": 49532,
+      "privateBytes": 470294528,
+      "cpuSeconds": 77.953125
+    },
+    {
+      "workingSetBytes": 488992768,
+      "elapsedMs": 50542,
+      "privateBytes": 476463104,
+      "cpuSeconds": 78.25
+    },
+    {
+      "workingSetBytes": 494899200,
+      "elapsedMs": 51560,
+      "privateBytes": 482381824,
+      "cpuSeconds": 78.453125
+    },
+    {
+      "workingSetBytes": 494899200,
+      "elapsedMs": 52580,
+      "privateBytes": 482381824,
+      "cpuSeconds": 78.640625
+    },
+    {
+      "workingSetBytes": 472403968,
+      "elapsedMs": 53587,
+      "privateBytes": 459841536,
+      "cpuSeconds": 78.84375
+    },
+    {
+      "workingSetBytes": 477900800,
+      "elapsedMs": 54595,
+      "privateBytes": 465346560,
+      "cpuSeconds": 79.0
+    },
+    {
+      "workingSetBytes": 489615360,
+      "elapsedMs": 55599,
+      "privateBytes": 477081600,
+      "cpuSeconds": 79.1875
+    },
+    {
+      "workingSetBytes": 494137344,
+      "elapsedMs": 56607,
+      "privateBytes": 481603584,
+      "cpuSeconds": 79.34375
+    },
+    {
+      "workingSetBytes": 498118656,
+      "elapsedMs": 57617,
+      "privateBytes": 485588992,
+      "cpuSeconds": 79.515625
+    },
+    {
+      "workingSetBytes": 498118656,
+      "elapsedMs": 58623,
+      "privateBytes": 485588992,
+      "cpuSeconds": 79.65625
+    },
+    {
+      "workingSetBytes": 475566080,
+      "elapsedMs": 59638,
+      "privateBytes": 463007744,
+      "cpuSeconds": 79.90625
+    },
+    {
+      "workingSetBytes": 481472512,
+      "elapsedMs": 60647,
+      "privateBytes": 468922368,
+      "cpuSeconds": 79.984375
+    }
+  ],
+  "nativeCpuSeconds": 11.875,
+  "pid": 24784,
+  "logicalProcessors": 16
+}

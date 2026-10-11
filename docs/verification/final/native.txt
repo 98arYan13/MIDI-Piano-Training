@@ -1,0 +1,13 @@
+Test project C:/Users/Amin/Documents/ChatGPT/Sight Reading/build/native
+    Start 1: native_protection
+1/4 Test #1: native_protection ................   Passed    2.25 sec
+    Start 2: native_piano_render
+2/4 Test #2: native_piano_render ..............   Passed    9.71 sec
+    Start 3: native_storage
+3/4 Test #3: native_storage ...................   Passed    0.08 sec
+    Start 4: native_transport_render
+4/4 Test #4: native_transport_render ..........   Passed    1.64 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =  13.70 sec

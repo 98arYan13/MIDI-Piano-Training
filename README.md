@@ -41,7 +41,7 @@ npm.cmd --prefix web run test:e2e
 npm.cmd --prefix web run build
 ```
 
-`test:e2e` runs maintained service, browser, keyboard/notation, Staff, Play Along and Ear/Flash suites with isolated databases and installed headless Edge/Chrome. Set `SR_BROWSER` to an explicit browser executable if needed. It fails fast and never downloads a browser. The native SQLite experimental notice is suppressed only for these Node integration processes; error warnings remain enabled. Release/performance and 30-minute actual WASAPI tooling are `tests/release.mjs` and `tests/soak.mjs`; see [release verification](docs/RELEASE-VERIFICATION.md) for exact commands, machine, evidence and limitations.
+`test:e2e` runs maintained service, browser, keyboard/notation, Staff, Play Along, Ear/Flash and final notation regression suites with isolated databases and installed headless Edge/Chrome. Set `SR_BROWSER` to an explicit browser executable if needed. It fails fast and never downloads a browser. The native SQLite experimental notice is suppressed only for these Node integration processes; error warnings remain enabled. Release/performance and 30-minute actual WASAPI tooling are `tests/release.mjs` and `tests/soak.mjs`; see [release verification](docs/RELEASE-VERIFICATION.md) for exact commands, machine, evidence and limitations.
 
 ## Runtime limits and attribution
 

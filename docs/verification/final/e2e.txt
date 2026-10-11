@@ -1,0 +1,27 @@
+
+> sight-reading@0.1.0 test:e2e
+> node ../tests/run-e2e.mjs
+
+
+Native/browser integration: service
+PASS 130 reconnects reused 1 native source IDs without leaked notes
+PASS SQLite locked-write errors correlate HTTP/WS/PUT IDs, report applied/not-persisted, retain durable settings
+PASS strict origins, JSON, commands, persistence, WebSocket reconnect continuity
+
+Native/browser integration: browser
+PASS five tabs, native controls, fullscreen dialogs, settings, reload, mobile width, browser closure, offline resources
+
+Native/browser integration: keyboard-notation
+PASS: Grand/88/C4, native chord ownership, route persistence, multitouch cancellation, virtual pedal focus recovery, other owner untouched, M, responsive pan, fullscreen, native-clock scroll; no browser errors
+
+Native/browser integration: staff-practice
+PASS: native Wait/Scroll timing, exact held pitch answers, isolated reset/stop + global clicks, atomic invalid config, all Staff generators/visible options, Grand/88, local numeric drafts, native Cb spelling SVG, fullscreen, persistence and no browser errors
+
+Native/browser integration: play-along
+PASS actual binary multipart/import/original/window/title/assignment/trash/restore/restart + native playback/loop/accompaniment/live/metronome + installed Edge UI/upload/mobile; no browser errors
+
+Native/browser integration: ear-flash
+PASS Ear/Flash API all qualities/directions/melody sizes/key inversions/answers, native examples/autoplay/held Live/click isolation, Edge UI/mobile/shortcuts/reload/persistence
+
+Native/browser integration: final-notation
+PASS complete Flash treble/bass/grand glyphs, snapshot cache, paused forward/back seek, second song reset

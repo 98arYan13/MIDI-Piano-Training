@@ -1,0 +1,47 @@
+File: build/release/SightReading-final/sightreading.exe
+  Name: WS2_32.dll
+  Name: SHELL32.dll
+  Name: USER32.dll
+  Name: KERNEL32.dll
+  Name: libc++.dll
+  Name: libunwind.dll
+  Name: api-ms-win-crt-stdio-l1-1-0.dll
+  Name: api-ms-win-crt-runtime-l1-1-0.dll
+  Name: api-ms-win-crt-filesystem-l1-1-0.dll
+  Name: api-ms-win-crt-string-l1-1-0.dll
+  Name: api-ms-win-crt-locale-l1-1-0.dll
+  Name: api-ms-win-crt-time-l1-1-0.dll
+  Name: api-ms-win-crt-math-l1-1-0.dll
+  Name: api-ms-win-crt-environment-l1-1-0.dll
+  Name: api-ms-win-crt-heap-l1-1-0.dll
+  Name: api-ms-win-crt-private-l1-1-0.dll
+  Name: api-ms-win-crt-convert-l1-1-0.dll
+  Name: WINMM.dll
+  Name: api-ms-win-crt-utility-l1-1-0.dll
+  Name: ole32.dll
+File: build/release/SightReading-final/libc++.dll
+  Name: libunwind.dll
+  Name: KERNEL32.dll
+  Name: api-ms-win-crt-locale-l1-1-0.dll
+  Name: api-ms-win-crt-stdio-l1-1-0.dll
+  Name: api-ms-win-crt-runtime-l1-1-0.dll
+  Name: api-ms-win-crt-heap-l1-1-0.dll
+  Name: api-ms-win-crt-string-l1-1-0.dll
+  Name: api-ms-win-crt-multibyte-l1-1-0.dll
+  Name: api-ms-win-crt-time-l1-1-0.dll
+  Name: api-ms-win-crt-convert-l1-1-0.dll
+  Name: api-ms-win-crt-utility-l1-1-0.dll
+  Name: api-ms-win-crt-math-l1-1-0.dll
+  Name: api-ms-win-crt-private-l1-1-0.dll
+  Name: api-ms-win-crt-filesystem-l1-1-0.dll
+File: build/release/SightReading-final/libunwind.dll
+  Name: KERNEL32.dll
+  Name: api-ms-win-crt-stdio-l1-1-0.dll
+  Name: api-ms-win-crt-runtime-l1-1-0.dll
+  Name: api-ms-win-crt-environment-l1-1-0.dll
+  Name: api-ms-win-crt-private-l1-1-0.dll
+  Name: api-ms-win-crt-filesystem-l1-1-0.dll
+  Name: api-ms-win-crt-locale-l1-1-0.dll
+  Name: api-ms-win-crt-convert-l1-1-0.dll
+  Name: api-ms-win-crt-string-l1-1-0.dll
+  Name: api-ms-win-crt-heap-l1-1-0.dll

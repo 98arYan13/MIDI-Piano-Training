@@ -1,0 +1,61 @@
+{
+  "findingsAddressed": 8,
+  "limits": {
+    "absolute60fps": false,
+    "acousticCapture": false,
+    "physicalMidi": false,
+    "pitchWheel": false,
+    "physicalHotplug": false,
+    "externalMidi": false,
+    "wiredAudibleP95": false
+  },
+  "exeSha256": "8A4368C59DADB2647ED458ED017218BA917AA8AF4484938FE22223895A84B0C8",
+  "format": 1,
+  "soak": {
+    "requiredMinutes": 30,
+    "startedUtc": "2026-10-11T22:35:58.428Z",
+    "status": "complete",
+    "historicalTask8Separate": true,
+    "pid": 24784,
+    "actualFrames": 128,
+    "voiceRefusalDelta": 0,
+    "sampleFrameEnd": 86464384,
+    "sampleFrameStart": 54400,
+    "retainedLive": true,
+    "dropoutDelta": 0,
+    "audibleCapture": false,
+    "actualRate": 48000,
+    "apiLatencyMs": 22,
+    "overloadDelta": 0,
+    "metronomeRetained": true,
+    "iterations": 7144,
+    "physicalMidi": false,
+    "elapsedMs": 1800196,
+    "endedUtc": "2026-10-11T23:05:58.624Z"
+  },
+  "baseCommit": "7b040690ec9177c519616d18fea23807d47d7e61",
+  "productCommit": "03e6867c088666cd563735463e45efacf433c5ce",
+  "scopedProductFindingsOpen": 0,
+  "rulingCount": 14,
+  "verification": {
+    "nativeCTest": "4/4 13.70s",
+    "vitest": "15 tests",
+    "nativeFocused": "79573 assertions 8 cases",
+    "windowsPowerShell5TrayGracefulStop": true,
+    "nativeEdgeSuites": 7,
+    "webBuild": true,
+    "typecheck": true,
+    "portableDocLinks": 4,
+    "offlineRelease": true
+  },
+  "scopedReview": {
+    "newCriticalImportant": 0,
+    "importantResolved": 3,
+    "productFrozen": true,
+    "head": "03e6867c088666cd563735463e45efacf433c5ce",
+    "base": "7b040690ec9177c519616d18fea23807d47d7e61",
+    "verdict": "APPROVED",
+    "minorResolved": 5,
+    "unresolved": 0
+  }
+}

@@ -1,0 +1,3 @@
+Sight Reading: http://127.0.0.1:18784 (native process 6628). Closing the browser leaves MIDI and clicks running. Use the notification-area icon or scripts/stop.ps1 -Port 18784 to quit gracefully.
+Native shutdown requested; MIDI, piano and clicks stop together.
+PASS Windows PowerShell portable start/stop, System32-only PATH, native tray window, actual WASAPI/piano readiness, graceful exit.
