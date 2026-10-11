@@ -1,7 +1,8 @@
+import { pianoKeys } from "./pianoModel";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNative } from "./native";
 import { ScrollingStaff } from "./ScrollingStaff";
-import { pianoKeys } from "./pianoModel";
+import { spelledLabel } from "./notationModel";
 import type { PracticeConfig, TimelineNote } from "./types";
 const keys = [
   "C",
@@ -207,7 +208,7 @@ export function StaffPractice() {
           <small>
             Play the displayed chord voicing:{" "}
             {current?.pitches
-              .map((n) => pianoKeys().find((k) => k.midi === n.midiNote)?.label)
+              .map((n) => spelledLabel(n.spelling))
               .join(" · ")}
           </small>
         </div>

@@ -1,0 +1,170 @@
+[
+  {
+    "path": ".tools/deps/sfizz/LICENSE",
+    "sha256": "7A705870EA48835DE61975DDC052FAD098497C00C4A8BD5799B203EF12524AC9"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/abseil-cpp/LICENSE",
+    "sha256": "F54FFF0B905DF5B3464527C652A30E903B172D6DCAB4D89B5E6F105D5E4A4603"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/jsl/LICENSE.md",
+    "sha256": "983B0CDCDEBE27CB88C770A2488581A82060C176FC4DBCC80E83B50B44923A5E"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/st_audiofile/LICENSE.md",
+    "sha256": "5A0F3A21542E5FBCACD62C0C3B35A4EE9184737B562ABEC7D266003B52F0B8E2"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/st_audiofile/thirdparty/dr_libs/LICENSE",
+    "sha256": "A13603628866863F196C0201891A6DCC8062481E83B5D686F34CF9E45CEEC899"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/st_audiofile/thirdparty/libaiff/LICENSE",
+    "sha256": "2A092EA42CAB9F8665307E0E5F60818DF94D0AE065D7763D82585C7DC1594921"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/st_audiofile/thirdparty/wavpack/COPYING",
+    "sha256": "C580B15E1391E59164D17C642DF7019CB11946AB89281B5D781B43C732D4BF97"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/st_audiofile/thirdparty/stb_vorbis/LICENSE",
+    "sha256": "11DD149DBC50748419A22FCEC275B5BCFB4C2D86D9FBA8802E5C4FFD40C94609"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/simde/COPYING",
+    "sha256": "83E48417DD53D380432CA08C1AABC35AF5A8B8D4CAC037F066510D0BCDA8F2C0"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/pugixml/LICENSE.md",
+    "sha256": "9C2E5A97CC6733EFD0FFC2E4CF23BF306E415DDE068230E2A0B6B83C97E8BAE1"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/spline/LICENSE",
+    "sha256": "A96F6B74594E70337F6E5533D0B612116C2F49DCC5B67402B4BFBE6C57F78DF8"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/tunings/LICENSE.md",
+    "sha256": "D28D9CD501E65EF5011C9AA0ECF9AA5DF99EACE7193E2BF6E2AAA6854D1FF037"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/hiir/license.txt",
+    "sha256": "A7DEA6B02C25B101CA92D21FB23A0A752E02B62CDC52C965BDB50B223C49E881"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/kiss_fft/COPYING",
+    "sha256": "B338C6AD7C4109F19EF8AF177F11C12A2E511819E3B71C67EE10875E22E55CC5"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/cephes/LICENSE.txt",
+    "sha256": "A94CDF6936F7A3E3DA295D878B1F56472D78583938C85815A591B51CFA2A866F"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/atomic_queue/LICENSE",
+    "sha256": "1CF86BB57E333E5F21BDE84390AF4FFD3E47A71602624E18A9DAAA7120E258E0"
+  },
+  {
+    "path": ".tools/deps/sfizz/external/filesystem/LICENSE",
+    "sha256": "41AF490F2D3DBEABA890CA8AD198BEDC604492E718E673D82F8EFF7A5E75ABD5"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/cpuid/LICENSE.rst",
+    "sha256": "5A6B008D32FF099154FBA4EC45F841F3908681E8F7F447CBEA810C3468B4EAEF"
+  },
+  {
+    "path": ".tools/deps/sfizz/src/external/cpuid/platform/LICENSE.rst",
+    "sha256": "A354A615D8F862A66FAC30D1E94ED96C5BDB8B441E620B2B58C59153487EAAB0"
+  },
+  {
+    "path": ".tools/deps/portaudio/LICENSE.txt",
+    "sha256": "24F3D353AE19B58CE4E86915B71EAADB564E797682D2284BE90B8A7E078E5D9C"
+  },
+  {
+    "path": ".tools/deps/rtmidi/LICENSE",
+    "sha256": "03F43E4CAA83BC62907B0A55B74E62CEF15A7B8D8DB41C2DF663FCFCC1D56342"
+  },
+  {
+    "path": ".tools/deps/json/LICENSE.MIT",
+    "sha256": "6F48A03625699EEA99E599744EFEA0BF9C9DD67A669E65554DF1CD726B8A2477"
+  },
+  {
+    "path": ".tools/deps/midifile/midifile-98917df5b1bf0d6e8d4c0e5fff86d6b05343e793/LICENSE.txt",
+    "sha256": "42E99D613230355A66309528B6FCF1A11C4A9B0E707773EABF21BA6C67E35AF1"
+  },
+  {
+    "path": ".tools/llvm-mingw-20261006-ucrt-x86_64/LICENSE.TXT",
+    "sha256": "8D85C1057D742E597985C7D4E6320B015A9139385CFF4CBAE06FFC0EBE89AFEE"
+  },
+  {
+    "path": ".tools/llvm-mingw-20261006-ucrt-x86_64/x86_64-w64-mingw32/share/mingw32/COPYING.MinGW-w64-runtime.txt",
+    "sha256": "1DB8DA07B436C68833C0673FFEE3D9FCB2526047F3820B81661865DFEDC79A1F"
+  },
+  {
+    "path": ".tools/llvm-mingw-20261006-ucrt-x86_64/x86_64-w64-mingw32/share/mingw32/COPYING.winpthreads.txt",
+    "sha256": "63263614CDD29F2F93CBA85E992F041B31F9FC7B4033692F31269489A8A1B177"
+  },
+  {
+    "path": "web/node_modules/react/LICENSE",
+    "sha256": "DA6D3703ED11CBE42BD212C725957C98DA23CBFF1998C05FA4B3D976D1A58E93"
+  },
+  {
+    "path": "web/node_modules/react-dom/LICENSE",
+    "sha256": "DA6D3703ED11CBE42BD212C725957C98DA23CBFF1998C05FA4B3D976D1A58E93"
+  },
+  {
+    "path": "web/node_modules/scheduler/LICENSE",
+    "sha256": "DA6D3703ED11CBE42BD212C725957C98DA23CBFF1998C05FA4B3D976D1A58E93"
+  },
+  {
+    "path": "web/node_modules/vexflow/LICENSE",
+    "sha256": "5522A52057A68B081DD3E06A878584B565C6A3F7E7DDB154DD24F25B5630216F"
+  },
+  {
+    "path": "assets/piano/LICENSE",
+    "sha256": "E6BC9E9C474700B708F568BAC9E5A8A9BCB2B1DAD53442F5BA449FCB848B8E76"
+  },
+  {
+    "path": "assets/piano/ATTRIBUTION.md",
+    "sha256": "4BB658109055F834A05A1155878546E0993FD9E6AEFCAD81FBD4208BC7FD9008"
+  },
+  {
+    "path": "assets/music/LICENSE.md",
+    "sha256": "380E5BE7E28011A5A6E5AC89D8083F7F89BC6B82F89CA5332880D6C1E5F7A79B"
+  },
+  {
+    "path": "assets/ear/README.md",
+    "sha256": "CD47F78A973882DCBA229DB650C659E514A798F1B985490FFF26FB4B32F151CD"
+  },
+  {
+    "path": "docs/licenses/bravura-OFL.txt",
+    "sha256": "EAF7E8FAFFBE4E404FC19E625C89CEF03992DC736051AE7E2FEFE205CD6C93DB"
+  },
+  {
+    "path": "docs/licenses/academico-OFL.txt",
+    "sha256": "DA623FE9D67FD535CAF746690C6678CDA62CE23B44CF23453B2D71F3E6961720"
+  },
+  {
+    "path": "docs/licenses/httplib-MIT.txt",
+    "sha256": "4B45CBE16D7B71B89AE6127E26E0D90A029198CA5E958AD8E3D0B8BBED364D8B"
+  },
+  {
+    "path": "docs/licenses/threadpool-zlib.txt",
+    "sha256": "8AFBC5160151ECC1FC27DCE6CB03E4AF8FB1033D59848107CE7561161242B0C7"
+  },
+  {
+    "path": "docs/licenses/faust-attribution.txt",
+    "sha256": "D3CB90552635960C000BE7611B672960CA2B7AB8EEA9D4F1BC8E5A33A55DD68C"
+  },
+  {
+    "path": "docs/licenses/faust-rbj-exception.txt",
+    "sha256": "3A675FAA3BA2FBB39DEDEE6B71E4DDD0D3DEE155A968238292CA9B5F9230BCAC"
+  },
+  {
+    "path": "docs/licenses/faust-library-LGPL.txt",
+    "sha256": "2403020EC1FA1ADA91CDFFB14CC48251088C20E4D2CD4C70081C0F1D0FB10E30"
+  },
+  {
+    "path": "docs/licenses/faust-STK-4.3.txt",
+    "sha256": "07585D962EEB7F033A77366ED2B92EDC9ACF603E5BBC5023EC01BE9EDC4A25A1"
+  }
+]

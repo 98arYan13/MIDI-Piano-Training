@@ -50,6 +50,7 @@ void Storage::putSong(const json &model, const std::string &original) {
     std::filesystem::rename(staged, path);
     moved = true;
     sql("COMMIT");
+    ++libraryRevision_;
   } catch (...) {
     sql("ROLLBACK");
     std::error_code ec;
@@ -113,6 +114,7 @@ void Storage::patchSong(const std::string &id, const json &patch) {
   bind(update.get(), 3, id);
   if (sqlite3_step(update.get()) != SQLITE_DONE)
     throw std::runtime_error(sqlite3_errmsg(db));
+  ++libraryRevision_;
 }
 void Storage::trashSong(const std::string &id, bool trashed) {
   std::lock_guard lock(mutex);
@@ -123,6 +125,7 @@ void Storage::trashSong(const std::string &id, bool trashed) {
     throw std::runtime_error(sqlite3_errmsg(db));
   if (!sqlite3_changes(db))
     throw std::invalid_argument("Song not found.");
+  ++libraryRevision_;
 }
 std::string Storage::originalSong(const std::string &id) {
   std::lock_guard lock(mutex);

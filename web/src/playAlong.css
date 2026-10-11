@@ -59,6 +59,13 @@
 .song-workspace {
   min-width: 0;
 }
+.song-workspace input:not([type="range"]):not([type="checkbox"]) {
+  background: #19221e; color: #eceeea; border: 1px solid #59675e;
+  border-radius: 6px; padding: 7px 9px;
+}
+.song-workspace input[aria-label="Song title"] { width: 100%; margin-top: 5px; }
+.song-settings { padding: 10px; border: 1px solid #39413c; border-radius: 8px; margin: 10px 0; }
+.song-settings summary { cursor: pointer; color: #dcb77d; }
 .song-workspace > label {
   display: block;
   margin: 12px 0;

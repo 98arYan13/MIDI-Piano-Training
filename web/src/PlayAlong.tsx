@@ -5,6 +5,7 @@ import { songApi } from "./songApi";
 import { ScrollingStaff } from "./ScrollingStaff";
 import type { Song, SongTrack, TimelineNote, TransportConfig } from "./types";
 import "./playAlong.css";
+import { NumericInput } from "./NumericInput";
 export function PlayAlong() {
   const native = useNative(),
     p = native.state?.transport;
@@ -34,11 +35,11 @@ export function PlayAlong() {
   useEffect(() => {
     if (!song) return;
     let current = true;
-    void songApi<{ notes: TimelineNote[] }>(
+    void songApi<{ notes: TimelineNote[]; truncated?: boolean }>(
       `/${song.id}/events?fromTick=${Math.max(0, (bucket - 2) * song.ppq * 8)}&toTick=${(bucket + 6) * song.ppq * 8}`,
     )
       .then((s) => {
-        if (current) setNotes(s.notes);
+        if (current) { setNotes(s.notes); if(s.truncated)setError('Dense notation window exceeded 4096 notes; the displayed window is truncated. Increase spacing to view a shorter musical window. Original playback remains intact.'); }
       })
       .catch((e) => setError(e.message));
     return () => {
@@ -132,18 +133,16 @@ export function PlayAlong() {
                 {p.target.join(" + ")}. Backing resumes after your answer.
               </p>
             )}
+            <details className="song-settings"><summary>Playback settings, loops & tracks</summary>
             <div className="song-options">
               <label>
                 Tempo BPM
-                <input
-                  aria-label="Song tempo"
-                  type="number"
-                  min="20"
-                  max="300"
+                <NumericInput
+                  ariaLabel="Song tempo"
+                  min={20}
+                  max={300}
                   value={p.tempo}
-                  onChange={(e) =>
-                    void run("transport.tempo", { bpm: Number(e.target.value) })
-                  }
+                  onCommit={(bpm) => void run("transport.tempo", { bpm })}
                 />
               </label>
               <label>
@@ -164,7 +163,7 @@ export function PlayAlong() {
                   aria-label="Song spacing"
                   type="range"
                   min="30"
-                  max="300"
+                  max={300}
                   value={p.config.spacing}
                   onChange={(e) => config({ spacing: Number(e.target.value) })}
                 />
@@ -204,7 +203,7 @@ export function PlayAlong() {
                 <input
                   type="number"
                   aria-label="Song tolerance"
-                  min="20"
+                  min={20}
                   max="1000"
                   value={p.config.toleranceMs}
                   onChange={(e) =>
@@ -329,6 +328,7 @@ export function PlayAlong() {
                 </div>
               ))}
             </div>
+            </details>
             <ScrollingStaff
               mode="grand"
               notes={notes}

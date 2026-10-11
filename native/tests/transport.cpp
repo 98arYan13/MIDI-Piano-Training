@@ -2,6 +2,17 @@
 #include <sightreading/Transport.hpp>
 using namespace sightreading;
 using json = nlohmann::json;
+TEST_CASE("Song windows index late dense timelines without losing spanning notes", "[window]") {
+  json song={{"ppq",480},{"tracks",json::array({{{"staff","split"}}})},{"tempoMap",json::array({{{"tick",0},{"microseconds",500000}}})},{"notes",json::array()}};
+  for(int i=0;i<10000;i++)song["notes"].push_back({{"id",i},{"trackId",0},{"midiNote",60},{"startTick",i*48},{"endTick",i*48+24}});
+  song["notes"][0]["endTick"]=480000;
+  SongWindow window(song);
+  auto result=window.query(470000,470200,48000,4096);
+  REQUIRE(result[0]["id"]==0);
+  REQUIRE(result.size()==5);
+  REQUIRE(window.inspected()<100);
+  REQUIRE(window.query(470000,470200,48000,2).size()==2);
+}
 static json model() {
   return {{"id", "test"},
           {"title", "Test"},

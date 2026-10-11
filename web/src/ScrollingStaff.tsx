@@ -10,6 +10,7 @@ import { notationNote } from "./notationNote";
 import {
   frameX,
   staffClefs,
+  segmentFingerprint,
   type StaffMode,
   type TimelineNote,
 } from "./notationModel";
@@ -38,14 +39,14 @@ const Segment = memo(function Segment({
     if (!el) return;
     el.replaceChildren();
     const renderer = new Renderer(el, Renderer.Backends.SVG);
-    renderer.resize(header ? 106 : segmentWidth, mode === "grand" ? 276 : 174);
+    renderer.resize(header ? 106 : segmentWidth, mode === "grand" ? 236 : 174);
     const context = renderer.getContext();
     context.setFillStyle("#c9d0c8");
     context.setStrokeStyle("#69746d");
     const staves = staffClefs(mode).map((clef, i) => {
       const stave = new Stave(
         header ? 16 : 0,
-        35 + i * 112,
+        (mode === "grand" ? 15 : 35) + i * 92,
         header ? 100 : segmentWidth + 1,
       )
         .setBegBarType(Barline.type.NONE)
@@ -124,6 +125,10 @@ const Segment = memo(function Segment({
       data-clefs={staffClefs(mode).join(" ")}
     />
   );
+}, (before, after) => {
+  if(before.mode!==after.mode || before.index!==after.index || before.sampleRate!==after.sampleRate || before.spacing!==after.spacing || before.header!==after.header)return false;
+  if(after.header || before.notes===after.notes)return true;
+  return segmentFingerprint(before.notes,before.index,before.sampleRate,before.spacing,before.mode)===segmentFingerprint(after.notes,after.index,after.sampleRate,after.spacing,after.mode);
 });
 
 export type ScrollingStaffProps = {
@@ -191,8 +196,8 @@ export function ScrollingStaff({
               key={`${i}:${line}`}
               x1="0"
               x2="100%"
-              y1={75 + i * 112 + line * 10}
-              y2={75 + i * 112 + line * 10}
+              y1={(mode === "grand" ? 55 : 75) + i * 92 + line * 10}
+              y2={(mode === "grand" ? 55 : 75) + i * 92 + line * 10}
               stroke="#69746d"
               strokeWidth="1"
             />

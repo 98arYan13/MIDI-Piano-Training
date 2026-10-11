@@ -8,6 +8,20 @@ namespace sightreading {
 nlohmann::json inferChords(const nlohmann::json &song);
 nlohmann::json songEvents(const nlohmann::json &song, double fromTick,
                           double toTick, unsigned rate, unsigned limit = 4096);
+class SongWindow {
+public:
+  explicit SongWindow(nlohmann::json song);
+  nlohmann::json query(double from, double to, unsigned rate, unsigned limit = 4096) const;
+  size_t inspected() const { return inspected_; }
+  double ppq() const { return metadata_["ppq"].get<double>(); }
+private:
+  nlohmann::json metadata_, notes_;
+  std::vector<size_t> order_;
+  std::vector<double> ends_;
+  size_t base_{};
+  mutable size_t inspected_{};
+  void collect(size_t node,size_t left,size_t right,double from,double to,std::vector<size_t> &found,unsigned limit) const;
+};
 class Transport {
 public:
   explicit Transport(Engine &engine) : engine_(engine) {}
@@ -35,6 +49,7 @@ private:
                                    {"accompaniment", "Off"},
                                    {"rate", 1.0},
                                    {"accompanimentSpacing", 1.0}};
+  std::unique_ptr<SongWindow> window_;
   struct Event {
     double seconds;
     InputEvent input;

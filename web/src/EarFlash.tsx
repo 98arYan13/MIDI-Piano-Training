@@ -212,7 +212,7 @@ export function EarTraining() {
           commit={(mode) => configure({ mode })}
         />
       </div>
-      <details className="exercise-settings" open>
+      <details className="exercise-settings">
         <summary>Exercise settings</summary>
         <div className="form-grid">
           <NumberField
@@ -522,7 +522,7 @@ export function FlashCards() {
           commit={(mode) => configure({ mode })}
         />
       </div>
-      <details className="exercise-settings" open>
+      <details className="exercise-settings">
         <summary>Card settings</summary>
         {c.mode === "noteMath" ? (
           <>

@@ -1,3 +1,4 @@
+import { browserPath } from "./browser-path.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdtemp, rm, mkdir } from "node:fs/promises";
@@ -39,7 +40,7 @@ try {
   });
   browser = await chromium.launch({
     executablePath:
-      "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+      browserPath(),
     headless: true,
   });
   const page = await browser.newPage({

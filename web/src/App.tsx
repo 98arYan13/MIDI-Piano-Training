@@ -1,3 +1,5 @@
+import { Guide } from "./Guide";
+import { NumericInput } from "./NumericInput";
 import { EarTraining, FlashCards } from "./EarFlash";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NativeProvider, useNative } from "./native";
@@ -14,74 +16,6 @@ const routes = [
   ["guide", "Guide", "05"],
 ] as const;
 // Local text drafts allow normal editing; only valid committed values reach C++.
-function NumericInput({
-  value,
-  min,
-  max,
-  integer = false,
-  onCommit,
-}: {
-  value: number;
-  min: number;
-  max: number;
-  integer?: boolean;
-  onCommit: (value: number) => void;
-}) {
-  const focused = useRef(false);
-  const [draft, setDraft] = useState(String(value));
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    if (!focused.current) setDraft(String(value));
-  }, [value]);
-  const commit = () => {
-    focused.current = false;
-    const n = Number(draft);
-    if (
-      draft.trim() &&
-      Number.isFinite(n) &&
-      n >= min &&
-      n <= max &&
-      (!integer || Number.isInteger(n))
-    ) {
-      setError(null);
-      onCommit(n);
-    } else {
-      setDraft(String(value));
-      setError(
-        `Enter ${integer ? "a whole number" : "a number"} from ${min} to ${max}.`,
-      );
-    }
-  };
-  return (
-    <>
-      <input
-        type="number"
-        min={min}
-        max={max}
-        step={integer ? 1 : "any"}
-        value={draft}
-        aria-invalid={!!error}
-        onFocus={() => {
-          focused.current = true;
-          setError(null);
-        }}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            e.currentTarget.blur();
-          }
-        }}
-      />
-      {error && (
-        <small className="field-error" role="alert">
-          {error}
-        </small>
-      )}
-    </>
-  );
-}
 function Dialog({
   title,
   close,
@@ -525,62 +459,7 @@ function MetronomeDialog() {
   );
 }
 function Workspace({ route }: { route: string }) {
-  if (route === "guide")
-    return (
-      <section className="guide">
-        <span className="eyebrow">YOUR LOCAL STUDIO</span>
-        <h1>
-          Make a little progress,
-          <br />
-          every day.
-        </h1>
-        <p className="lead">
-          A sampled piano, a steady pulse, and room to focus.
-        </p>
-        <div className="guide-grid">
-          <article>
-            <span>01</span>
-            <h3>Connect & play</h3>
-            <p>
-              Connect a MIDI keyboard. The native service automatically opens
-              enabled devices and monitors them on every tab. Audio settings
-              show the actual WASAPI output and sample format.
-            </p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Keep your pulse</h3>
-            <p>
-              Open metronome settings with M. BPM is measured in quarter notes;
-              beat units follow the time-signature denominator. Stopping an
-              exercise leaves your metronome running.
-            </p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Stay local</h3>
-            <p>
-              Your settings are saved in the native SQLite database. Reloading
-              or closing this browser leaves hardware input and clicks running.
-              Stop the native service to shut down sound.
-            </p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>Recover gracefully</h3>
-            <p>
-              Panic explicitly clears all notes and clicks. Audio-device changes
-              defer while notes or sustain are held. Apply now intentionally
-              interrupts live notes.
-            </p>
-          </article>
-        </div>
-        <p className="helper">
-          No browser audio. No account. No external fonts or cloud assets.
-          Piano: Salamander Grand Piano by Alexander Holm, CC BY 3.0.
-        </p>
-      </section>
-    );
+  if (route === "guide") return <Guide />;
   const r = routes.find((r) => r[0] === route) ?? routes[0];
   return (
     <section className="workspace">

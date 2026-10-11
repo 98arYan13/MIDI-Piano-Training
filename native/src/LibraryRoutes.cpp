@@ -17,6 +17,9 @@ static void error(httplib::Response &res, const std::exception &e,
                  {"message", e.what()}}}});
 }
 void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate) {
+  struct WindowCache { std::mutex mutex; std::string id; uint64_t revision{}; std::unique_ptr<SongWindow> window; };
+  // One current song bounds cache memory; storage revision invalidates every edit.
+  auto cache = std::make_shared<WindowCache>();
   http.Get("/api/v1/songs",
            [&](auto &, auto &res) { output(res, storage.songs()); });
   http.Get("/api/v1/songs/trash",
@@ -66,23 +69,33 @@ void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate) {
           error(res, e, 404);
         }
       });
-  http.Get(R"(/api/v1/songs/([^/]+)/events)", [&storage, rate](const auto &req,
+  http.Get(R"(/api/v1/songs/([^/]+)/events)", [&storage, rate, cache](const auto &req,
                                                                auto &res) {
     try {
-      auto s = storage.song(req.matches[1]);
+      std::lock_guard lock(cache->mutex);
+      const std::string id = req.matches[1];
+      const auto revision = storage.libraryRevision();
+      if (!cache->window || cache->id != id || cache->revision != revision) {
+        cache->window = std::make_unique<SongWindow>(storage.song(id));
+        cache->id = id; cache->revision = revision;
+      }
       double from = req.has_param("fromTick")
                         ? std::stod(req.get_param_value("fromTick"))
                         : 0,
              to = req.has_param("toTick")
                       ? std::stod(req.get_param_value("toTick"))
-                      : s["ppq"].template get<double>() * 16;
+                      : cache->window->ppq() * 16;
       unsigned limit = req.has_param("limit")
                            ? std::stoul(req.get_param_value("limit"))
                            : 4096;
       if (!std::isfinite(from) || !std::isfinite(to) || from < 0 || to < from ||
           !limit || limit > 4096)
         throw std::invalid_argument("Invalid event window; limit 1–4096.");
-      output(res, {{"notes", songEvents(s, from, to, rate, limit)},
+      auto notes = cache->window->query(from, to, rate, limit + 1);
+      const bool truncated = notes.size() > limit;
+      if (truncated) notes.erase(notes.end()-1);
+      output(res, {{"notes", notes}, {"truncated", truncated},
+                   {"inspected", cache->window->inspected()},
                    {"fromTick", from},
                    {"toTick", to},
                    {"limit", limit}});

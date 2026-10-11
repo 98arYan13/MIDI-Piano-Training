@@ -3,6 +3,17 @@
 #include <sightreading/Engine.hpp>
 #include <sightreading/Practice.hpp>
 using namespace sightreading;
+TEST_CASE("Practice integer validation rejects wide values before narrowing", "[practice][bounds]") {
+  for (const json value : {json(4294967296ULL), json(UINT64_MAX), json(-1), json(true), json(1.5)}) {
+    auto config = defaultPracticeConfig();
+    config["seed"] = value;
+    REQUIRE_THROWS(validatePracticeConfig(config));
+  }
+  for (int value : {0, 2147483647}) {
+    auto config = defaultPracticeConfig(); config["seed"] = value;
+    REQUIRE_NOTHROW(validatePracticeConfig(config));
+  }
+}
 TEST_CASE("Native theory spells all keys and minor alterations", "[practice]") {
   for (auto key : {"C", "G", "D", "A", "E", "B", "F", "Bb", "Eb", "Ab", "Db",
                    "Gb", "Chromatic"}) {

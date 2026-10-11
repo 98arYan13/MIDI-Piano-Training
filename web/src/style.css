@@ -751,3 +751,54 @@ summary {
   font-size: 11px;
   line-height: 1.6;
 }
+@media (min-width: 900px) and (max-height: 900px) {
+  main { padding: 12px 20px; }
+  .workspace-heading { margin-bottom: 10px; }
+  .workspace-heading h1 { margin: 4px 0 0; font-size: 25px; }
+  .workspace .workspace-heading .eyebrow { display: none; }
+  .workspace .workspace-heading { margin-bottom: 6px; }
+  .workspace-stage { min-height: 0; display: block; }
+  .workspace-footer { margin-top: 8px; }
+  .workspace .workspace-footer { display: none; }
+  .workspace .staff-preview-tools label { white-space: nowrap; }
+  .workspace .staff-preview-tools select { padding: 6px; }
+  .workspace .staff-preview-tools button { padding: 7px 9px; }
+  .workspace .practice-settings { margin: 6px 24px; padding: 6px 8px; }
+  .piano-panel { margin-top: 12px; padding: 10px 14px; }
+  .piano-heading { margin-bottom: 6px; }
+  .piano-heading h2 { font-size: 16px; margin: 0; }
+  .piano-panel .piano-heading .eyebrow { display: none; }
+  .piano-panel .piano-heading button,.piano-panel .piano-tools button { padding: 5px 9px; }
+  .piano-panel .piano-heading { margin-bottom: 4px; }
+  .piano-panel .piano-tools { margin-bottom: 4px; }
+  .piano-tools { margin-bottom: 6px; gap: 8px; }
+  .piano-keys { height: 104px; }
+  .piano-key.white { height: 100px; }
+  .piano-key.black { height: 64px; }
+  .piano-legend { margin-top: 4px; font-size: 10px; }
+  .staff-practice { padding: 8px 0; }
+  .staff-preview-tools { padding-bottom: 6px; gap: 8px; }
+  .practice-stats { padding-top: 4px; padding-bottom: 4px; }
+  .staff-practice .helper { font-size: 11px; margin: 6px 0; }
+  .practice-settings { padding: 8px; margin-top: 6px; }
+  .ear-flash { padding: 12px; }
+  .exercise-top h2 { font-size: 24px; }
+  .exercise-settings { padding: 8px; margin: 8px 0; }
+  .exercise-actions,.exercise-stats { margin: 8px 0; }
+  .play-along { gap: 14px; }
+  .transport-buttons,.scoreline { margin: 8px 0; gap: 8px; }
+  .song-workspace > label { margin: 6px 0; }
+  .song-list { max-height: 285px; }
+  .play-along .song-list { max-height: 150px; margin: 8px 0; }
+  .play-along .song-row { padding: 3px 0; }
+  .play-along .song-row button:first-child { padding: 5px; }
+  .play-along .upload { padding: 8px; margin-bottom: 6px; }
+  .play-along .song-workspace { display: grid; grid-template-columns: minmax(0,1fr) auto; column-gap: 12px; align-content: start; }
+  .play-along .song-workspace > label:first-of-type { grid-column: 1; grid-row: 1; margin: 2px 0; }
+  .play-along .transport-buttons { grid-column: 2; grid-row: 1; align-self: center; margin: 0; }
+  .play-along .transport-buttons button { padding: 7px 9px; }
+  .play-along .song-workspace > label:nth-of-type(2) { grid-column: 1; grid-row: 2; margin: 4px 0; }
+  .play-along .song-settings { grid-column: 2; grid-row: 2; align-self: center; margin: 4px 0; padding: 8px; }
+  .play-along .song-settings[open] { grid-column: 1 / -1; grid-row: auto; }
+  .play-along .song-workspace > .scrolling-staff,.play-along .scoreline,.play-along .song-workspace > p { grid-column: 1 / -1; }
+}

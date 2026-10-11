@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 #include <sightreading/Practice.hpp>
 #include <sightreading/Transport.hpp>
 namespace sightreading {
@@ -99,6 +100,7 @@ void Transport::cancel() {
 void Transport::load(json s) {
   cancel();
   song_ = std::move(s);
+  window_ = std::make_unique<SongWindow>(song_);
   prepareSongTiming(song_);
   position_ = 0;
   config_["a"] = 0;
@@ -1009,8 +1011,31 @@ json songEvents(const json &song, double from, double to, unsigned rate,
   return result;
 }
 json Transport::events(double from, double to, unsigned limit) const {
-  return song_.is_null()
+  return !window_
              ? json::array()
-             : songEvents(song_, from, to, engine_.sampleRate(), limit);
+             : window_->query(from, to, engine_.sampleRate(), limit);
+}
+SongWindow::SongWindow(json song) : metadata_(std::move(song)) {
+  prepareSongTiming(metadata_);
+  notes_ = std::move(metadata_["notes"]); metadata_.erase("notes"); metadata_.erase("rawEvents"); metadata_.erase("controllers");
+  order_.resize(notes_.size()); std::iota(order_.begin(),order_.end(),0);
+  std::stable_sort(order_.begin(),order_.end(),[&](size_t a,size_t b){return notes_[a]["startTick"].get<double>()<notes_[b]["startTick"].get<double>();});
+  base_=1; while(base_<order_.size())base_*=2;
+  ends_.assign(base_*2,-1);
+  for(size_t i=0;i<order_.size();i++)ends_[base_+i]=notes_[order_[i]]["endTick"].get<double>();
+  for(size_t i=base_;--i;)ends_[i]=std::max(ends_[i*2],ends_[i*2+1]);
+}
+void SongWindow::collect(size_t node,size_t left,size_t right,double from,double to,std::vector<size_t> &found,unsigned limit) const {
+  ++inspected_;
+  if(found.size()>=limit || left>=order_.size() || ends_[node]<from || notes_[order_[left]]["startTick"].get<double>()>to)return;
+  if(right-left==1){found.push_back(order_[left]);return;}
+  const auto middle=(left+right)/2;
+  collect(node*2,left,middle,from,to,found,limit); collect(node*2+1,middle,right,from,to,found,limit);
+}
+json SongWindow::query(double from,double to,unsigned rate,unsigned limit) const {
+  inspected_=0; std::vector<size_t> found; collect(1,0,base_,from,to,found,limit);
+  std::sort(found.begin(),found.end()); auto selected=metadata_; selected["notes"]=json::array();
+  for(auto i:found)selected["notes"].push_back(notes_[i]);
+  return songEvents(selected,from,to,rate,limit);
 }
 } // namespace sightreading

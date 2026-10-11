@@ -1,0 +1,1366 @@
+{
+  "started": "2026-10-11T21:40:25.436Z",
+  "ended": "2026-10-11T22:10:25.626Z",
+  "elapsedMs": 1800190,
+  "iterations": 7158,
+  "initial": {
+    "audioOutputs": [
+      {
+        "defaultSampleRate": 48000,
+        "id": 0,
+        "name": "Realtek Digital Output (Realtek USB Audio)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 1,
+        "name": "Headphones (Realtek USB Audio)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 2,
+        "name": "Speakers (DualSense Wireless Controller)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 3,
+        "name": "Speakers (Realtek USB Audio)"
+      }
+    ],
+    "audioReady": true,
+    "devices": [],
+    "disabledInputs": {},
+    "dropouts": 0,
+    "ear": {
+      "accuracy": 0,
+      "answerLocked": false,
+      "answered": false,
+      "autoplay": false,
+      "config": {
+        "continuous": false,
+        "directions": [
+          "up"
+        ],
+        "groups": 4,
+        "intervals": [
+          "m2",
+          "M2",
+          "m3",
+          "M3",
+          "P4",
+          "TT",
+          "P5",
+          "m6",
+          "M6",
+          "m7",
+          "M7",
+          "P8"
+        ],
+        "melodyDirection": "any",
+        "mode": "interval",
+        "order": "ordered",
+        "pitchWheel": false,
+        "pitches": 1,
+        "playOrder": "forward",
+        "randomRoot": false,
+        "range": {
+          "max": 84,
+          "min": 48
+        },
+        "root": 60,
+        "tempo": 100,
+        "transpose": 0
+      },
+      "elapsed": 0,
+      "endFrame": 0,
+      "error": "",
+      "feedback": "",
+      "hits": 0,
+      "index": 0,
+      "misses": 0,
+      "notes": [],
+      "pauseFrame": 933248,
+      "paused": false,
+      "playing": false,
+      "revision": 0,
+      "target": null
+    },
+    "engineTimeNs": 25220196540200,
+    "error": null,
+    "externalErrors": 0,
+    "externalPortOpens": 0,
+    "flash": {
+      "accuracy": 0,
+      "answerLocked": false,
+      "answered": false,
+      "config": {
+        "distances": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "inversions": [
+          0,
+          1,
+          2
+        ],
+        "keys": [
+          "C",
+          "G",
+          "D",
+          "A",
+          "E",
+          "B",
+          "F",
+          "Bb",
+          "Eb",
+          "Ab",
+          "Db",
+          "Gb"
+        ],
+        "mode": "noteMath",
+        "roots": [
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "A",
+          "B"
+        ],
+        "staff": "treble"
+      },
+      "feedback": "",
+      "hits": 0,
+      "misses": 0,
+      "revision": 0,
+      "target": null
+    },
+    "generation": 25200797,
+    "heldNotes": [],
+    "livePool": {
+      "attackCapacity": 960,
+      "releaseReserve": 64,
+      "stealing": false,
+      "voices": 1024
+    },
+    "metronome": {
+      "accents": [
+        "strong",
+        "weak",
+        "weak",
+        "weak"
+      ],
+      "activeMeter": {
+        "denominator": 4,
+        "numerator": 4
+      },
+      "activeTempo": 137,
+      "bar": 10,
+      "beat": 1,
+      "beatUnit": 4,
+      "countIn": 0,
+      "meter": {
+        "denominator": 4,
+        "numerator": 4
+      },
+      "mode": "independent",
+      "mute": false,
+      "running": true,
+      "settings": {
+        "accents": [
+          "strong",
+          "weak",
+          "weak",
+          "weak"
+        ],
+        "beatUnit": 4,
+        "countIn": 0,
+        "meter": {
+          "denominator": 4,
+          "numerator": 4
+        },
+        "mode": "independent",
+        "mute": false,
+        "sound": "click",
+        "subdivision": "sixteenth",
+        "swing": 50,
+        "tempo": 137,
+        "volume": 0.699999988079071
+      },
+      "sound": "click",
+      "subdivision": "sixteenth",
+      "swing": 50,
+      "tempo": 137,
+      "volume": 0.699999988079071
+    },
+    "midiOutputs": [
+      {
+        "id": 0,
+        "name": "Microsoft GS Wavetable Synth 0"
+      }
+    ],
+    "monitor": [],
+    "output": {
+      "actualFrames": 128,
+      "actualSampleRate": 48000,
+      "backend": "WASAPI",
+      "exclusive": false,
+      "latencyMs": 22,
+      "name": "Speakers (Realtek USB Audio)",
+      "requestedFrames": 128,
+      "requestedSampleRate": 48000
+    },
+    "overload": 0,
+    "pendingChange": null,
+    "pianoLoading": false,
+    "pianoReady": true,
+    "practice": {
+      "accuracy": 0,
+      "clockFrame": 0,
+      "config": {
+        "generator": "random",
+        "generatorOptions": {
+          "chordBased": false,
+          "commonNotes": 0,
+          "hands": 2,
+          "ignoreAbove": 108,
+          "intervals": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "inversions": true,
+          "keys": [
+            "C"
+          ],
+          "multiKey": false,
+          "notes": 1,
+          "openVoicing": false,
+          "progression": "autumnLeaves",
+          "randomChords": true,
+          "scale": "major",
+          "startingFinger": 1,
+          "tones": 3
+        },
+        "key": "C",
+        "mode": "wait",
+        "range": {
+          "max": 84,
+          "min": 48
+        },
+        "seed": 1,
+        "smoothness": 3,
+        "staff": "treble",
+        "tempo": 100,
+        "toleranceMs": 150
+      },
+      "elapsed": 0,
+      "error": "",
+      "hits": 0,
+      "index": 0,
+      "misses": 0,
+      "notes": [],
+      "originFrame": 0,
+      "pressed": [],
+      "revision": 0,
+      "running": false,
+      "targets": []
+    },
+    "sampleFrame": 933248,
+    "sampleRate": 48000,
+    "settings": {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "exclusive": false,
+      "externalDevice": -1,
+      "monitoring": true,
+      "outputDevice": -1,
+      "outputMode": "internal",
+      "velocityCurve": 1,
+      "volume": 0.7
+    },
+    "transport": {
+      "accompanimentError": "",
+      "accuracy": 0,
+      "channelControllers": {},
+      "config": {
+        "a": 0,
+        "accompaniment": "Off",
+        "accompanimentSpacing": 1,
+        "b": 7680,
+        "hearPractice": false,
+        "loop": false,
+        "mode": "continuous",
+        "practiceEnabled": true,
+        "rate": 1,
+        "spacing": 110,
+        "speed": 1,
+        "toleranceMs": 150
+      },
+      "engineTimeNs": 25220196540200,
+      "error": "",
+      "followError": "",
+      "generation": 2,
+      "group": 0,
+      "hits": 0,
+      "misses": 0,
+      "pumpEntries": 0,
+      "retry": false,
+      "revision": 2,
+      "sampleFrame": 933248,
+      "sampleRate": 48000,
+      "songId": "starter-bach",
+      "songSeconds": 0,
+      "songTick": 0,
+      "speed": 1,
+      "state": "stopped",
+      "target": [
+        60
+      ],
+      "tempo": 89.9999550000225,
+      "title": "BWV 846 — short excerpt"
+    },
+    "voiceRefusals": 0
+  },
+  "final": {
+    "audioOutputs": [
+      {
+        "defaultSampleRate": 48000,
+        "id": 0,
+        "name": "Realtek Digital Output (Realtek USB Audio)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 1,
+        "name": "Headphones (Realtek USB Audio)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 2,
+        "name": "Speakers (DualSense Wireless Controller)"
+      },
+      {
+        "defaultSampleRate": 48000,
+        "id": 3,
+        "name": "Speakers (Realtek USB Audio)"
+      }
+    ],
+    "audioReady": true,
+    "devices": [],
+    "disabledInputs": {},
+    "dropouts": 0,
+    "ear": {
+      "accuracy": 0,
+      "answerLocked": true,
+      "answered": false,
+      "autoplay": false,
+      "config": {
+        "continuous": false,
+        "directions": [
+          "up"
+        ],
+        "groups": 4,
+        "intervals": [
+          "m2",
+          "M2",
+          "m3",
+          "M3",
+          "P4",
+          "TT",
+          "P5",
+          "m6",
+          "M6",
+          "m7",
+          "M7",
+          "P8"
+        ],
+        "melodyDirection": "any",
+        "mode": "interval",
+        "order": "ordered",
+        "pitchWheel": false,
+        "pitches": 1,
+        "playOrder": "forward",
+        "randomRoot": false,
+        "range": {
+          "max": 84,
+          "min": 48
+        },
+        "root": 60,
+        "tempo": 100,
+        "transpose": 0
+      },
+      "elapsed": 1800.1813333333334,
+      "endFrame": 87365120,
+      "error": "",
+      "feedback": "",
+      "hits": 0,
+      "index": 0,
+      "misses": 0,
+      "notes": [
+        {
+          "duration": "q",
+          "endFrame": 87330560,
+          "highlight": "target",
+          "id": "955",
+          "midiNote": 60,
+          "spelling": {
+            "accidental": "n",
+            "letter": "c",
+            "octave": 4
+          },
+          "startFrame": 87307520
+        },
+        {
+          "duration": "q",
+          "endFrame": 87359360,
+          "highlight": "target",
+          "id": "956",
+          "midiNote": 61,
+          "spelling": {
+            "accidental": "#",
+            "letter": "c",
+            "octave": 4
+          },
+          "startFrame": 87336320
+        }
+      ],
+      "pauseFrame": 87343360,
+      "paused": false,
+      "playing": true,
+      "revision": 1435,
+      "target": {
+        "direction": "up",
+        "groups": [
+          [
+            60
+          ],
+          [
+            61
+          ]
+        ],
+        "interval": "m2",
+        "mode": "interval",
+        "root": 60,
+        "semitones": 1
+      }
+    },
+    "engineTimeNs": 27020411553200,
+    "error": null,
+    "externalErrors": 0,
+    "externalPortOpens": 0,
+    "flash": {
+      "accuracy": 0,
+      "answerLocked": true,
+      "answered": false,
+      "config": {
+        "distances": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "inversions": [
+          0,
+          1,
+          2
+        ],
+        "keys": [
+          "C",
+          "G",
+          "D",
+          "A",
+          "E",
+          "B",
+          "F",
+          "Bb",
+          "Eb",
+          "Ab",
+          "Db",
+          "Gb"
+        ],
+        "mode": "noteMath",
+        "roots": [
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "A",
+          "B"
+        ],
+        "staff": "treble"
+      },
+      "feedback": "",
+      "hits": 0,
+      "misses": 0,
+      "revision": 0,
+      "target": null
+    },
+    "generation": 25200797,
+    "heldNotes": [
+      {
+        "bus": "live",
+        "channel": 0,
+        "held": true,
+        "instance": 1,
+        "note": 60,
+        "sounding": true,
+        "source": "soak-retained",
+        "sourceId": 1,
+        "sustained": false,
+        "velocity": 90
+      },
+      {
+        "bus": "playback",
+        "channel": 0,
+        "held": true,
+        "instance": 1,
+        "note": 60,
+        "sounding": true,
+        "source": "native:126",
+        "sourceId": 126,
+        "sustained": false,
+        "velocity": 82
+      },
+      {
+        "bus": "playback",
+        "channel": 1,
+        "held": true,
+        "instance": 33,
+        "note": 48,
+        "sounding": true,
+        "source": "native:126",
+        "sourceId": 126,
+        "sustained": false,
+        "velocity": 55
+      },
+      {
+        "bus": "playback",
+        "channel": 1,
+        "held": true,
+        "instance": 34,
+        "note": 52,
+        "sounding": true,
+        "source": "native:126",
+        "sourceId": 126,
+        "sustained": false,
+        "velocity": 55
+      },
+      {
+        "bus": "playback",
+        "channel": 1,
+        "held": true,
+        "instance": 35,
+        "note": 55,
+        "sounding": true,
+        "source": "native:126",
+        "sourceId": 126,
+        "sustained": false,
+        "velocity": 55
+      },
+      {
+        "bus": "live",
+        "channel": 0,
+        "held": true,
+        "instance": 7159,
+        "note": 78,
+        "sounding": true,
+        "source": "soak",
+        "sourceId": 2,
+        "sustained": false,
+        "velocity": 118
+      },
+      {
+        "bus": "playback",
+        "channel": 0,
+        "held": true,
+        "instance": 1008102,
+        "note": 48,
+        "sounding": true,
+        "source": "native:127",
+        "sourceId": 127,
+        "sustained": false,
+        "velocity": 65
+      },
+      {
+        "bus": "playback",
+        "channel": 0,
+        "held": true,
+        "instance": 1008103,
+        "note": 52,
+        "sounding": true,
+        "source": "native:127",
+        "sourceId": 127,
+        "sustained": false,
+        "velocity": 65
+      },
+      {
+        "bus": "playback",
+        "channel": 0,
+        "held": true,
+        "instance": 1008104,
+        "note": 55,
+        "sounding": true,
+        "source": "native:127",
+        "sourceId": 127,
+        "sustained": false,
+        "velocity": 65
+      },
+      {
+        "bus": "example",
+        "channel": 0,
+        "held": true,
+        "instance": 956,
+        "note": 61,
+        "sounding": true,
+        "source": "native:125",
+        "sourceId": 125,
+        "sustained": false,
+        "velocity": 90
+      }
+    ],
+    "livePool": {
+      "attackCapacity": 960,
+      "releaseReserve": 64,
+      "stealing": false,
+      "voices": 1024
+    },
+    "metronome": {
+      "accents": [
+        "strong",
+        "weak",
+        "weak",
+        "weak"
+      ],
+      "activeMeter": {
+        "denominator": 4,
+        "numerator": 4
+      },
+      "activeTempo": 137,
+      "bar": 1038,
+      "beat": 0,
+      "beatUnit": 4,
+      "countIn": 0,
+      "meter": {
+        "denominator": 4,
+        "numerator": 4
+      },
+      "mode": "independent",
+      "mute": false,
+      "running": true,
+      "settings": {
+        "accents": [
+          "strong",
+          "weak",
+          "weak",
+          "weak"
+        ],
+        "beatUnit": 4,
+        "countIn": 0,
+        "meter": {
+          "denominator": 4,
+          "numerator": 4
+        },
+        "mode": "independent",
+        "mute": false,
+        "sound": "click",
+        "subdivision": "sixteenth",
+        "swing": 50,
+        "tempo": 137,
+        "volume": 0.699999988079071
+      },
+      "sound": "click",
+      "subdivision": "sixteenth",
+      "swing": 50,
+      "tempo": 137,
+      "volume": 0.699999988079071
+    },
+    "midiOutputs": [
+      {
+        "id": 0,
+        "name": "Microsoft GS Wavetable Synth 0"
+      }
+    ],
+    "monitor": [],
+    "output": {
+      "actualFrames": 128,
+      "actualSampleRate": 48000,
+      "backend": "WASAPI",
+      "exclusive": false,
+      "latencyMs": 22,
+      "name": "Speakers (Realtek USB Audio)",
+      "requestedFrames": 128,
+      "requestedSampleRate": 48000
+    },
+    "overload": 0,
+    "pendingChange": null,
+    "pianoLoading": false,
+    "pianoReady": true,
+    "practice": {
+      "accuracy": 0,
+      "clockFrame": 0,
+      "config": {
+        "generator": "random",
+        "generatorOptions": {
+          "chordBased": false,
+          "commonNotes": 0,
+          "hands": 2,
+          "ignoreAbove": 108,
+          "intervals": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "inversions": true,
+          "keys": [
+            "C"
+          ],
+          "multiKey": false,
+          "notes": 1,
+          "openVoicing": false,
+          "progression": "autumnLeaves",
+          "randomChords": true,
+          "scale": "major",
+          "startingFinger": 1,
+          "tones": 3
+        },
+        "key": "C",
+        "mode": "wait",
+        "range": {
+          "max": 84,
+          "min": 48
+        },
+        "seed": 1,
+        "smoothness": 3,
+        "staff": "treble",
+        "tempo": 100,
+        "toleranceMs": 150
+      },
+      "elapsed": 0,
+      "error": "",
+      "hits": 0,
+      "index": 0,
+      "misses": 0,
+      "notes": [],
+      "originFrame": 0,
+      "pressed": [
+        {
+          "channel": 0,
+          "instance": 1,
+          "note": 60,
+          "sourceId": 1
+        },
+        {
+          "channel": 0,
+          "instance": 7159,
+          "note": 78,
+          "sourceId": 2
+        }
+      ],
+      "revision": 0,
+      "running": false,
+      "targets": []
+    },
+    "sampleFrame": 87343360,
+    "sampleRate": 48000,
+    "settings": {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "exclusive": false,
+      "externalDevice": -1,
+      "monitoring": true,
+      "outputDevice": -1,
+      "outputMode": "internal",
+      "velocityCurve": 1,
+      "volume": 0.7
+    },
+    "transport": {
+      "accompanimentError": "",
+      "accuracy": 0,
+      "channelControllers": {},
+      "config": {
+        "a": 0,
+        "accompaniment": "Triad",
+        "accompanimentSpacing": 1,
+        "b": 1920,
+        "hearPractice": true,
+        "loop": true,
+        "mode": "continuous",
+        "practiceEnabled": false,
+        "rate": 1,
+        "spacing": 110,
+        "speed": 1,
+        "toleranceMs": 150
+      },
+      "engineTimeNs": 27020411553200,
+      "error": "",
+      "followError": "",
+      "generation": 4,
+      "group": 0,
+      "hits": 0,
+      "misses": 0,
+      "pumpEntries": 0,
+      "retry": false,
+      "revision": 4,
+      "sampleFrame": 87343360,
+      "sampleRate": 48000,
+      "songId": "starter-bach",
+      "songSeconds": 0.185766666666626,
+      "songTick": 133.75193312400415,
+      "speed": 1,
+      "state": "playing",
+      "target": [
+        60
+      ],
+      "tempo": 89.9999550000225,
+      "title": "BWV 846 — short excerpt"
+    },
+    "voiceRefusals": 0
+  },
+  "readings": [
+    {
+      "elapsedMs": 25181,
+      "sampleFrame": 2142848,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 50288,
+      "sampleFrame": 3348096,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 75435,
+      "sampleFrame": 4555264,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 100529,
+      "sampleFrame": 5759616,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 125624,
+      "sampleFrame": 6964480,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 150817,
+      "sampleFrame": 8173568,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 175993,
+      "sampleFrame": 9382144,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 201186,
+      "sampleFrame": 10591360,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 226344,
+      "sampleFrame": 11799040,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 251517,
+      "sampleFrame": 13007104,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 276698,
+      "sampleFrame": 14215808,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 301928,
+      "sampleFrame": 15426816,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 327099,
+      "sampleFrame": 16635008,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 352226,
+      "sampleFrame": 17841280,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 377462,
+      "sampleFrame": 19052544,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 402667,
+      "sampleFrame": 20262400,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 427794,
+      "sampleFrame": 21468544,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 452914,
+      "sampleFrame": 22674304,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 478055,
+      "sampleFrame": 23881088,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 503175,
+      "sampleFrame": 25086848,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 528364,
+      "sampleFrame": 26295680,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 553478,
+      "sampleFrame": 27501184,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 578649,
+      "sampleFrame": 28709376,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 603856,
+      "sampleFrame": 29919488,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 629022,
+      "sampleFrame": 31127680,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 654182,
+      "sampleFrame": 32335360,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 679326,
+      "sampleFrame": 33542016,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 704468,
+      "sampleFrame": 34748800,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 729630,
+      "sampleFrame": 35956480,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 754835,
+      "sampleFrame": 37166464,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 780022,
+      "sampleFrame": 38375680,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 805154,
+      "sampleFrame": 39581824,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 830268,
+      "sampleFrame": 40787200,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 855454,
+      "sampleFrame": 41996288,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 880622,
+      "sampleFrame": 43204480,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 905787,
+      "sampleFrame": 44412160,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 930976,
+      "sampleFrame": 45621248,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 956160,
+      "sampleFrame": 46829824,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 981358,
+      "sampleFrame": 48039424,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1006523,
+      "sampleFrame": 49247616,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1031644,
+      "sampleFrame": 50453376,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1056834,
+      "sampleFrame": 51662464,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1082050,
+      "sampleFrame": 52873088,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1107147,
+      "sampleFrame": 54077440,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1132284,
+      "sampleFrame": 55284096,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1157421,
+      "sampleFrame": 56490496,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1182495,
+      "sampleFrame": 57694208,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1207555,
+      "sampleFrame": 58897024,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1232667,
+      "sampleFrame": 60102400,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1257671,
+      "sampleFrame": 61302784,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1282740,
+      "sampleFrame": 62505728,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1307809,
+      "sampleFrame": 63709056,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1332920,
+      "sampleFrame": 64914816,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1358056,
+      "sampleFrame": 66121088,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1383178,
+      "sampleFrame": 67326848,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1408254,
+      "sampleFrame": 68530688,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1433384,
+      "sampleFrame": 69736704,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1458524,
+      "sampleFrame": 70943616,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1483680,
+      "sampleFrame": 72150784,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1508747,
+      "sampleFrame": 73354240,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1533891,
+      "sampleFrame": 74560896,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1558968,
+      "sampleFrame": 75764736,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1584057,
+      "sampleFrame": 76969088,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1609154,
+      "sampleFrame": 78173824,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1634346,
+      "sampleFrame": 79383040,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1659580,
+      "sampleFrame": 80594048,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1684823,
+      "sampleFrame": 81806080,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1710036,
+      "sampleFrame": 83016064,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1735258,
+      "sampleFrame": 84226688,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1760476,
+      "sampleFrame": 85437184,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    },
+    {
+      "elapsedMs": 1785633,
+      "sampleFrame": 86644864,
+      "dropouts": 0,
+      "overload": 0,
+      "voiceRefusals": 0
+    }
+  ],
+  "audibleCapture": false,
+  "physicalMidi": false
+}

@@ -17,7 +17,13 @@ void choice(const json &c, const char *f, const std::vector<std::string> &a) {
     throw std::invalid_argument(std::string("Unsupported ") + f + ".");
 }
 void integer(const json &c, const char *f, int lo, int hi) {
-  if (!c[f].is_number_integer() || c[f].get<int>() < lo || c[f].get<int>() > hi)
+  const auto &value = c[f];
+  const bool valid = value.is_number_unsigned()
+      ? value.get<uint64_t>() <= uint64_t(hi) &&
+            (lo <= 0 || value.get<uint64_t>() >= uint64_t(lo))
+      : value.is_number_integer() && value.get<int64_t>() >= lo &&
+            value.get<int64_t>() <= hi;
+  if (!valid)
     throw std::invalid_argument(std::string(f) + " must be " +
                                 std::to_string(lo) + "–" + std::to_string(hi) +
                                 ".");

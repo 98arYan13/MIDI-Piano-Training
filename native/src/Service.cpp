@@ -8,6 +8,7 @@
 #include <sightreading/Storage.hpp>
 #include <sightreading/Transport.hpp>
 #include <sightreading/LibraryRoutes.hpp>
+#include <sightreading/Tray.hpp>
 #include <thread>
 #include <unordered_set>
 using json = nlohmann::json;
@@ -59,8 +60,10 @@ int main(int argc, char **argv) {
     dir = local ? std::filesystem::path(local) / "SightReading"
                 : std::filesystem::path("data");
     std::string web = "web/dist";
+    bool tray = true;
     for (int i = 1; i < argc; i++) {
       std::string arg = argv[i];
+      if (arg == "--no-tray") { tray = false; continue; }
       if ((arg == "--port" || arg == "--data-dir" || arg == "--web-dir") &&
           i + 1 < argc) {
         std::string value = argv[++i];
@@ -72,7 +75,7 @@ int main(int argc, char **argv) {
           web = value;
       } else
         throw std::invalid_argument("Usage: sightreading [--port 8765] "
-                                    "[--data-dir path] [--web-dir path]");
+                                    "[--data-dir path] [--web-dir path] [--no-tray]");
     }
     if (port < 1 || port > 65535)
       throw std::invalid_argument("Invalid port");
@@ -298,6 +301,9 @@ int main(int argc, char **argv) {
       res.set_content(value.dump(), "application/json");
       res.set_header("Cache-Control", "no-store");
     };
+    http.Post("/api/v1/shutdown", [&](auto &, auto &res) {
+      output(res, {{"stopping", true}}); stopping = true;
+    });
     http.Get("/api/v1/status",
              [&](auto &, auto &res) { output(res, state()); });
     http.Get("/api/v1/devices", [&](auto &, auto &res) {
@@ -533,7 +539,17 @@ int main(int argc, char **argv) {
       }
     });
     std::cout << "Sight Reading at " << origin << std::endl;
+    std::thread trayThread;
+    if (tray) trayThread = std::thread([&] { runTray(origin, stopping); });
+    std::jthread lifecycle([&](std::stop_token token) {
+      while (!token.stop_requested() && !stopping.load())
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      if (stopping.load()) http.stop();
+    });
     bool listened = http.listen("127.0.0.1", port);
+    stopping = true;
+    lifecycle.request_stop();
+    if (trayThread.joinable()) trayThread.join();
     pumping = false;
     pump.join();
     engine.stop();

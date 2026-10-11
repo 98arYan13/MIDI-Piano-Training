@@ -1,0 +1,48 @@
+{
+  "runtimePath": "C:\\Users\\Amin\\Documents\\ChatGPT\\Sight Reading\\build\\release\\SightReading",
+  "cleanPath": "C:\\WINDOWS\\System32",
+  "hardwareMidi": false,
+  "audibleCapture": false,
+  "readyMs": 1247.1403,
+  "output": {
+    "actualFrames": 128,
+    "actualSampleRate": 48000,
+    "backend": "WASAPI",
+    "exclusive": false,
+    "latencyMs": 22,
+    "name": "Speakers (Realtek USB Audio)",
+    "requestedFrames": 128,
+    "requestedSampleRate": 48000
+  },
+  "firstWindowMs": 69.71019999999999,
+  "cachedWindowMedianMs": 1.4774999999999636,
+  "cachedWindowMaxMs": 3.0732000000000426,
+  "hostBaselineFrames": {
+    "count": 275,
+    "durationMs": 4923.2,
+    "medianMs": 17.699999999999818,
+    "p95Ms": 18.199999999999818,
+    "maxMs": 71.6,
+    "fps": 55.85797855053624
+  },
+  "coldUiMs": 230.02779999999984,
+  "staffKeyboardBottom": 711.9375,
+  "notationFrames": {
+    "count": 276,
+    "durationMs": 5003.400000000001,
+    "medianMs": 18,
+    "p95Ms": 18.100000000000364,
+    "maxMs": 106.20000000000005,
+    "fps": 55.16248950713514
+  },
+  "cachedNotationFrames": {
+    "count": 281,
+    "durationMs": 5009.199999999999,
+    "medianMs": 18,
+    "p95Ms": 18.100000000000364,
+    "maxMs": 18.600000000000364,
+    "fps": 56.096781921264885
+  },
+  "playKeyboardBottom": 711.25,
+  "libraryRetained": true
+}

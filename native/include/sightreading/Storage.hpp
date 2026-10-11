@@ -12,6 +12,7 @@ class Storage {
   sqlite3 *db{};
   std::filesystem::path directory;
   std::mutex mutex;
+  uint64_t libraryRevision_{};
   using Statement = std::unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)>;
   Statement prepare(const char *text) {
     sqlite3_stmt *statement{};
@@ -91,6 +92,7 @@ public:
       throw std::runtime_error(sqlite3_errmsg(db));
   }
   nlohmann::json song(const std::string &id);
+  uint64_t libraryRevision() { std::lock_guard lock(mutex); return libraryRevision_; }
   void putSong(const nlohmann::json &model,const std::string &original);
   void patchSong(const std::string &id,const nlohmann::json &patch);
   void trashSong(const std::string &id,bool trashed);

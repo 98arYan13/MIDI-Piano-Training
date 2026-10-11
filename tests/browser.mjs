@@ -1,3 +1,4 @@
+import { browserPath } from "./browser-path.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdtemp, rm, mkdir } from "node:fs/promises";
@@ -23,7 +24,7 @@ try {
   }
   browser = await chromium.launch({
     executablePath:
-      "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+      browserPath(),
     headless: true,
   });
   const context = await browser.newContext({
@@ -56,7 +57,7 @@ try {
     await page.getByRole("link", { name: new RegExp(name) }).click();
     await page
       .getByRole("heading", {
-        name: name === "Guide" ? "Make a little progress, every day." : name,
+        name: name === "Guide" ? "Practice, with everything in reach." : name,
         exact: true,
       })
       .waitFor();

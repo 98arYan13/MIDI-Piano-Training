@@ -1,3 +1,4 @@
+import { browserPath } from "./browser-path.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdtemp, rm, readFile, mkdir, copyFile } from "node:fs/promises";
@@ -147,7 +148,7 @@ try {
   });
   browser = await chromium.launch({
     executablePath:
-      "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+      browserPath(),
     headless: true,
   });
   const page = await browser.newPage({
@@ -164,6 +165,7 @@ try {
   await until(async () => (await state()).transport.state === "playing");
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await until(async () => (await state()).transport.state === "paused");
+  await page.getByText("Playback settings, loops & tracks", {exact:true}).click();
   await page.getByLabel("Auto accompaniment").selectOption("Arp");
   await until(
     async () => (await state()).transport.config.accompaniment === "Arp",
