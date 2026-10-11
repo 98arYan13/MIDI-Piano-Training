@@ -1,0 +1,2 @@
+// Real Salamander sample; fixture isolates ownership from instrument complexity.
+<region> sample=../../assets/piano/Samples/C4v8.flac note_selfmask=off ampeg_release=1

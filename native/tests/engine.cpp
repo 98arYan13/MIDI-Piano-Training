@@ -1,0 +1,103 @@
+#include <catch2/catch_test_macros.hpp>
+#include <sightreading/Engine.hpp>
+#include <array>
+#include <cmath>
+#include <thread>
+#include <chrono>
+#include <portaudio.h>
+using namespace sightreading;
+using nlohmann::json;
+static EngineOptions fixture(){return {SR_ROOT "/native/tests/fixture.sfz",48000,128,false,true};}
+static json cmd(Engine& e,const char* type,json params={}){return e.command({{"version",1},{"id",1},{"type",type},{"params",params}});}
+static double audio(Engine& e,unsigned blocks=1){std::array<float,256> out{}; double sum=0; for(unsigned i=0;i<blocks;i++){e.render(out.data(),128); for(float f:out){REQUIRE(std::isfinite(f)); sum+=f*f;}}return sum;}
+
+TEST_CASE("Piano readiness requires genuine complete sampled instrument") {
+    Engine e(fixture()); REQUIRE(e.snapshot()["pianoReady"]==true); REQUIRE(e.snapshot()["audioReady"]==false);
+    Engine missing({SR_ROOT "/native/tests/missing.sfz",48000,128,false,true}); REQUIRE(missing.snapshot()["pianoReady"]==false); REQUIRE_FALSE(missing.snapshot()["error"].get<std::string>().empty());
+}
+TEST_CASE("Virtual disconnect and source off preserve hardware same pitch") {
+    Engine e(fixture());
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,9}));
+    REQUIRE(cmd(e,"virtual.noteOn",{{"source","browser:test"},{"instance",1},{"note",60},{"velocity",100}})["ok"]==true);
+    REQUIRE(audio(e,16)>0.0001); REQUIRE(e.snapshot()["heldNotes"].size()==2);
+    REQUIRE(cmd(e,"virtual.disconnect",{{"source","browser:test"}})["ok"]==true);
+    audio(e); REQUIRE(e.snapshot()["heldNotes"].size()==1); REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127);
+    REQUIRE(audio(e,64)>0.0001);
+}
+TEST_CASE("Playback stop and pedal changes cannot release live keys") {
+    Engine e(fixture());
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,9}));
+    REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,60,100,1})); audio(e);
+    REQUIRE(cmd(e,"bus.stop",{{"bus","playback"}})["ok"]==true); audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].size()==1); REQUIRE(e.snapshot()["heldNotes"][0]["bus"]=="live");
+}
+TEST_CASE("Browser pedal up and disconnect cannot release physical sustained voices") {
+    Engine e(fixture());
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127,0}));
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,9}));
+    REQUIRE(e.submit({EventType::Off,Bus::Live,127,0,60,0,9}));
+    REQUIRE(cmd(e,"virtual.pedal",{{"source","browser:test"},{"down",true}})["ok"]==true);
+    REQUIRE(cmd(e,"virtual.noteOn",{{"source","browser:test"},{"instance",1},{"note",60},{"velocity",100}})["ok"]==true);
+    REQUIRE(cmd(e,"virtual.noteOff",{{"source","browser:test"},{"instance",1}})["ok"]==true); audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].size()==2);
+    REQUIRE(cmd(e,"virtual.pedal",{{"source","browser:test"},{"down",false}})["ok"]==true); audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].size()==1); REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127); REQUIRE(e.snapshot()["heldNotes"][0]["held"]==false);
+    cmd(e,"virtual.disconnect",{{"source","browser:test"}}); audio(e,64);
+    REQUIRE(e.snapshot()["heldNotes"].size()==1);
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,0,0})); audio(e); REQUIRE(e.snapshot()["heldNotes"].empty());
+}
+TEST_CASE("Pedal holds source notes and defers disruptive settings until release") {
+    Engine e(fixture());
+    REQUIRE(cmd(e,"virtual.pedal",{{"source","browser:test"},{"down",true}})["ok"]==true);
+    REQUIRE(cmd(e,"virtual.noteOn",{{"source","browser:test"},{"instance",1},{"note",60},{"velocity",100}})["ok"]==true); audio(e);
+    REQUIRE(cmd(e,"virtual.noteOff",{{"source","browser:test"},{"instance",1}})["ok"]==true); audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].size()==1); REQUIRE(e.snapshot()["heldNotes"][0]["held"]==false);
+    REQUIRE(cmd(e,"audio.settings",{{"outputMode","silent"}})["ok"]==true); REQUIRE_FALSE(e.snapshot()["pendingChange"].is_null());
+    REQUIRE(cmd(e,"virtual.pedal",{{"source","browser:test"},{"down",false}})["ok"]==true); audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].empty());
+    cmd(e,"audio.applyPending"); REQUIRE(e.snapshot()["pendingChange"].is_null()); REQUIRE(e.snapshot()["settings"]["outputMode"]=="silent");
+}
+TEST_CASE("Versioned commands reject malformed parameters without allocating notes") {
+    Engine e(fixture());
+    REQUIRE_FALSE(cmd(e,"virtual.noteOn",{{"source","browser:test"},{"instance",1},{"note",999},{"velocity",100}})["ok"].get<bool>());
+    REQUIRE_FALSE(e.command({{"version",2},{"id",2},{"type","panic"},{"params",json::object()}})["ok"].get<bool>());
+    REQUIRE(cmd(e,"unknown")["error"]["code"]=="unknown_command"); REQUIRE(e.snapshot()["heldNotes"].empty());
+}
+TEST_CASE("Stopping playback cancels scheduled future attacks and keeps the native hook running") {
+    Engine e(fixture());
+    unsigned hookCalls=0;
+    e.setRenderHook([](float*,unsigned,uint64_t,void* p) noexcept{++*static_cast<unsigned*>(p);},&hookCalls);
+    InputEvent future{EventType::On,Bus::Playback,126,0,60,100,1,500}; REQUIRE(e.submit(future));
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));
+    REQUIRE(cmd(e,"bus.stop",{{"bus","playback"}})["ok"]==true);
+    audio(e,8); REQUIRE(hookCalls==8); REQUIRE(e.snapshot()["heldNotes"].size()==1); REQUIRE(e.snapshot()["heldNotes"][0]["bus"]=="live");
+}
+TEST_CASE("Events use the native sample frame precisely") {
+    std::array<uint64_t,2> observed{};Engine e(fixture());
+    e.setInputHook([](const InputEvent& event,uint64_t frame,void* p) noexcept{auto* times=static_cast<uint64_t*>(p);times[event.type==EventType::On?0:1]=frame;},observed.data());
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1,37}));
+    REQUIRE(e.submit({EventType::Off,Bus::Live,127,0,60,0,1,211}));audio(e,2);
+    REQUIRE(observed[0]==37);REQUIRE(observed[1]==211);REQUIRE(e.sampleFrame()==256);REQUIRE(e.snapshot()["heldNotes"].empty());
+}
+TEST_CASE("Explicit Panic notifies the native global hook and clears notes") {
+    bool stopped=false;Engine e(fixture());
+    e.setInputHook([](const InputEvent& event,uint64_t,void* p) noexcept{if(event.type==EventType::Panic)*static_cast<bool*>(p)=true;},&stopped);
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));audio(e);
+    REQUIRE(cmd(e,"panic")["ok"]==true);audio(e);
+    REQUIRE(stopped);REQUIRE(e.snapshot()["heldNotes"].empty());
+}
+TEST_CASE("Native sample clock can run while a missing piano is reported not ready") {
+    REQUIRE(Pa_Initialize()==paNoError);auto host=Pa_HostApiTypeIdToHostApiIndex(paWASAPI);bool available=host>=0&&Pa_GetHostApiInfo(host)->defaultOutputDevice>=0;Pa_Terminate();
+    Engine e({SR_ROOT "/native/tests/missing.sfz"});e.start();
+    for(unsigned i=0;i<100&&e.snapshot()["pianoLoading"]==true;++i)std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    auto state=e.snapshot();REQUIRE(state["pianoReady"]==false);
+    if(available) {REQUIRE(state["audioReady"]==true);std::this_thread::sleep_for(std::chrono::milliseconds(40));REQUIRE(e.sampleFrame()>0);}
+    e.stop();
+}
+TEST_CASE("Release overflow recovers only the pressured source") {
+    Engine e(fixture()); REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));audio(e);
+    for(unsigned i=0;i<3072;++i)REQUIRE(e.submit({EventType::On,Bus::Live,1,0,64,100,i+1}));
+    for(unsigned i=0;i<1024;++i)REQUIRE(e.submit({EventType::Off,Bus::Live,1,0,64,0,i+1}));
+    REQUIRE_FALSE(e.submit({EventType::Off,Bus::Live,1,0,64,0,1}));audio(e);
+    REQUIRE(e.snapshot()["heldNotes"].size()==1);REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127);REQUIRE(e.snapshot()["heldNotes"][0]["held"]==true);REQUIRE(e.snapshot()["heldNotes"][0]["sounding"]==true);
+}

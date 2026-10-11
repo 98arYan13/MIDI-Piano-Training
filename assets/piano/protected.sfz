@@ -1,0 +1,635 @@
+// Independently generated protected Salamander mapping. See ATTRIBUTION.md.
+<control> default_path=Samples/
+<global> note_selfmask=off amp_veltrack=73 ampeg_release=1.5
+<group> trigger=attack lovel=1 hivel=26
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v1.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v1.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v1.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v1.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v1.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v1.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v1.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v1.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v1.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v1.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v1.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v1.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v1.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v1.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v1.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v1.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v1.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v1.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v1.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v1.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v1.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v1.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v1.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v1.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v1.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v1.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v1.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v1.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v1.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v1.flac
+<group> trigger=attack lovel=27 hivel=34
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v2.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v2.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v2.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v2.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v2.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v2.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v2.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v2.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v2.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v2.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v2.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v2.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v2.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v2.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v2.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v2.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v2.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v2.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v2.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v2.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v2.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v2.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v2.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v2.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v2.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v2.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v2.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v2.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v2.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v2.flac
+<group> trigger=attack lovel=35 hivel=36
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v3.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v3.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v3.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v3.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v3.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v3.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v3.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v3.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v3.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v3.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v3.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v3.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v3.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v3.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v3.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v3.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v3.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v3.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v3.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v3.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v3.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v3.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v3.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v3.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v3.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v3.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v3.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v3.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v3.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v3.flac
+<group> trigger=attack lovel=37 hivel=43
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v4.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v4.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v4.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v4.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v4.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v4.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v4.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v4.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v4.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v4.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v4.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v4.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v4.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v4.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v4.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v4.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v4.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v4.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v4.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v4.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v4.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v4.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v4.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v4.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v4.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v4.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v4.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v4.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v4.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v4.flac
+<group> trigger=attack lovel=44 hivel=46
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v5.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v5.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v5.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v5.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v5.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v5.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v5.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v5.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v5.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v5.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v5.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v5.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v5.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v5.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v5.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v5.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v5.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v5.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v5.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v5.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v5.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v5.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v5.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v5.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v5.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v5.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v5.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v5.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v5.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v5.flac
+<group> trigger=attack lovel=47 hivel=50
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v6.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v6.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v6.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v6.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v6.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v6.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v6.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v6.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v6.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v6.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v6.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v6.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v6.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v6.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v6.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v6.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v6.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v6.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v6.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v6.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v6.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v6.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v6.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v6.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v6.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v6.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v6.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v6.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v6.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v6.flac
+<group> trigger=attack lovel=51 hivel=56
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v7.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v7.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v7.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v7.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v7.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v7.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v7.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v7.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v7.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v7.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v7.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v7.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v7.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v7.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v7.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v7.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v7.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v7.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v7.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v7.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v7.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v7.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v7.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v7.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v7.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v7.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v7.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v7.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v7.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v7.flac
+<group> trigger=attack lovel=57 hivel=64
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v8.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v8.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v8.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v8.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v8.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v8.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v8.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v8.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v8.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v8.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v8.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v8.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v8.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v8.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v8.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v8.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v8.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v8.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v8.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v8.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v8.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v8.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v8.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v8.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v8.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v8.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v8.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v8.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v8.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v8.flac
+<group> trigger=attack lovel=65 hivel=72
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v9.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v9.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v9.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v9.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v9.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v9.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v9.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v9.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v9.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v9.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v9.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v9.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v9.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v9.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v9.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v9.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v9.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v9.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v9.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v9.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v9.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v9.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v9.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v9.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v9.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v9.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v9.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v9.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v9.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v9.flac
+<group> trigger=attack lovel=73 hivel=80
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v10.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v10.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v10.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v10.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v10.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v10.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v10.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v10.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v10.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v10.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v10.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v10.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v10.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v10.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v10.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v10.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v10.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v10.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v10.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v10.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v10.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v10.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v10.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v10.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v10.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v10.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v10.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v10.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v10.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v10.flac
+<group> trigger=attack lovel=81 hivel=88
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v11.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v11.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v11.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v11.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v11.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v11.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v11.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v11.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v11.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v11.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v11.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v11.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v11.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v11.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v11.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v11.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v11.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v11.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v11.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v11.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v11.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v11.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v11.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v11.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v11.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v11.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v11.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v11.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v11.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v11.flac
+<group> trigger=attack lovel=89 hivel=96
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v12.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v12.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v12.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v12.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v12.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v12.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v12.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v12.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v12.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v12.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v12.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v12.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v12.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v12.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v12.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v12.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v12.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v12.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v12.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v12.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v12.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v12.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v12.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v12.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v12.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v12.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v12.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v12.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v12.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v12.flac
+<group> trigger=attack lovel=97 hivel=104
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v13.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v13.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v13.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v13.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v13.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v13.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v13.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v13.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v13.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v13.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v13.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v13.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v13.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v13.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v13.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v13.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v13.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v13.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v13.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v13.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v13.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v13.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v13.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v13.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v13.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v13.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v13.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v13.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v13.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v13.flac
+<group> trigger=attack lovel=105 hivel=112
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v14.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v14.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v14.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v14.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v14.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v14.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v14.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v14.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v14.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v14.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v14.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v14.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v14.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v14.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v14.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v14.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v14.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v14.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v14.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v14.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v14.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v14.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v14.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v14.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v14.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v14.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v14.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v14.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v14.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v14.flac
+<group> trigger=attack lovel=113 hivel=120
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v15.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v15.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v15.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v15.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v15.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v15.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v15.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v15.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v15.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v15.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v15.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v15.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v15.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v15.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v15.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v15.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v15.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v15.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v15.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v15.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v15.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v15.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v15.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v15.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v15.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v15.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v15.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v15.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v15.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v15.flac
+<group> trigger=attack lovel=121 hivel=127
+<region> lokey=21 hikey=22 pitch_keycenter=21 ampeg_release=1.5 sample=A0v16.flac
+<region> lokey=23 hikey=25 pitch_keycenter=24 ampeg_release=1.5 sample=C1v16.flac
+<region> lokey=26 hikey=28 pitch_keycenter=27 ampeg_release=1.5 sample=D#1v16.flac
+<region> lokey=29 hikey=31 pitch_keycenter=30 ampeg_release=1.5 sample=F#1v16.flac
+<region> lokey=32 hikey=34 pitch_keycenter=33 ampeg_release=1.5 sample=A1v16.flac
+<region> lokey=35 hikey=37 pitch_keycenter=36 ampeg_release=1.5 sample=C2v16.flac
+<region> lokey=38 hikey=40 pitch_keycenter=39 ampeg_release=1.5 sample=D#2v16.flac
+<region> lokey=41 hikey=43 pitch_keycenter=42 ampeg_release=1.5 sample=F#2v16.flac
+<region> lokey=44 hikey=46 pitch_keycenter=45 ampeg_release=1.5 sample=A2v16.flac
+<region> lokey=47 hikey=49 pitch_keycenter=48 ampeg_release=1.5 sample=C3v16.flac
+<region> lokey=50 hikey=52 pitch_keycenter=51 ampeg_release=1.5 sample=D#3v16.flac
+<region> lokey=53 hikey=55 pitch_keycenter=54 ampeg_release=1.5 sample=F#3v16.flac
+<region> lokey=56 hikey=58 pitch_keycenter=57 ampeg_release=1.5 sample=A3v16.flac
+<region> lokey=59 hikey=61 pitch_keycenter=60 ampeg_release=1.5 sample=C4v16.flac
+<region> lokey=62 hikey=64 pitch_keycenter=63 ampeg_release=1.5 sample=D#4v16.flac
+<region> lokey=65 hikey=67 pitch_keycenter=66 ampeg_release=1.5 sample=F#4v16.flac
+<region> lokey=68 hikey=70 pitch_keycenter=69 ampeg_release=1.5 sample=A4v16.flac
+<region> lokey=71 hikey=73 pitch_keycenter=72 ampeg_release=1.5 sample=C5v16.flac
+<region> lokey=74 hikey=76 pitch_keycenter=75 ampeg_release=1.5 sample=D#5v16.flac
+<region> lokey=77 hikey=79 pitch_keycenter=78 ampeg_release=1.5 sample=F#5v16.flac
+<region> lokey=80 hikey=82 pitch_keycenter=81 ampeg_release=1.5 sample=A5v16.flac
+<region> lokey=83 hikey=85 pitch_keycenter=84 ampeg_release=1.5 sample=C6v16.flac
+<region> lokey=86 hikey=88 pitch_keycenter=87 ampeg_release=1.5 sample=D#6v16.flac
+<region> lokey=89 hikey=91 pitch_keycenter=90 ampeg_release=4 sample=F#6v16.flac
+<region> lokey=92 hikey=94 pitch_keycenter=93 ampeg_release=4 sample=A6v16.flac
+<region> lokey=95 hikey=97 pitch_keycenter=96 ampeg_release=4 sample=C7v16.flac
+<region> lokey=98 hikey=100 pitch_keycenter=99 ampeg_release=4 sample=D#7v16.flac
+<region> lokey=101 hikey=103 pitch_keycenter=102 ampeg_release=4 sample=F#7v16.flac
+<region> lokey=104 hikey=106 pitch_keycenter=105 ampeg_release=4 sample=A7v16.flac
+<region> lokey=107 hikey=108 pitch_keycenter=108 ampeg_release=4 sample=C8v16.flac
+<group> trigger=release volume=-37 amp_veltrack=82 rt_decay=2
+<region> key=21 sample=rel1.flac
+<region> key=22 sample=rel2.flac
+<region> key=23 sample=rel3.flac
+<region> key=24 sample=rel4.flac
+<region> key=25 sample=rel5.flac
+<region> key=26 sample=rel6.flac
+<region> key=27 sample=rel7.flac
+<region> key=28 sample=rel8.flac
+<region> key=29 sample=rel9.flac
+<region> key=30 sample=rel10.flac
+<region> key=31 sample=rel11.flac
+<region> key=32 sample=rel12.flac
+<region> key=33 sample=rel13.flac
+<region> key=34 sample=rel14.flac
+<region> key=35 sample=rel15.flac
+<region> key=36 sample=rel16.flac
+<region> key=37 sample=rel17.flac
+<region> key=38 sample=rel18.flac
+<region> key=39 sample=rel19.flac
+<region> key=40 sample=rel20.flac
+<region> key=41 sample=rel21.flac
+<region> key=42 sample=rel22.flac
+<region> key=43 sample=rel23.flac
+<region> key=44 sample=rel24.flac
+<region> key=45 sample=rel25.flac
+<region> key=46 sample=rel26.flac
+<region> key=47 sample=rel27.flac
+<region> key=48 sample=rel28.flac
+<region> key=49 sample=rel29.flac
+<region> key=50 sample=rel30.flac
+<region> key=51 sample=rel31.flac
+<region> key=52 sample=rel32.flac
+<region> key=53 sample=rel33.flac
+<region> key=54 sample=rel34.flac
+<region> key=55 sample=rel35.flac
+<region> key=56 sample=rel36.flac
+<region> key=57 sample=rel37.flac
+<region> key=58 sample=rel38.flac
+<region> key=59 sample=rel39.flac
+<region> key=60 sample=rel40.flac
+<region> key=61 sample=rel41.flac
+<region> key=62 sample=rel42.flac
+<region> key=63 sample=rel43.flac
+<region> key=64 sample=rel44.flac
+<region> key=65 sample=rel45.flac
+<region> key=66 sample=rel46.flac
+<region> key=67 sample=rel47.flac
+<region> key=68 sample=rel48.flac
+<region> key=69 sample=rel49.flac
+<region> key=70 sample=rel50.flac
+<region> key=71 sample=rel51.flac
+<region> key=72 sample=rel52.flac
+<region> key=73 sample=rel53.flac
+<region> key=74 sample=rel54.flac
+<region> key=75 sample=rel55.flac
+<region> key=76 sample=rel56.flac
+<region> key=77 sample=rel57.flac
+<region> key=78 sample=rel58.flac
+<region> key=79 sample=rel59.flac
+<region> key=80 sample=rel60.flac
+<region> key=81 sample=rel61.flac
+<region> key=82 sample=rel62.flac
+<region> key=83 sample=rel63.flac
+<region> key=84 sample=rel64.flac
+<region> key=85 sample=rel65.flac
+<region> key=86 sample=rel66.flac
+<region> key=87 sample=rel67.flac
+<region> key=88 sample=rel68.flac
+<region> key=89 sample=rel69.flac
+<region> key=90 sample=rel70.flac
+<region> key=91 sample=rel71.flac
+<region> key=92 sample=rel72.flac
+<region> key=93 sample=rel73.flac
+<region> key=94 sample=rel74.flac
+<region> key=95 sample=rel75.flac
+<region> key=96 sample=rel76.flac
+<region> key=97 sample=rel77.flac
+<region> key=98 sample=rel78.flac
+<region> key=99 sample=rel79.flac
+<region> key=100 sample=rel80.flac
+<region> key=101 sample=rel81.flac
+<region> key=102 sample=rel82.flac
+<region> key=103 sample=rel83.flac
+<region> key=104 sample=rel84.flac
+<region> key=105 sample=rel85.flac
+<region> key=106 sample=rel86.flac
+<region> key=107 sample=rel87.flac
+<region> key=108 sample=rel88.flac
+<group> trigger=release volume=-12 rt_decay=6
+<region> lovel=45 lokey=21 hikey=22 pitch_keycenter=21 sample=harmLA0.flac
+<region> hivel=44 lokey=21 hikey=22 pitch_keycenter=21 sample=harmSA0.flac
+<region> lovel=45 lokey=23 hikey=25 pitch_keycenter=24 sample=harmLC1.flac
+<region> hivel=44 lokey=23 hikey=25 pitch_keycenter=24 sample=harmSC1.flac
+<region> lovel=45 lokey=26 hikey=28 pitch_keycenter=27 sample=harmLD#1.flac
+<region> hivel=44 lokey=26 hikey=28 pitch_keycenter=27 sample=harmSD#1.flac
+<region> lovel=45 lokey=29 hikey=31 pitch_keycenter=30 sample=harmLF#1.flac
+<region> hivel=44 lokey=29 hikey=31 pitch_keycenter=30 sample=harmSF#1.flac
+<region> lovel=45 lokey=32 hikey=34 pitch_keycenter=33 sample=harmLA1.flac
+<region> hivel=44 lokey=32 hikey=34 pitch_keycenter=33 sample=harmSA1.flac
+<region> lovel=45 lokey=35 hikey=37 pitch_keycenter=36 sample=harmLC2.flac
+<region> hivel=44 lokey=35 hikey=37 pitch_keycenter=36 sample=harmSC2.flac
+<region> lovel=45 lokey=38 hikey=40 pitch_keycenter=39 sample=harmLD#2.flac
+<region> hivel=44 lokey=38 hikey=40 pitch_keycenter=39 sample=harmSD#2.flac
+<region> lovel=45 lokey=41 hikey=43 pitch_keycenter=42 sample=harmLF#2.flac
+<region> hivel=44 lokey=41 hikey=43 pitch_keycenter=42 sample=harmSF#2.flac
+<region> lovel=45 lokey=44 hikey=46 pitch_keycenter=45 sample=harmLA2.flac
+<region> hivel=44 lokey=44 hikey=46 pitch_keycenter=45 sample=harmSA2.flac
+<region> lovel=45 lokey=47 hikey=49 pitch_keycenter=48 sample=harmLC3.flac
+<region> hivel=44 lokey=47 hikey=49 pitch_keycenter=48 sample=harmSC3.flac
+<region> lovel=45 lokey=50 hikey=52 pitch_keycenter=51 sample=harmLD#3.flac
+<region> hivel=44 lokey=50 hikey=52 pitch_keycenter=51 sample=harmSD#3.flac
+<region> lovel=45 lokey=53 hikey=55 pitch_keycenter=54 sample=harmLF#3.flac
+<region> hivel=44 lokey=53 hikey=55 pitch_keycenter=54 sample=harmSF#3.flac
+<region> lovel=45 lokey=56 hikey=58 pitch_keycenter=57 sample=harmLA3.flac
+<region> hivel=44 lokey=56 hikey=58 pitch_keycenter=57 sample=harmSA3.flac
+<region> lovel=45 lokey=59 hikey=61 pitch_keycenter=60 sample=harmLC4.flac
+<region> hivel=44 lokey=59 hikey=61 pitch_keycenter=60 sample=harmSC4.flac
+<region> lovel=45 lokey=62 hikey=64 pitch_keycenter=63 sample=harmLD#4.flac
+<region> hivel=44 lokey=62 hikey=64 pitch_keycenter=63 sample=harmSD#4.flac
+<region> lovel=45 lokey=65 hikey=67 pitch_keycenter=66 sample=harmLF#4.flac
+<region> hivel=44 lokey=65 hikey=67 pitch_keycenter=66 sample=harmSF#4.flac
+<region> lovel=45 lokey=68 hikey=70 pitch_keycenter=69 sample=harmLA4.flac
+<region> hivel=44 lokey=68 hikey=70 pitch_keycenter=69 sample=harmSA4.flac
+<region> lovel=45 lokey=71 hikey=73 pitch_keycenter=72 sample=harmLC5.flac
+<region> hivel=44 lokey=71 hikey=73 pitch_keycenter=72 sample=harmSC5.flac
+<region> lovel=45 lokey=74 hikey=76 pitch_keycenter=75 sample=harmLD#5.flac
+<region> hivel=44 lokey=74 hikey=76 pitch_keycenter=75 sample=harmSD#5.flac
+<region> lovel=45 lokey=77 hikey=79 pitch_keycenter=78 sample=harmLF#5.flac
+<region> hivel=44 lokey=77 hikey=79 pitch_keycenter=78 sample=harmSF#5.flac
+<region> lovel=45 lokey=80 hikey=82 pitch_keycenter=81 sample=harmLA5.flac
+<region> hivel=44 lokey=80 hikey=82 pitch_keycenter=81 sample=harmSA5.flac
+<region> lovel=45 lokey=83 hikey=85 pitch_keycenter=84 sample=harmLC6.flac
+<region> hivel=44 lokey=83 hikey=85 pitch_keycenter=84 sample=harmSC6.flac
+<region> lovel=45 lokey=86 hikey=88 pitch_keycenter=87 sample=harmLD#6.flac
+<region> hivel=44 lokey=86 hikey=88 pitch_keycenter=87 sample=harmSD#6.flac

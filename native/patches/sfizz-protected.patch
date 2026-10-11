@@ -1,0 +1,225 @@
+diff --git a/external/atomic_queue/include/atomic_queue/atomic_queue.h b/external/atomic_queue/include/atomic_queue/atomic_queue.h
+index 21dc029..b27a16e 100644
+--- a/external/atomic_queue/include/atomic_queue/atomic_queue.h
++++ b/external/atomic_queue/include/atomic_queue/atomic_queue.h
+@@ -391,13 +391,13 @@ class AtomicQueue2 : public AtomicQueueCommon<AtomicQueue2<T, SIZE, MINIMIZE_CON
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail % size_);
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::template do_pop_any<>(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head % size_);
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::template do_push_any<>(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+@@ -519,13 +519,13 @@ class AtomicQueueB2 : public AtomicQueueCommon<AtomicQueueB2<T, A, MAXIMIZE_THRO
+ 
+     T do_pop(unsigned tail) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(tail & (size_ - 1));
+-        return Base::template do_pop_any(states_[index], elements_[index]);
++        return Base::template do_pop_any<>(states_[index], elements_[index]);
+     }
+ 
+     template<class U>
+     void do_push(U&& element, unsigned head) noexcept {
+         unsigned index = details::remap_index<SHUFFLE_BITS>(head & (size_ - 1));
+-        Base::template do_push_any(std::forward<U>(element), states_[index], elements_[index]);
++        Base::template do_push_any<>(std::forward<U>(element), states_[index], elements_[index]);
+     }
+ 
+ public:
+diff --git a/src/Config.h.in b/src/Config.h.in
+index bd13a70..8664090 100644
+--- a/src/Config.h.in
++++ b/src/Config.h.in
+@@ -35,7 +35,7 @@ namespace config {
+     constexpr int numBackgroundThreads { 4 };
+     constexpr unsigned fileClearingPeriod { 5 }; // in seconds
+     constexpr int numVoices { 64 };
+-    constexpr unsigned maxVoices { 256 };
++    constexpr unsigned maxVoices { 1024 };
+     constexpr unsigned smoothingSteps { 512 };
+     constexpr uint16_t xfadeSmoothing { 5 };
+     constexpr uint16_t gainSmoothing { 0 };
+diff --git a/src/sfizz/Config.h b/src/sfizz/Config.h
+index 5722f68..5b3707b 100644
+--- a/src/sfizz/Config.h
++++ b/src/sfizz/Config.h
+@@ -35,7 +35,7 @@ namespace config {
+     constexpr int numBackgroundThreads { 4 };
+     constexpr unsigned fileClearingPeriod { 5 }; // in seconds
+     constexpr int numVoices { 64 };
+-    constexpr unsigned maxVoices { 256 };
++    constexpr unsigned maxVoices { 1024 };
+     constexpr unsigned smoothingSteps { 512 };
+     constexpr uint16_t xfadeSmoothing { 5 };
+     constexpr uint16_t gainSmoothing { 0 };
+diff --git a/src/sfizz/Synth.cpp b/src/sfizz/Synth.cpp
+index a484cb0..1f100dd 100644
+--- a/src/sfizz/Synth.cpp
++++ b/src/sfizz/Synth.cpp
+@@ -1300,13 +1300,15 @@ void Synth::Impl::startVoice(Layer* layer, int delay, const TriggerEvent& trigge
+     const Region& region = layer->getRegion();
+ 
+     voiceManager_.checkPolyphony(&region, delay, triggerEvent);
+-    Voice* selectedVoice = voiceManager_.findFreeVoice();
+-    if (selectedVoice == nullptr)
+-        return;
++    Voice* selectedVoice = voiceManager_.findFreeVoice(triggerEvent.type == TriggerEventType::NoteOn);
++    if (selectedVoice == nullptr) { ++protectedRefusals_; return; }
+ 
+     selectedVoice->reset();
+-    if (selectedVoice->startVoice(layer, delay, triggerEvent))
++    if (selectedVoice->startVoice(layer, delay, triggerEvent)) {
++        selectedVoice->protectedOwner = protectedOwner_;
++        ++protectedStarted_;
+         ring.addVoiceToRing(selectedVoice);
++    }
+ }
+ 
+ void Synth::Impl::checkOffGroups(const Region* region, int delay, int number, bool chokedByCC)
+@@ -2414,3 +2416,26 @@ const Resources& Synth::getResources() const noexcept
+ }
+ 
+ } // namespace sfz
++
++namespace sfz {
++bool Synth::protectedNoteOn(int delay, int note, int velocity, uint64_t owner) noexcept {
++    impl_->protectedOwner_ = owner; impl_->protectedStarted_ = 0; noteOn(delay,note,velocity); impl_->protectedOwner_ = 0; return impl_->protectedStarted_ != 0;
++}
++void Synth::protectedNoteOff(int delay, int note, uint64_t owner) noexcept {
++        Impl& impl = *impl_;
++    float velocity = 0;
++    bool found = false;
++    for (auto& voice : impl.voiceManager_) {
++        if (voice.isFree() || voice.protectedOwner != owner || voice.getTriggerEvent().type != TriggerEventType::NoteOn) continue;
++        velocity = voice.getTriggerEvent().value;
++        voice.registerNoteOff(delay,note,velocity);
++        found = true;
++    }
++    if (!found) return;
++    impl.protectedOwner_ = owner;
++    impl.resources_.getMidiState().noteOffEvent(delay,note,velocity);
++    impl.noteOffDispatch(delay,note,velocity);
++    impl.protectedOwner_ = 0;
++}
++}
++uint64_t sfz::Synth::getProtectedRefusals() const noexcept { return impl_->protectedRefusals_; }
+diff --git a/src/sfizz/Synth.h b/src/sfizz/Synth.h
+index eb98a45..dcd2218 100644
+--- a/src/sfizz/Synth.h
++++ b/src/sfizz/Synth.h
+@@ -76,6 +76,9 @@ public:
+      *
+      */
+     Synth();
++    bool protectedNoteOn(int delay, int note, int velocity, uint64_t owner) noexcept;
++    void protectedNoteOff(int delay, int note, uint64_t owner) noexcept;
++    uint64_t getProtectedRefusals() const noexcept;
+     /**
+      * @brief Destructor
+      */
+diff --git a/src/sfizz/SynthPrivate.h b/src/sfizz/SynthPrivate.h
+index 9989a6c..dd63ab5 100644
+--- a/src/sfizz/SynthPrivate.h
++++ b/src/sfizz/SynthPrivate.h
+@@ -19,6 +19,9 @@
+ namespace sfz {
+ 
+ struct Synth::Impl final: public Parser::Listener {
++    uint64_t protectedOwner_ = 0;
++    unsigned protectedStarted_ = 0;
++    uint64_t protectedRefusals_ = 0;
+     Impl();
+     ~Impl();
+ 
+diff --git a/src/sfizz/Voice.h b/src/sfizz/Voice.h
+index 3cebdee..04a3f07 100644
+--- a/src/sfizz/Voice.h
++++ b/src/sfizz/Voice.h
+@@ -36,6 +36,8 @@ struct ExtendedCCValues {
+  */
+ class Voice {
+ public:
++    uint64_t protectedOwner = 0;
++
+     Voice() = delete;
+     /**
+      * @brief Construct a new voice with the midistate singleton
+diff --git a/src/sfizz/VoiceManager.cpp b/src/sfizz/VoiceManager.cpp
+index 47dbbef..af8c0c2 100644
+--- a/src/sfizz/VoiceManager.cpp
++++ b/src/sfizz/VoiceManager.cpp
+@@ -146,40 +146,26 @@ void VoiceManager::setStealingAlgorithm(StealingAlgorithm algorithm)
+ 
+ void VoiceManager::checkPolyphony(const Region* region, int delay, const TriggerEvent& triggerEvent) noexcept
+ {
+-    checkNotePolyphony(region, delay, triggerEvent);
+-    checkRegionPolyphony(region, delay);
+-    checkGroupPolyphony(region, delay);
+-    checkSetPolyphony(region, delay);
+-    checkEnginePolyphony(delay);
++    (void)region; (void)delay; (void)triggerEvent; // Application protection: never steal.
+ }
+ 
+-Voice* VoiceManager::findFreeVoice() noexcept
++Voice* VoiceManager::findFreeVoice(bool attack) noexcept
+ {
+-    Voice* freeVoice = nullptr;
+-    for (auto& v: list_) {
+-        if (v.isFree()) {
+-            freeVoice = &v;
+-            break;
+-        }
+-
+-        if (v.offedOrFree()) {
+-            if (freeVoice == nullptr || v.getAge() > freeVoice->getAge())
+-                freeVoice = &v;
+-        }
+-    };
+-
+-    if (freeVoice != nullptr)
+-        return freeVoice;
+-
+-    DBG("Engine hard polyphony reached");
+-    return {};
++    Voice* selected = nullptr;
++    unsigned free = 0;
++    for (auto& voice : list_) {
++        if (!voice.isFree()) continue;
++        ++free;
++        if (!selected) selected = &voice;
++    }
++    const unsigned reserve = std::min(64, std::max(1, numRequiredVoices_ / 16));
++    if (attack && free <= reserve) return nullptr;
++    return selected;
+ }
+-
+ void VoiceManager::requireNumVoices(int numVoices, Resources& resources)
+ {
+     numRequiredVoices_ = numVoices;
+-    const int numEffectiveVoices = std::min(int(config::maxVoices), numVoices +
+-            std::max(int(numVoices * config::overflowVoiceMultiplier), config::minOverflowVoices));
++    const int numEffectiveVoices = std::min(int(config::maxVoices), numVoices);
+ 
+     clear();
+     list_.reserve(numEffectiveVoices);
+diff --git a/src/sfizz/VoiceManager.h b/src/sfizz/VoiceManager.h
+index b14e083..aa32906 100644
+--- a/src/sfizz/VoiceManager.h
++++ b/src/sfizz/VoiceManager.h
+@@ -128,7 +128,7 @@ struct VoiceManager final : public Voice::StateListener
+      *
+      * @return Voice*
+      */
+-    Voice* findFreeVoice() noexcept;
++    Voice* findFreeVoice(bool attack = false) noexcept;
+     /**
+      * @brief Require a number of voices from this manager.
+      * In practice, the manager will handle slightly more, in order to

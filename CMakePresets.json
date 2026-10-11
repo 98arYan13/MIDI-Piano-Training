@@ -1,0 +1,16 @@
+{
+  "version":6,
+  "configurePresets":[{
+    "name":"native-windows", "displayName":"Native Windows (pinned portable LLVM-MinGW)",
+    "generator":"Ninja", "binaryDir":"${sourceDir}/build/native",
+    "cacheVariables":{
+      "CMAKE_BUILD_TYPE":"Release",
+      "CMAKE_C_COMPILER":"${sourceDir}/.tools/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe",
+      "CMAKE_CXX_COMPILER":"${sourceDir}/.tools/llvm-mingw-20261006-ucrt-x86_64/bin/clang++.exe",
+      "CMAKE_MAKE_PROGRAM":"${sourceDir}/.tools/ninja/ninja.exe"
+    },
+    "environment":{"PATH":"${sourceDir}/.tools/llvm-mingw-20261006-ucrt-x86_64/bin;$penv{PATH}"}
+  }],
+  "buildPresets":[{"name":"native-windows","configurePreset":"native-windows","jobs":4}],
+  "testPresets":[{"name":"native-windows","configurePreset":"native-windows","output":{"outputOnFailure":true}}]
+}
