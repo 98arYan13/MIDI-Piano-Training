@@ -33,6 +33,9 @@ public:
     void setRenderHook(RenderHook hook, void* context);
     using InputHook = void(*)(const InputEvent&, uint64_t, void*) noexcept;
     void setInputHook(InputHook hook, void* context);
+    // Native message sink for embedding/tests; overrides RtMidi delivery while set.
+    using ExternalMessageHook = void(*)(const uint8_t*,unsigned,void*) noexcept;
+    void setExternalMessageHook(ExternalMessageHook hook,void* context);
 private:
     struct Impl;
     std::unique_ptr<Impl> impl_;

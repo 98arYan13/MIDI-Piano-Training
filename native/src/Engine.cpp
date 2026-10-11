@@ -42,12 +42,12 @@ bool Engine::Impl::submit(InputEvent e){
     e.busGeneration=e.type==EventType::StopBus?busGeneration[unsigned(e.bus)].fetch_add(1)+1:busGeneration[unsigned(e.bus)].load();
     if(outputMode==1&&e.bus==Bus::Live){
         std::lock_guard lock(externalControl);
-        auto send=[&](unsigned status,unsigned note,unsigned value){if(midiOut&&midiOut->isPortOpen()){unsigned char bytes[3]{uint8_t(status),uint8_t(note),uint8_t(value)};try{midiOut->sendMessage(bytes,3);}catch(const RtMidiError&){++externalErrors;}}};
+        auto send=[&](unsigned status,unsigned note,unsigned value){unsigned char bytes[3]{uint8_t(status),uint8_t(note),uint8_t(value)};if(externalHook){externalHook(bytes,3,externalContext);return;}if(midiOut&&midiOut->isPortOpen()){try{midiOut->sendMessage(bytes,3);}catch(const RtMidiError&){++externalErrors;}}};
         auto release=[&](auto iterator){auto [source,channel,instance]=iterator->first;auto note=iterator->second;externalNotes.erase(iterator);bool other=false;for(auto& [key,pitch]:externalNotes)if(std::get<1>(key)==channel&&pitch==note)other=true;if(!other)send(0x80|channel,note,0);};
         auto key=std::tuple<unsigned,unsigned,uint64_t>{e.source,e.channel,e.instance};
-        if(e.type==EventType::On){externalNotes[key]=e.note;send(0x90|e.channel,e.note,e.velocity);}
+        if(e.type==EventType::On&&monitoring.load()){externalNotes[key]=e.note;send(0x90|e.channel,e.note,e.velocity);}
         if(e.type==EventType::Off){auto i=externalNotes.find(key);if(i!=externalNotes.end())release(i);}
-        if(e.type==EventType::Pedal){externalPedals[e.source][e.channel]=e.velocity>=64;bool down=false;for(auto& source:externalPedals)down|=source[e.channel];send(0xb0|e.channel,64,down?127:0);}
+        if(e.type==EventType::Pedal&&(e.velocity<64||monitoring.load())){externalPedals[e.source][e.channel]=e.velocity>=64;bool down=false;for(auto& source:externalPedals)down|=source[e.channel];send(0xb0|e.channel,64,down?127:0);}
         if(e.type==EventType::Disconnect||e.type==EventType::Panic){for(auto i=externalNotes.begin();i!=externalNotes.end();){auto current=i++;if(e.type==EventType::Panic||std::get<0>(current->first)==e.source)release(current);}for(unsigned channel=0;channel<16;++channel){if(e.type==EventType::Panic)for(auto& source:externalPedals)source[channel]=false;else externalPedals[e.source][channel]=false;bool down=false;for(auto& source:externalPedals)down|=source[channel];send(0xb0|channel,64,down?127:0);}}
     }
     if(events.push(e))return true;++overload;
@@ -97,3 +97,5 @@ unsigned Engine::sampleRate()const noexcept{return impl_->options.sampleRate;}
 void Engine::setRenderHook(RenderHook hook,void* context){if(impl_->running)throw std::logic_error("Register render hook before start");impl_->renderHook=hook;impl_->renderContext=context;}
 void Engine::setInputHook(InputHook hook,void* context){if(impl_->running)throw std::logic_error("Register input hook before start");impl_->inputHook=hook;impl_->inputContext=context;}
 }
+
+void sightreading::Engine::setExternalMessageHook(ExternalMessageHook hook,void* context){if(impl_->running)throw std::logic_error("Register external message hook before start");std::lock_guard lock(impl_->externalControl);impl_->externalHook=hook;impl_->externalContext=context;}

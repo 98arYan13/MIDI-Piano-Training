@@ -24,7 +24,8 @@ json Engine::command(const json& request){
         if(type=="status")return reply(true,snapshot(),nullptr);
         if(type=="panic"){s.submit({EventType::Panic});return reply(true,json::object(),nullptr);}
         if(type=="virtual.noteOn"||type=="virtual.noteOff"||type=="virtual.pedal"||type=="virtual.disconnect"){
-            InputEvent event{};event.source=s.source(p.at("source").get<std::string>());event.channel=integer(p,"channel",0,15,0);event.bus=parseBus(p);
+            auto name=p.at("source").get<std::string>();if(name.starts_with("midi:"))throw std::invalid_argument("midi: source namespace is reserved for native devices");
+            InputEvent event{};event.source=s.source(name);event.channel=integer(p,"channel",0,15,0);event.bus=parseBus(p);
             if(type=="virtual.noteOn"){if(!s.pianoReady&&s.outputMode==0)return reply(false,nullptr,{{"code","piano_not_ready"},{"message",s.error.empty()?"Piano is preloading":s.error}});event.type=EventType::On;event.note=integer(p,"note",21,108,0);if(!event.note)throw std::invalid_argument("note is required");event.velocity=integer(p,"velocity",1,127,100);event.instance=instance(p);}
             else if(type=="virtual.noteOff"){event.type=EventType::Off;event.instance=instance(p);}
             else if(type=="virtual.pedal"){event.type=EventType::Pedal;auto down=p.at("down");if(!down.is_boolean())throw std::invalid_argument("down must be boolean");event.velocity=down.get<bool>()?127:0;}

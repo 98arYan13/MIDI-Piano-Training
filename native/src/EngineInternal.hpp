@@ -42,6 +42,7 @@ struct Engine::Impl {
     RenderHook renderHook{};void* renderContext{};InputHook inputHook{};void* inputContext{};
     mutable std::recursive_mutex control;
     std::mutex externalControl;std::atomic<uint64_t> externalErrors{};
+    ExternalMessageHook externalHook{};void* externalContext{};
     std::map<std::tuple<unsigned,unsigned,uint64_t>,uint8_t> externalNotes;
     std::array<std::array<bool,16>,SourceCount> externalPedals{};
     json settings,pending=nullptr,devices=json::array(),outputs=json::array(),audioOutputs=json::array();

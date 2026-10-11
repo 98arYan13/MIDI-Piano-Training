@@ -101,3 +101,47 @@ TEST_CASE("Release overflow recovers only the pressured source") {
     REQUIRE_FALSE(e.submit({EventType::Off,Bus::Live,1,0,64,0,1}));audio(e);
     REQUIRE(e.snapshot()["heldNotes"].size()==1);REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127);REQUIRE(e.snapshot()["heldNotes"][0]["held"]==true);REQUIRE(e.snapshot()["heldNotes"][0]["sounding"]==true);
 }
+struct ExternalMessages {
+    std::array<std::array<uint8_t,3>,128> messages{};unsigned count{};
+    static void capture(const uint8_t* bytes,unsigned size,void* context) noexcept {
+        auto& sink=*static_cast<ExternalMessages*>(context);
+        if(size==3&&sink.count<sink.messages.size())sink.messages[sink.count++]={bytes[0],bytes[1],bytes[2]};
+    }
+};
+TEST_CASE("External monitoring blocks attacks and pedal down but retains releases", "[routing]") {
+    ExternalMessages sink;Engine e(fixture());e.setExternalMessageHook(ExternalMessages::capture,&sink);
+    REQUIRE(cmd(e,"audio.settings",{{"outputMode","external"},{"monitoring",false}})["ok"]==true);
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127}));
+    REQUIRE(sink.count==0);
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,0}));
+    REQUIRE(sink.count==1);REQUIRE(sink.messages[0]==std::array<uint8_t,3>{0xb0,64,0});
+    REQUIRE(e.submit({EventType::Off,Bus::Live,127,0,60,0,1}));REQUIRE(sink.count==1);
+}
+TEST_CASE("External owners release after monitoring becomes disabled", "[routing]") {
+    ExternalMessages sink;Engine e(fixture());e.setExternalMessageHook(ExternalMessages::capture,&sink);
+    REQUIRE(cmd(e,"audio.settings",{{"outputMode","external"}})["ok"]==true);
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127}));
+    REQUIRE(sink.count==2);REQUIRE(sink.messages[0]==std::array<uint8_t,3>{0x90,60,100});
+    // Native events remain queued here; exercise the producer routing transition directly.
+    REQUIRE(cmd(e,"audio.settings",{{"monitoring",false}})["ok"]==true);
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,64,100,2}));
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,126,0,0,127}));
+    REQUIRE(sink.count==2);
+    REQUIRE(e.submit({EventType::Off,Bus::Live,127,0,60,0,1}));
+    REQUIRE(sink.messages[2]==std::array<uint8_t,3>{0x80,60,0});
+    REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,0}));
+    REQUIRE(sink.messages[3]==std::array<uint8_t,3>{0xb0,64,0});
+}
+TEST_CASE("Virtual commands cannot claim a reserved physical MIDI source name", "[routing]") {
+    Engine e(fixture());REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127}));
+    REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));
+    REQUIRE(e.submit({EventType::Off,Bus::Live,127,0,60,0,1}));audio(e);
+    for(auto type:{"virtual.disconnect","virtual.pedal","virtual.noteOn","virtual.noteOff"}) {
+        auto reply=cmd(e,type,{{"source","midi:fixture keyboard#0"},{"down",false},{"note",60},{"velocity",100},{"instance",1}});
+        REQUIRE(reply["ok"]==false);REQUIRE(reply["error"]["code"]=="invalid_params");
+    }
+    audio(e);REQUIRE(e.snapshot()["heldNotes"].size()==1);
+    REQUIRE(e.snapshot()["heldNotes"][0]["sourceId"]==127);REQUIRE(e.snapshot()["heldNotes"][0]["sustained"]==true);
+}
