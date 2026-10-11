@@ -1,8 +1,49 @@
 {
-  "sfizz": {"url":"https://github.com/sfztools/sfizz.git", "revision":"4e70dc0bef53b41f2853ed46e26f5911114c92d0", "tag":"1.2.3", "recursive":true, "license":"BSD-2-Clause"},
-  "portaudio": {"url":"https://github.com/PortAudio/portaudio.git", "revision":"147dd722548358763a8b649b3e4b41dfffbcfbb6", "tag":"v19.7.0", "license":"MIT"},
-  "rtmidi": {"url":"https://github.com/thestk/rtmidi.git", "revision":"1e5b49925aa60065db52de44c366d446a902547b", "tag":"6.0.0", "license":"MIT"},
-  "json": {"url":"https://github.com/nlohmann/json.git", "revision":"9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03", "tag":"v3.11.3", "license":"MIT"},
-  "Catch2": {"url":"https://github.com/catchorg/Catch2.git", "revision":"fa43b77429ba76c462b1898d6cd2f2d7a9416b14", "tag":"v3.7.1", "license":"BSL-1.0"},
-  "salamander": {"url":"https://github.com/sfzinstruments/SalamanderGrandPiano", "revision":"3382bf9496bba2486f5ab0de55a264d1dfc38404", "license":"CC-BY-3.0", "author":"Alexander Holm", "mapping":"kinwie"}
+  "sfizz": {
+    "url": "https://github.com/sfztools/sfizz.git",
+    "revision": "4e70dc0bef53b41f2853ed46e26f5911114c92d0",
+    "tag": "1.2.3",
+    "recursive": true,
+    "license": "BSD-2-Clause"
+  },
+  "portaudio": {
+    "url": "https://github.com/PortAudio/portaudio.git",
+    "revision": "147dd722548358763a8b649b3e4b41dfffbcfbb6",
+    "tag": "v19.7.0",
+    "license": "MIT"
+  },
+  "rtmidi": {
+    "url": "https://github.com/thestk/rtmidi.git",
+    "revision": "1e5b49925aa60065db52de44c366d446a902547b",
+    "tag": "6.0.0",
+    "license": "MIT"
+  },
+  "json": {
+    "url": "https://github.com/nlohmann/json.git",
+    "revision": "9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03",
+    "tag": "v3.11.3",
+    "license": "MIT"
+  },
+  "Catch2": {
+    "url": "https://github.com/catchorg/Catch2.git",
+    "revision": "fa43b77429ba76c462b1898d6cd2f2d7a9416b14",
+    "tag": "v3.7.1",
+    "license": "BSL-1.0"
+  },
+  "salamander": {
+    "url": "https://github.com/sfzinstruments/SalamanderGrandPiano",
+    "revision": "3382bf9496bba2486f5ab0de55a264d1dfc38404",
+    "license": "CC-BY-3.0",
+    "author": "Alexander Holm",
+    "mapping": "kinwie"
+  },
+  "midifile": {
+    "archive": true,
+    "url": "https://codeload.github.com/craigsapp/midifile/zip/98917df5b1bf0d6e8d4c0e5fff86d6b05343e793",
+    "revision": "98917df5b1bf0d6e8d4c0e5fff86d6b05343e793",
+    "archiveName": "midifile-98917df.zip",
+    "folder": "midifile-98917df5b1bf0d6e8d4c0e5fff86d6b05343e793",
+    "sha256": "005cab033b5d224c26e9e093af382371acf6c0010c5caca5ed497dd8f3a6e833",
+    "license": "BSD-2-Clause"
+  }
 }

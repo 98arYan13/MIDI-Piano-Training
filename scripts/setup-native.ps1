@@ -20,6 +20,15 @@ New-Item -ItemType Directory -Force "$root/.tools/deps" | Out-Null
 foreach ($entry in $pins.PSObject.Properties) {
     if ($entry.Name -eq 'salamander') { continue }
     $pin = $entry.Value
+    if ($pin.archive) {
+        $archive=Join-Path "$root/.tools/downloads" $pin.archiveName
+        New-Item -ItemType Directory -Force (Split-Path $archive) | Out-Null
+        if (!(Test-Path $archive)) { Invoke-WebRequest $pin.url -OutFile $archive -TimeoutSec 300 }
+        if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $pin.sha256) { throw "Dependency archive integrity failure: $($entry.Name)" }
+        $dest=Join-Path "$root/.tools/deps" $entry.Name
+        if (!(Test-Path "$dest/$($pin.folder)/include/MidiFile.h")) { Expand-Archive $archive -DestinationPath $dest -Force }
+        continue
+    }
     $dest = Join-Path "$root/.tools/deps" $entry.Name
     if (!(Test-Path "$dest/.git")) {
         & git clone --depth 1 --branch $pin.tag $pin.url $dest
@@ -53,12 +62,13 @@ if (!$SkipSamples) {
 }
 $patch = "$root/native/patches/sfizz-protected.patch"
 if (!(Test-Path $patch)) { throw 'Protected sampler patch missing' }
+if ((Get-FileHash $patch -Algorithm SHA256).Hash -ne (Get-Content "$root/native/patches/sfizz-protected.sha256").Trim()) { throw 'Protected sampler patch integrity failure' }
 if (Test-Path $patch) {
-    & git -C "$root/.tools/deps/sfizz" apply --reverse --check $patch 2>$null
+    & git -C "$root/.tools/deps/sfizz" apply --unidiff-zero --reverse --check $patch 2>$null
     if ($LASTEXITCODE -ne 0) {
-        & git -C "$root/.tools/deps/sfizz" apply --check $patch
+        & git -C "$root/.tools/deps/sfizz" apply --unidiff-zero --check $patch
         if ($LASTEXITCODE) { throw 'Pinned sfizz patch no longer applies' }
-        & git -C "$root/.tools/deps/sfizz" apply $patch
+        & git -C "$root/.tools/deps/sfizz" apply --unidiff-zero $patch
         if ($LASTEXITCODE) { throw 'sfizz protection patch failed' }
     }
 }

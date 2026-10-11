@@ -3,6 +3,7 @@ import { NativeProvider, useNative } from "./native";
 import type { AudioSettings, MetronomeSettings } from "./types";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { StaffPractice } from "./StaffPractice";
+import { PlayAlong } from "./PlayAlong";
 import "./style.css";
 const routes = [
   ["staff", "Staff", "01"],
@@ -592,6 +593,8 @@ function Workspace({ route }: { route: string }) {
       <div className="workspace-stage">
         {route === "staff" ? (
           <StaffPractice />
+        ) : route === "play" ? (
+          <PlayAlong />
         ) : (
           <>
             <div className="staff-decoration" aria-hidden="true">

@@ -62,3 +62,5 @@ Physical MIDI hotplug/latency, actual device/exclusive rebuilds and 30-minute dr
 ## Attribution
 
 Salamander Grand Piano: Alexander Holm, CC BY 3.0, compatible mapping attributed to kinwie; see `assets/piano` and `native/README.md`. Application click waveforms are original. cpp-httplib MIT; SQLite public domain. VexFlow MIT; bundled Bravura and Academico fonts SIL OFL. React/Vite/TypeScript/Vitest/Playwright use redistributable upstream licenses. No code or assets copied from the UNLICENSED reference.
+
+Play Along imports local SMF0/1 PPQ `.mid`/`.midi` files into the native SQLite library with retained original downloads, track assignments and recoverable trash. Five independently authored simplified public-domain starter arrangements and provenance are in assets/music. Native transport supplies timing, scoring, controller restoration and accompaniment; browser notation remains visualization only. See native/CONTRACT.md for bounds, audible controller mappings and explicit accompaniment/Follow capacity diagnostics.

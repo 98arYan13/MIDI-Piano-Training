@@ -42,6 +42,7 @@ export type Device = {
 };
 export type NativeState = {
   practice: PracticeSnapshot;
+  transport: TransportSnapshot;
   generation: number;
   engineTimeNs: number;
   sampleFrame: number;
@@ -115,8 +116,8 @@ export type SnapshotMessage = {
   resync?: boolean;
 };
 export type NoteEvent = {
-  id: string;
-  trackId: string;
+  id: number;
+  trackId: number;
   channel: number;
   midiNote: number;
   velocity: number;
@@ -127,7 +128,11 @@ export type Song = {
   id: string;
   title: string;
   ppq: number;
-  tracks: unknown[];
+  tracks: SongTrack[];
+  durationTicks: number;
+  durationSeconds: number;
+  recent: number;
+  trashed?: boolean;
   notes: NoteEvent[];
   controllers: unknown[];
   tempoMap: unknown[];
@@ -135,6 +140,20 @@ export type Song = {
   keyMap: unknown[];
 };
 export type TransportSnapshot = {
+  accompanimentError: string;
+  followError: string;
+  tempo: number;
+  songId: string;
+  title: string;
+  revision: number;
+  songSeconds: number;
+  retry: boolean;
+  target: number[];
+  hits: number;
+  misses: number;
+  accuracy: number;
+  error: string;
+  config: TransportConfig;
   generation: number;
   sampleFrame: number;
   sampleRate: number;
@@ -142,6 +161,29 @@ export type TransportSnapshot = {
   songTick: number;
   state: "stopped" | "playing" | "paused";
   speed: number;
+};
+export type SongTrack = {
+  id: number;
+  title: string;
+  noteCount: number;
+  percussion: boolean;
+  practice: boolean;
+  backing: boolean;
+  staff: "split" | "treble" | "bass" | "grand";
+};
+export type TransportConfig = {
+  speed: number;
+  hearPractice: boolean;
+  practiceEnabled: boolean;
+  mode: "continuous" | "pauseOnMiss";
+  toleranceMs: number;
+  spacing: number;
+  loop: boolean;
+  a: number;
+  b: number;
+  accompaniment: string;
+  rate: number;
+  accompanimentSpacing: number;
 };
 export type MetronomeMeterEdit = Partial<Meter>;
 export type MetronomeAccentEdit = {

@@ -19,6 +19,8 @@ constexpr unsigned SourceCount=128, NoteCount=2048, BlockFrames=128, ScheduledCo
 struct Engine::Impl {
     explicit Impl(EngineOptions o);
     EngineOptions options; Metronome metronome{options.sampleRate};
+    struct PlaybackLane {unsigned volume{100},expression{127},pan{64};std::array<float,BlockFrames> left{},right{};};
+    std::array<PlaybackLane,16> playbackLanes{};
     std::array<std::unique_ptr<sfz::Synth>,3> synths;
     EventQueue<> events;
     struct Note {bool active{},held{},sounding{}; InputEvent event{}; uint64_t token{};};
@@ -57,6 +59,7 @@ struct Engine::Impl {
     void loadPiano();unsigned source(const std::string& name);bool submit(InputEvent event);
     void publish(unsigned slot);void off(unsigned slot,int delay);void disconnect(unsigned source,int delay);void panic(uint64_t absolute=UINT64_MAX,uint64_t metronomeBoundary=UINT64_MAX);
     void resetLive(uint64_t absolute) noexcept;
+    void laneGain(unsigned channel,unsigned delay) noexcept;
     void dispatch(const InputEvent& event,int delay,uint64_t absolute);void render(float* output,unsigned frames);
     static int callback(const void*,void*,unsigned long,const PaStreamCallbackTimeInfo*,PaStreamCallbackFlags,void*);
     void closeAudio();void openAudio();static void midiCallback(double,std::vector<unsigned char>*,void*);void pollMidi();void applySettings();bool applyPending(bool now);

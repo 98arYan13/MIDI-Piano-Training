@@ -1,0 +1,127 @@
+.play-along {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 24px;
+}
+.song-library {
+  border-right: 1px solid #39413c;
+  padding-right: 20px;
+}
+.song-library header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.song-library h2 {
+  font-size: 17px;
+}
+.song-library small {
+  display: block;
+  color: #97a49b;
+  margin: 5px 0;
+}
+.upload {
+  display: block;
+  padding: 12px;
+  border: 1px dashed #69746d;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.upload input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.song-list {
+  max-height: 420px;
+  overflow: auto;
+  margin: 16px 0;
+}
+.song-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #39413c;
+  padding: 8px 0;
+  gap: 8px;
+}
+.song-row button:first-child {
+  text-align: left;
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 8px;
+}
+.song-row.selected {
+  background: #35453c;
+  border-radius: 6px;
+}
+.song-workspace {
+  min-width: 0;
+}
+.song-workspace > label {
+  display: block;
+  margin: 12px 0;
+}
+.song-workspace input[type="range"] {
+  width: 100%;
+}
+.transport-buttons,
+.song-options,
+.scoreline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+  align-items: center;
+}
+.song-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.song-options input[type="number"] {
+  width: 80px;
+}
+.song-options input[type="range"] {
+  width: 100px;
+}
+.song-tracks {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.song-tracks > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 10px;
+  background: #28322c;
+  border-radius: 6px;
+}
+.song-tracks small {
+  color: #97a49b;
+}
+.retry {
+  background: #4a3f29;
+  color: #edcb8f;
+  padding: 12px;
+  border-radius: 8px;
+}
+.scoreline {
+  color: #dcb77d;
+}
+@media (max-width: 800px) {
+  .play-along {
+    grid-template-columns: 1fr;
+  }
+  .song-library {
+    border-right: 0;
+    border-bottom: 1px solid #39413c;
+    padding: 0 0 16px;
+  }
+  .song-list {
+    max-height: 200px;
+  }
+}

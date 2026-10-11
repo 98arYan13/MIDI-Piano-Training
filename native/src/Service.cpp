@@ -5,6 +5,8 @@
 #include <sightreading/Engine.hpp>
 #include <sightreading/Practice.hpp>
 #include <sightreading/Storage.hpp>
+#include <sightreading/Transport.hpp>
+#include <sightreading/LibraryRoutes.hpp>
 #include <thread>
 #include <unordered_set>
 using json = nlohmann::json;
@@ -74,6 +76,7 @@ int main(int argc, char **argv) {
     if (port < 1 || port > 65535)
       throw std::invalid_argument("Invalid port");
     Storage storage(dir);
+    installStarters(storage,"assets/music");
     Hooks hooks;
     EngineOptions options;
     auto savedDisabled = storage.load("disabled");
@@ -83,6 +86,8 @@ int main(int argc, char **argv) {
           options.disabledInputs.push_back(i.key());
     Engine engine(options);
     Practice practice(options.sampleRate);
+    Transport transport(engine);
+    std::mutex transportMutex;
     std::mutex practiceMutex;
     auto savedPractice = storage.load("practice");
     if (!savedPractice.is_null())
@@ -132,7 +137,9 @@ int main(int argc, char **argv) {
         std::lock_guard lock(practiceMutex);
         s["practice"] = practice.snapshot(engine.sampleFrame());
       }
+      {std::lock_guard lock(transportMutex);s["transport"]=transport.snapshot(engine.sampleFrame());s["transport"]["engineTimeNs"]=s["engineTimeNs"];}
       return s;
+
     };
     auto command = [&](const json &req) {
       std::lock_guard lock(commands);
@@ -145,6 +152,9 @@ int main(int argc, char **argv) {
                     {"result", state()},
                     {"error", nullptr}};
       json reply;
+      if(req.is_object()&&req.contains("id")&&req.value("version",json())==1&&req.value("type",json()).is_string()&&req["type"].get<std::string>().starts_with("transport.")){
+        try{std::lock_guard lock(transportMutex);auto type=req["type"].get<std::string>();auto params=req.value("params",json::object());json result;if(type=="transport.load"){auto id=params.at("id").get<std::string>();auto song=storage.song(id);if(song["trashed"]==true)throw std::invalid_argument("Restore this song from trash first.");transport.load(song);storage.patchSong(id,{{"recent",uint64_t(std::chrono::system_clock::now().time_since_epoch().count())}});result=transport.snapshot(engine.sampleFrame());}else result=transport.command(type,params,engine.sampleFrame());return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};}catch(const std::exception &e){return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},{"error",{{"code","invalid_transport"},{"message",e.what()}}}};}
+      }
       if (req.is_object() && req.contains("id") &&
           req.value("version", json()) == 1 &&
           req.value("type", json()).is_string() &&
@@ -251,7 +261,7 @@ int main(int argc, char **argv) {
       return reply;
     };
     http.set_write_timeout(2);
-    http.set_payload_max_length(20 * 1024 * 1024);
+    http.set_payload_max_length(20 * 1024 * 1024 + 64 * 1024);
     http.set_pre_routing_handler([&](const httplib::Request &req,
                                      httplib::Response &res) {
       bool mutation = req.method != "GET" && req.method != "HEAD";
@@ -324,14 +334,7 @@ int main(int argc, char **argv) {
                        {"message", "Invalid settings JSON"}}}});
       }
     });
-    http.Get("/api/v1/songs",
-             [&](auto &, auto &res) { output(res, storage.songs()); });
-    http.Get(R"(/api/v1/songs/([^/]+)(/events)?)", [&](auto &, auto &res) {
-      res.status = 404;
-      output(res,
-             {{"error",
-               {{"code", "song_not_found"}, {"message", "Song not found"}}}});
-    });
+    libraryRoutes(http,storage,engine.sampleRate());
     // One control-worker drains hooks; per-connection snapshots include bounded
     // event history.
     std::mutex eventMutex;
@@ -351,6 +354,7 @@ int main(int argc, char **argv) {
             std::lock_guard lock(practiceMutex);
             practice.input(e);
           }
+          {std::lock_guard lock(transportMutex);transport.input(e);}
           additions.push_back({{"type", "note"},
                                {"event",
                                 {{"kind", unsigned(e.type)},
@@ -368,6 +372,7 @@ int main(int argc, char **argv) {
           if (drops != practiceDrops) {
             practiceDrops = drops;
             practice.recoverHeld(engine.snapshot()["heldNotes"], tickFrame);
+            {std::lock_guard lock(transportMutex);transport.recover(tickFrame);}
           }
           practice.tick(tickFrame);
           if (practice.revision() != practiceRevision) {
@@ -383,7 +388,9 @@ int main(int argc, char **argv) {
                                    {"running", p["running"]}}}});
           }
         }
+        {std::lock_guard lock(transportMutex);transport.tick(tickFrame);}
         while (hooks.beats.pop(b))
+
           additions.push_back({{"type", "beat"},
                                {"event",
                                 {{"sampleFrame", b.sampleFrame},

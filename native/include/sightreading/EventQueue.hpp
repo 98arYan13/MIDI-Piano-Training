@@ -5,8 +5,10 @@
 #include <mutex>
 
 namespace sightreading {
+inline constexpr uint16_t FirstReservedSource=125;
+inline constexpr uint16_t ExampleSource=125, SongSource=126, AccompanimentSource=127;
 enum class Bus : uint8_t { Live, Playback, Example, Click };
-enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic, ResetLive };
+enum class EventType : uint8_t { On, Off, Pedal, Disconnect, StopBus, Panic, ResetLive, Controller };
 struct InputEvent {
     EventType type{};
     Bus bus{Bus::Live};

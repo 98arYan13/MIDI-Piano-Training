@@ -1,0 +1,399 @@
+[
+  {
+    "chords": [
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 1920,
+        "root": 0,
+        "startTick": 0,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 3840,
+        "root": 0,
+        "startTick": 1920,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "endTick": 5760,
+        "root": 5,
+        "startTick": 3840,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 6720,
+        "root": 0,
+        "startTick": 5760,
+        "explicit": true
+      }
+    ],
+    "id": "starter-twinkle",
+    "title": "Twinkle Twinkle",
+    "provenance": {
+      "arrangement": "Sight Reading project, independently authored 2026-10-11",
+      "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
+      "license": "CC0-1.0",
+      "source": "Ah vous dirai-je maman, anonymous French melody first published 1761"
+    },
+    "file": "twinkle.mid"
+  },
+  {
+    "chords": [
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 1920,
+        "root": 0,
+        "startTick": 0,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 3840,
+        "root": 0,
+        "startTick": 1920,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 5760,
+        "root": 7,
+        "startTick": 3840,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 7680,
+        "root": 0,
+        "startTick": 5760,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 9600,
+        "root": 0,
+        "startTick": 7680,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 11520,
+        "root": 7,
+        "startTick": 9600,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 12480,
+        "root": 0,
+        "startTick": 11520,
+        "explicit": true
+      }
+    ],
+    "id": "starter-mary",
+    "title": "Mary Had a Little Lamb",
+    "provenance": {
+      "arrangement": "Sight Reading project, independently authored 2026-10-11",
+      "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
+      "license": "CC0-1.0",
+      "source": "Traditional American nursery melody, nineteenth century"
+    },
+    "file": "mary.mid"
+  },
+  {
+    "chords": [
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 1920,
+        "root": 0,
+        "startTick": 0,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 3840,
+        "root": 7,
+        "startTick": 1920,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 5760,
+        "root": 0,
+        "startTick": 3840,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 7680,
+        "root": 7,
+        "startTick": 5760,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 9600,
+        "root": 0,
+        "startTick": 7680,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 11520,
+        "root": 7,
+        "startTick": 9600,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 13440,
+        "root": 0,
+        "startTick": 11520,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 14400,
+        "root": 0,
+        "startTick": 13440,
+        "explicit": true
+      }
+    ],
+    "id": "starter-ode",
+    "title": "Ode to Joy",
+    "provenance": {
+      "arrangement": "Sight Reading project, independently authored 2026-10-11",
+      "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
+      "license": "CC0-1.0",
+      "source": "Ludwig van Beethoven, Symphony No. 9 Op. 125, 1824, opening theme"
+    },
+    "file": "ode.mid"
+  },
+  {
+    "chords": [
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 1920,
+        "root": 0,
+        "startTick": 0,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "endTick": 3840,
+        "root": 5,
+        "startTick": 1920,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 5760,
+        "root": 7,
+        "startTick": 3840,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 7680,
+        "root": 0,
+        "startTick": 5760,
+        "explicit": true
+      }
+    ],
+    "id": "starter-dan",
+    "title": "Old Dan Tucker",
+    "provenance": {
+      "arrangement": "Sight Reading project, independently authored 2026-10-11",
+      "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
+      "license": "CC0-1.0",
+      "source": "American folk melody published 1843; melody only, no lyrics"
+    },
+    "file": "dan.mid"
+  },
+  {
+    "chords": [
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 1920,
+        "root": 0,
+        "startTick": 0,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          50,
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "endTick": 3840,
+        "root": 2,
+        "startTick": 1920,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "endTick": 5760,
+        "root": 7,
+        "startTick": 3840,
+        "explicit": true
+      },
+      {
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "endTick": 7680,
+        "root": 0,
+        "startTick": 5760,
+        "explicit": true
+      }
+    ],
+    "id": "starter-bach",
+    "title": "BWV 846 — short excerpt",
+    "provenance": {
+      "arrangement": "Sight Reading project, independently authored 2026-10-11",
+      "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
+      "license": "CC0-1.0",
+      "source": "Johann Sebastian Bach, Well-Tempered Clavier Book I, Prelude in C BWV 846, 1722; first four harmonies, original simplified revoicing"
+    },
+    "file": "bach.mid"
+  }
+]

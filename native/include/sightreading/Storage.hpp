@@ -10,6 +10,7 @@ namespace sightreading {
 // transaction.
 class Storage {
   sqlite3 *db{};
+  std::filesystem::path directory;
   std::mutex mutex;
   using Statement = std::unique_ptr<sqlite3_stmt, decltype(&sqlite3_finalize)>;
   Statement prepare(const char *text) {
@@ -33,7 +34,7 @@ class Storage {
   }
 
 public:
-  explicit Storage(const std::filesystem::path &dir) {
+  explicit Storage(const std::filesystem::path &dir) : directory(dir) {
     std::filesystem::create_directories(dir);
     auto path = (dir / "practice.sqlite").u8string();
     if (sqlite3_open(reinterpret_cast<const char *>(path.c_str()), &db) !=
@@ -57,6 +58,7 @@ public:
           "NOT EXISTS songs(id TEXT PRIMARY KEY,title TEXT NOT NULL,model TEXT "
           "NOT NULL,trashed INTEGER NOT NULL DEFAULT 0); PRAGMA "
           "user_version=1; COMMIT;");
+      sql("CREATE TABLE IF NOT EXISTS song_originals(id TEXT PRIMARY KEY REFERENCES songs(id),bytes BLOB NOT NULL)");
     } catch (...) {
       sqlite3_close(db);
       db = nullptr;
@@ -88,21 +90,25 @@ public:
     if (sqlite3_step(statement.get()) != SQLITE_DONE)
       throw std::runtime_error(sqlite3_errmsg(db));
   }
+  nlohmann::json song(const std::string &id);
+  void putSong(const nlohmann::json &model,const std::string &original);
+  void patchSong(const std::string &id,const nlohmann::json &patch);
+  void trashSong(const std::string &id,bool trashed);
+  std::string originalSong(const std::string &id);
   nlohmann::json songs() {
     std::lock_guard lock(mutex);
     auto statement =
-        prepare("SELECT id,title FROM songs WHERE trashed=0 ORDER BY title");
+        prepare("SELECT id,title,model FROM songs WHERE trashed=0 ORDER BY json_extract(model,'$.recent') DESC,title");
     auto result = nlohmann::json::array();
     int code;
-    while ((code = sqlite3_step(statement.get())) == SQLITE_ROW)
-      result.push_back(
-          {{"id", reinterpret_cast<const char *>(
-                      sqlite3_column_text(statement.get(), 0))},
-           {"title", reinterpret_cast<const char *>(
-                         sqlite3_column_text(statement.get(), 1))}});
+    while ((code = sqlite3_step(statement.get())) == SQLITE_ROW) {
+      auto item=nlohmann::json::parse(reinterpret_cast<const char *>(sqlite3_column_text(statement.get(),2)));
+      item.erase("tempoMap");item.erase("meterMap");item.erase("keyMap");item.erase("notes");item.erase("controllers");item.erase("rawEvents");result.push_back(item);
+    }
     if (code != SQLITE_DONE)
       throw std::runtime_error(sqlite3_errmsg(db));
     return result;
   }
+  nlohmann::json trashSongs();
 };
 } // namespace sightreading

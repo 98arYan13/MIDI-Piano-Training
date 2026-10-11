@@ -12,3 +12,5 @@
 *.mid binary
 *.wav binary
 *.flac binary
+*.patch text eol=lf
+*.sha256 text eol=lf
