@@ -33,6 +33,10 @@ Tempo is quarter-note BPM (20–300). Meter uses denominator beats: 6/8 means si
 
 Native loading, missing samples/audio, overload and deferred changes display accurately. Output panel reports actual format and API output latency; this is not measured MIDI-to-audible latency.
 
+The global virtual piano covers A0–C8 (88 keys), with C4=MIDI60. Use mouse/touch or computer keys A W S E D F T G Y H U J K O L P ; for a chromatic range starting at the selected C octave. Space holds virtual sustain; M stays reserved for metronome settings. Keyboard settings change virtual attack velocity and labels. Full range pans horizontally on narrow screens; focused range and octave controls are independent of exercise range. Browser focus loss/cancel releases its virtual ownership only. Live/MIDI, playback and example notes have separate colors; hatching indicates sustained notes.
+
+Staff currently exposes a clearly marked notation preview with Treble/Bass/Grand views. The reusable VexFlow 5.0.0 renderer uses bundled Bravura/Academico fonts (offline, no CDN), joined Grand clefs, pitch spelling separate from MIDI, accidentals/ledger lines/duration bars and native-clock visual scrolling. Generation/scoring and song import/playback are subsequent implementation tasks. VexFlow is pinned in the lockfile; its rendering API follows the [official tutorial](https://github.com/vexflow/vexflow/wiki/Tutorial).
+
 ## Verification
 
 ```powershell
@@ -43,6 +47,7 @@ npm --prefix web run build
 # Prepend .tools/llvm-mingw-20261006-ucrt-x86_64/bin to PATH:
 node tests/service.mjs
 node tests/browser.mjs
+node tests/keyboard-notation.mjs
 ```
 
 API/browser tests use temporary databases and actual native executable. Browser tests use installed Edge with fresh headless contexts, no browser download. Restricted environments may need loopback socket access permission.
@@ -51,4 +56,4 @@ Physical MIDI hotplug/latency, actual device/exclusive rebuilds and 30-minute dr
 
 ## Attribution
 
-Salamander Grand Piano: Alexander Holm, CC BY 3.0, compatible mapping attributed to kinwie; see `assets/piano` and `native/README.md`. Application click waveforms are original. cpp-httplib MIT; SQLite public domain. React/Vite/TypeScript/Vitest/Playwright use redistributable upstream licenses. No code or assets copied from the UNLICENSED reference.
+Salamander Grand Piano: Alexander Holm, CC BY 3.0, compatible mapping attributed to kinwie; see `assets/piano` and `native/README.md`. Application click waveforms are original. cpp-httplib MIT; SQLite public domain. VexFlow MIT; bundled Bravura and Academico fonts SIL OFL. React/Vite/TypeScript/Vitest/Playwright use redistributable upstream licenses. No code or assets copied from the UNLICENSED reference.

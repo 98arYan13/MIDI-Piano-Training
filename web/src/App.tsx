@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NativeProvider, useNative } from "./native";
 import type { AudioSettings, MetronomeSettings } from "./types";
+import { PianoKeyboard } from "./PianoKeyboard";
+import { StaffPreview } from "./StaffPreview";
 import "./style.css";
 const routes = [
   ["staff", "Staff", "01"],
@@ -588,28 +590,34 @@ function Workspace({ route }: { route: string }) {
         <span className="workspace-tag">LOCAL PIANO</span>
       </div>
       <div className="workspace-stage">
-        <div className="staff-decoration" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-          <span>𝄞</span>
-        </div>
-        <div className="stage-copy">
-          <span className="eyebrow">YOUR PRACTICE WORKSPACE</span>
-          <h2>Listen. Notice. Play.</h2>
-          <p>
-            {route === "staff"
-              ? "Reading and keyboard practice will live here."
-              : route === "ear"
-                ? "Interval and melody exercises will live here."
-                : route === "flash"
-                  ? "Note and chord recall will live here."
-                  : "Your local MIDI library and playback will live here."}{" "}
-            Global piano and metronome controls are ready above.
-          </p>
-        </div>
+        {route === "staff" ? (
+          <StaffPreview />
+        ) : (
+          <>
+            <div className="staff-decoration" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <span>𝄞</span>
+            </div>
+            <div className="stage-copy">
+              <span className="eyebrow">YOUR PRACTICE WORKSPACE</span>
+              <h2>Listen. Notice. Play.</h2>
+              <p>
+                {route === "staff"
+                  ? "Reading and keyboard practice will live here."
+                  : route === "ear"
+                    ? "Interval and melody exercises will live here."
+                    : route === "flash"
+                      ? "Note and chord recall will live here."
+                      : "Your local MIDI library and playback will live here."}{" "}
+                Global piano and metronome controls are ready above.
+              </p>
+            </div>
+          </>
+        )}
       </div>
       <div className="workspace-footer">
         <span>Sound stays with you across every room.</span>
@@ -802,6 +810,7 @@ function Shell() {
         </nav>
         <main>
           <Workspace route={route} />
+          <PianoKeyboard />
         </main>
       </div>
       {(native.error || s?.error) && (
@@ -817,10 +826,11 @@ function Shell() {
           )}
         </div>
       )}
-      {s?.overload && (
+      {!!s?.overload && (
         <div className="overload" role="status">
-          Voice capacity reached: new voices were refused to protect existing
-          notes.
+          Native admission / event pressure: {s.overload} cumulative incidents.{" "}
+          Sampler capacity refusals: {s.voiceRefusals}. Existing live voices
+          remain protected.
         </div>
       )}
       {dialog && (

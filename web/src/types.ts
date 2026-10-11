@@ -62,7 +62,7 @@ export type NativeState = {
     sourceId: number;
     sampleFrame: number;
   }[];
-  overload: boolean;
+  overload: number;
   voiceRefusals: number;
   dropouts: number;
   externalErrors: number;
@@ -148,3 +148,5 @@ export type MetronomeAccentEdit = {
   accent: MetronomeSettings["accents"][number];
 };
 export type AudioChannelEdit = { channel: number; enabled: boolean };
+// Shared visual-only timeline contract. Native controllers own generation, scoring and sound.
+export type { StaffMode, SpelledPitch, TimelineNote } from "./notationModel";
