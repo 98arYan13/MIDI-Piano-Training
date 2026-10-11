@@ -1,0 +1,14 @@
+.tools/
+build/
+native/build/
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+.superpowers/
+data/
+*.log
+assets/piano/Samples/
+assets/piano/Data/
+assets/piano/upstream.sfz
+assets/piano/downloads/
