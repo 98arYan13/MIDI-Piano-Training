@@ -39,7 +39,7 @@ export function PlayAlong() {
       `/${song.id}/events?fromTick=${Math.max(0, (bucket - 2) * song.ppq * 8)}&toTick=${(bucket + 6) * song.ppq * 8}`,
     )
       .then((s) => {
-        if (current) { setNotes(s.notes); if(s.truncated)setError('Dense notation window exceeded 4096 notes; the displayed window is truncated. Increase spacing to view a shorter musical window. Original playback remains intact.'); }
+        if (current) { setNotes(s.notes); if(s.truncated)setError('Dense notation window exceeded 4096 notes; the displayed window is truncated. Original playback remains intact.'); }
       })
       .catch((e) => setError(e.message));
     return () => {

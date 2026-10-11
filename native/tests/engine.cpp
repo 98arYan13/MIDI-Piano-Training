@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <sightreading/Engine.hpp>
+#include <sightreading/EarFlash.hpp>
 #include <array>
 #include <cmath>
 #include <thread>
@@ -7,6 +8,9 @@
 #include <portaudio.h>
 using namespace sightreading;
 using nlohmann::json;
+static void fillFuture(Engine& e, Bus bus=Bus::Example, unsigned source=125) {
+ for(unsigned batch=0;batch<2;++batch){for(unsigned i=0;i<4096;++i){InputEvent ev{EventType::Pedal,bus,static_cast<uint16_t>(source),0,0,0,0};ev.frame=32768;REQUIRE(e.submit(ev));}std::array<float,256> out{};e.render(out.data(),128);}
+}
 static EngineOptions fixture(){return {SR_ROOT "/native/tests/fixture.sfz",48000,128,false,true};}
 static json cmd(Engine& e,const char* type,json params={}){return e.command({{"version",1},{"id",1},{"type",type},{"params",params}});}
 static double audio(Engine& e,unsigned blocks=1){std::array<float,256> out{}; double sum=0; for(unsigned i=0;i<blocks;i++){e.render(out.data(),128); for(float f:out){REQUIRE(std::isfinite(f)); sum+=f*f;}}return sum;}
@@ -14,6 +18,60 @@ static double audio(Engine& e,unsigned blocks=1){std::array<float,256> out{}; do
 TEST_CASE("Piano readiness requires genuine complete sampled instrument") {
     Engine e(fixture()); REQUIRE(e.snapshot()["pianoReady"]==true); REQUIRE(e.snapshot()["audioReady"]==false);
     Engine missing({SR_ROOT "/native/tests/missing.sfz",48000,128,false,true}); REQUIRE(missing.snapshot()["pianoReady"]==false); REQUIRE_FALSE(missing.snapshot()["error"].get<std::string>().empty());
+}
+TEST_CASE("Full future schedule retains Panic and scoped stop cancellation", "[final-control]") {
+ for(auto type:{EventType::Panic,EventType::StopBus})for(auto bus:{Bus::Playback,Bus::Example}){
+  Engine e(fixture());cmd(e,"metronome.start");
+  REQUIRE(e.submit({EventType::On,Bus::Live,124,0,60,100,1}));
+  REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,100,2}));
+  REQUIRE(e.submit({EventType::On,Bus::Example,125,0,67,100,3}));audio(e);
+  fillFuture(e,bus==Bus::Example?Bus::Playback:Bus::Example,bus==Bus::Example?126:125);
+  REQUIRE(e.submit({type,bus}));audio(e);
+  auto notes=e.snapshot()["heldNotes"];
+  if(type==EventType::Panic){REQUIRE(notes.empty());REQUIRE(e.snapshot()["metronome"]["running"]==false);}
+  else {REQUIRE(notes.size()==2);for(auto& n:notes)REQUIRE(n["bus"]!=(bus==Bus::Playback?"playback":"example"));REQUIRE(e.snapshot()["metronome"]["running"]==true);}
+ }
+}
+TEST_CASE("Full future schedule Panic preserves later metronome Start and attack", "[final-control]") {
+ Engine e(fixture());cmd(e,"metronome.start");audio(e);fillFuture(e);
+ REQUIRE(e.submit({EventType::Panic}));cmd(e,"metronome.start");
+ REQUIRE(e.submit({EventType::On,Bus::Live,124,0,60,100,42}));audio(e);
+ REQUIRE(e.snapshot()["metronome"]["running"]==true);REQUIRE(e.snapshot()["heldNotes"].size()==1);
+ REQUIRE(e.snapshot()["heldNotes"][0]["instance"]==42);
+}
+TEST_CASE("Reserved scope controls ignore unrelated default-source release recovery", "[final-control]") {
+ for(auto type:{EventType::Panic,EventType::StopBus,EventType::ResetLive}){
+  Engine e(fixture());cmd(e,"metronome.start");
+  REQUIRE(e.submit({EventType::On,Bus::Live,124,0,60,90,1}));REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,90,2}));audio(e);fillFuture(e);
+  REQUIRE(e.submit({EventType::Off,Bus::Live,0,0,60,0,99}));
+  REQUIRE(e.submit({type,type==EventType::StopBus?Bus::Playback:Bus::Live}));audio(e);
+  auto notes=e.snapshot()["heldNotes"];
+  if(type==EventType::Panic){REQUIRE(notes.empty());REQUIRE(e.snapshot()["metronome"]["running"]==false);}
+  else {REQUIRE(notes.size()==1);REQUIRE(notes[0]["bus"]==(type==EventType::StopBus?"live":"playback"));REQUIRE(e.snapshot()["metronome"]["running"]==true);}
+ }
+}
+TEST_CASE("Full producer queue reserves only requested stop bus", "[final-control]") {
+ for(auto bus:{Bus::Playback,Bus::Example}){
+  Engine e(fixture());cmd(e,"metronome.start");
+  REQUIRE(e.submit({EventType::On,Bus::Live,124,0,60,90,1}));REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,90,2}));REQUIRE(e.submit({EventType::On,Bus::Example,125,0,67,90,3}));audio(e);
+  for(unsigned i=0;i<4096;i++)REQUIRE(e.submit({EventType::Pedal,Bus::Live,123,0,0,0,0}));
+  REQUIRE(e.submit({EventType::StopBus,bus}));audio(e);auto notes=e.snapshot()["heldNotes"];
+  REQUIRE(notes.size()==2);for(auto& n:notes)REQUIRE(n["bus"]!=(bus==Bus::Playback?"playback":"example"));REQUIRE(e.snapshot()["metronome"]["running"]==true);
+ }
+}
+TEST_CASE("Named source exhaustion preserves existing owners and reusable identities", "[final-registry]") {
+ Engine e(fixture());cmd(e,"metronome.start");
+ for(unsigned i=1;i<=124;++i)REQUIRE(cmd(e,"virtual.noteOn",{{"source","slot:"+std::to_string(i)},{"note",60},{"velocity",80},{"instance",i}})["ok"]==true);
+ audio(e);auto before=e.snapshot()["heldNotes"];
+ auto failed=cmd(e,"virtual.noteOn",{{"source","one-too-many"},{"note",64},{"velocity",80},{"instance",125}});
+ REQUIRE(failed["ok"]==false);REQUIRE(failed["error"]["message"].get<std::string>().find("Restart")!=std::string::npos);
+ REQUIRE(cmd(e,"virtual.noteOff",{{"source","slot:1"},{"note",60},{"instance",1}})["ok"]==true);audio(e);
+ REQUIRE(e.snapshot()["heldNotes"].size()==before.size()-1);REQUIRE(e.snapshot()["metronome"]["running"]==true);
+}
+TEST_CASE("Ear config invalid integer replacement is atomic", "[final-validation]") {
+ Engine e(fixture());EarFlash controller(e);auto before=controller.ear(0)["config"];
+ REQUIRE_THROWS(controller.command("ear.configure",{{"root",uint64_t{4294967356}}},0));
+ REQUIRE(controller.ear(0)["config"]==before);
 }
 TEST_CASE("Virtual disconnect and source off preserve hardware same pitch") {
     Engine e(fixture());

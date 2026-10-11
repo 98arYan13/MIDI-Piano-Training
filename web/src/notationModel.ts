@@ -18,6 +18,8 @@ export const spelledLabel = (pitch: SpelledPitch) =>
   `${pitch.letter.toUpperCase()}${pitch.accidental === 'n' ? '' : pitch.accidental ?? ''}${pitch.octave}`;
 export const staffClefs = (mode: StaffMode): ("treble" | "bass")[] =>
   mode === "grand" ? ["treble", "bass"] : [mode];
+export const noteClef = (note: TimelineNote, mode: StaffMode): "treble" | "bass" =>
+  note.staff ?? (mode === "grand" ? (note.midiNote < 60 ? "bass" : "treble") : mode);
 export const frameX = (
   frame: number,
   sampleRate: number,
@@ -25,7 +27,7 @@ export const frameX = (
 ) => (frame / Math.max(1, sampleRate)) * pixelsPerSecond;
 export function segmentFingerprint(notes: TimelineNote[], index: number, sampleRate: number, spacing: number, mode: StaffMode) {
   return JSON.stringify(notes.filter(n => {
-    const clef=n.staff ?? (n.midiNote<60?'bass':'treble');
+    const clef=noteClef(n,mode);
     return (mode==='grand'||mode===clef) && frameX(n.endFrame,sampleRate,spacing)>=index*480 && frameX(n.startFrame,sampleRate,spacing)<(index+1)*480;
   }));
 }

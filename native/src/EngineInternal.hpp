@@ -15,6 +15,9 @@
 
 namespace sightreading {
 using json=nlohmann::json;
+struct SourceCapacityError : std::runtime_error {
+ SourceCapacityError():std::runtime_error("MIDI/input identity capacity (124 named sources) reached. Existing devices remain active. Restart Sight Reading to admit new identities."){}
+};
 constexpr unsigned SourceCount=128, NoteCount=2048, BlockFrames=128, ScheduledCount=8192;
 struct Engine::Impl {
     explicit Impl(EngineOptions o);
@@ -32,6 +35,7 @@ struct Engine::Impl {
     std::array<std::atomic<uint32_t>,3> busGeneration{};
     std::array<std::atomic<uint64_t>,2> emergencySources{};
     std::atomic<uint32_t> emergencyLiveReset{};std::atomic<bool> liveReconfiguring{};
+    std::array<std::atomic<uint32_t>,3> emergencyBusStop{};
     std::atomic<bool> emergencyPanic{};std::atomic<uint64_t> emergencyPanicBoundary{};
     struct Scheduled {InputEvent event;uint64_t order;};
     std::array<Scheduled,ScheduledCount> scheduled{};

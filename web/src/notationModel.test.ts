@@ -15,6 +15,12 @@ it("Grand joins treble and bass while single staff modes retain their clef", () 
   expect(staffClefs("grand")).toEqual(["treble", "bass"]);
   expect(staffClefs("bass")).toEqual(["bass"]);
 });
+it("single clef fingerprints include unassigned notes across middle C but retain explicit assignment",()=>{
+ const n:TimelineNote={id:'low',midiNote:55,spelling:{letter:'g',octave:3},startFrame:0,endFrame:48000};
+ expect(segmentFingerprint([n],0,48000,110,'treble')).not.toBe('[]');
+ expect(segmentFingerprint([{...n,midiNote:64}],0,48000,110,'bass')).not.toBe('[]');
+ expect(segmentFingerprint([{...n,staff:'bass'}],0,48000,110,'treble')).toBe('[]');
+});
 it("native sample positions map to stable notation geometry independent of viewport", () => {
   expect(frameX(48000, 48000, 100)).toBe(100);
   expect(frameX(96000, 48000, 100)).toBe(200);

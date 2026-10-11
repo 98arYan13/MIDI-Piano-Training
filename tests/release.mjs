@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {chromium} from '../web/node_modules/playwright/index.mjs';
 import {browserPath} from './browser-path.mjs';
+import {checkPortableDocLinks} from './package-links.mjs';
 const release=resolve(process.env.SR_RELEASE ?? 'build/release/SightReading'),port=18782,url=`http://127.0.0.1:${port}`;
 const data=await mkdtemp(join(tmpdir(),'sr-release-'));
 let child,browser,log='',request=0;
@@ -23,6 +24,7 @@ async function measureFrames(page) {
  return {count:frames.length,durationMs:frames.reduce((a,b)=>a+b,0),medianMs:sorted[Math.floor(sorted.length*.5)],p95Ms:sorted[Math.floor(sorted.length*.95)],maxMs:Math.max(...frames),fps:1000*frames.length/frames.reduce((a,b)=>a+b,0)};
 }
 try{
+ report.portableDocumentCount=await checkPortableDocLinks(release);
  const start=performance.now();launch();await until(async()=>{const s=await state();return s.audioReady&&s.pianoReady;});report.readyMs=performance.now()-start;report.output=(await state()).output;
  for(const route of ['/','/staff','/ear','/flash','/play','/guide'])assert.equal((await fetch(url+route)).status,200);
  const form=new FormData();form.append('file',new Blob([denseMidi()]),'Dense ten-minute.mid');const response=await fetch(url+'/api/v1/songs/import',{method:'POST',headers:{Origin:url},body:form});assert.equal(response.status,201);const song=await response.json();assert.equal(song.notes.length,19200);assert(Math.abs(song.durationSeconds-600)<.1);

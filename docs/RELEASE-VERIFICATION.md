@@ -1,5 +1,26 @@
 # Local piano release verification — 2026-10-12
 
+## Final whole-branch fix wave
+
+All eight final findings have product fixes and focused regressions: scope-aware Panic/StopBus recovery at full event/scheduler capacity, complete unassigned Flash triads in single clefs, authoritative paused/stopped notation redraw, truthful dense-window message, portable contract link, bounded tray shutdown/failure diagnostics, named-source capacity diagnostic, and wide Ear integer validation. Scope controls ignore unrelated default-source generation recovery; ResetLive and bus generations remain separate. Existing fourteen rulings and original Task1–8 evidence below are preserved.
+
+Frozen final native executable SHA256: `8A4368C59DADB2647ED458ED017218BA917AA8AF4484938FE22223895A84B0C8`. Copied soak and portable `build/release/SightReading-final` binaries match. A new exact-binary real WASAPI30minute run began `2026-10-11T22:35:58.428Z`; it is pending at this product-review commit. The earlier Task8 soak below is historical and does not certify this changed callback binary. No final30minute completion claim is made until the new report is saved.
+
+| Final check | Evidence |
+|---|---|
+| Native focused RED/GREEN | Initial full-heap Panic/scoped stop/newer attack and wide integer tests failed; default-source recovery then reproduced skipped scope controls. GREEN79,573 assertions in8focused cases, including queue reserves/registry/atomic config and injected tray registration/icon/wait failures. |
+| Full native CTest |4/4 passed13.70s; [log](verification/final/native.log). Sandbox SQLite rename denied; unchanged suite passed in normal Windows context. |
+| Frontend |15Vitest tests, typecheck and production build passed. Existing VexFlow/font chunk warning remains visible, with unchanged threshold. |
+| All native/Edge integration |Seven suites passed, including the new actual Flash glyph geometry/cache and paused seek/stopped second-song regression; [log](verification/final/e2e.log), [notation proof](verification/final/notation-proof.json). |
+| Copied offline release |System32-only runtime PATH, four linked portable documents, five tabs, retained imported library,208ms cold UI/1596ms piano+WASAPI ready; [proof](verification/final/release-proof.json). |
+| WindowsPowerShell5 launcher |System32-only PATH, native tray window, actual audio readiness and graceful shutdown passed; [log](verification/final/launcher.log). |
+
+The new headless run measured blank55.583fps versus cached dense56.275fps, moving54.948fps/max124.9ms; cached max18.6ms. Late ten-minute song window first78.59ms/cached median1.616ms/max2.841ms. Compact Grand and Play keyboard bottoms711.94/711.25px at1265×713; full88keys remain available through horizontal scrolling. Ruling14 and absolute60fps unverified status are unchanged. [Grand](verification/final/compact-grand.png), [Play](verification/final/compact-play.png), [stopped second song](verification/final/notation.png).
+
+Physical MIDI/hotplug/wheel/external-instrument and wired key-arrival-to-audible p95 remain unmeasured. No acoustic capture or audible-dropout certification is claimed. Native callback counters/sample positions/ownership and decoded sample renders are the measured coverage.
+
+## Historical Task8 verification
+
 Release scope: complete approved five-tab native Windows app, Task8 fixes and offline portable packaging. Base b6e7f9e53fc403faa26bed75d7187b644ca3ac01. Exact final Task8 commit is recorded in the ignored worker report and packaged release-manifest.json after commit. Native audio engine/callback/sampler patch unchanged in Task8; native modifications are integer validation, worker-only window indexing/cache, service lifecycle and tray.
 
 ## Machine and methods

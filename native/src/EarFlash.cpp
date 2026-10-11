@@ -14,8 +14,11 @@ void require(bool ok, const std::string &message) {
     throw std::invalid_argument(message);
 }
 void number(const json &c, const char *field, int lo, int hi) {
-  require(c.at(field).is_number_integer() && c[field].get<int>() >= lo &&
-              c[field].get<int>() <= hi,
+  const auto &value=c.at(field);
+  const bool valid=value.is_number_unsigned()
+      ? value.get<uint64_t>()<=uint64_t(hi) && (lo<=0 || value.get<uint64_t>()>=uint64_t(lo))
+      : value.is_number_integer() && value.get<int64_t>()>=lo && value.get<int64_t>()<=hi;
+  require(valid,
           std::string(field) + " must be " + std::to_string(lo) + " through " +
               std::to_string(hi) + ".");
 }

@@ -11,6 +11,8 @@ target_link_libraries(native_probe PRIVATE sightreading_engine)
 add_test(NAME native_piano_render COMMAND native_probe "${CMAKE_BINARY_DIR}/piano-proof.wav")
 set_tests_properties(native_piano_render PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" TIMEOUT 120)
 target_sources(native_tests PRIVATE tests/metronome.cpp)
+target_sources(native_tests PRIVATE tests/tray.cpp)
+target_link_libraries(native_tests PRIVATE shell32 user32)
 
 target_sources(sightreading_engine PRIVATE src/Metronome.cpp)
 target_sources(sightreading_engine PRIVATE src/Practice.cpp)

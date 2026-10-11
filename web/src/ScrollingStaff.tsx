@@ -11,6 +11,7 @@ import {
   frameX,
   staffClefs,
   segmentFingerprint,
+  noteClef,
   type StaffMode,
   type TimelineNote,
 } from "./notationModel";
@@ -70,7 +71,7 @@ const Segment = memo(function Segment({
     if (!header) {
       const groups = new Map<string, TimelineNote[]>();
       for (const n of notes) {
-        const clef = n.staff ?? (n.midiNote < 60 ? "bass" : "treble");
+        const clef = noteClef(n,mode);
         if (mode !== "grand" && clef !== mode) continue;
         const x =
             frameX(n.startFrame, sampleRate, spacing) - index * segmentWidth,
@@ -81,7 +82,7 @@ const Segment = memo(function Segment({
       }
       for (const chord of groups.values()) {
         const first = chord[0],
-          clef = first.staff ?? (first.midiNote < 60 ? "bass" : "treble"),
+          clef = noteClef(first,mode),
           stave = staves[mode === "grand" && clef === "bass" ? 1 : 0];
         const note = notationNote(chord, clef);
         const x =
@@ -154,6 +155,7 @@ export function ScrollingStaff({
   const [windowRange, setWindowRange] = useState({ first: 0, last: 3 });
   const clock = useRef(clockFrame);
   clock.current = clockFrame;
+  const stoppedFrame = running ? undefined : clockFrame();
   useEffect(() => {
     let raf = 0,
       previous = 0;
@@ -176,7 +178,7 @@ export function ScrollingStaff({
     };
     draw(performance.now());
     return () => cancelAnimationFrame(raf);
-  }, [sampleRate, pixelsPerSecond, running]);
+  }, [sampleRate, pixelsPerSecond, running, stoppedFrame, notes]);
   return (
     <div
       className={`scrolling-staff ${mode}`}

@@ -1,6 +1,12 @@
 #include <catch2/catch_test_macros.hpp>
 #include <sightreading/EarFlash.hpp>
 using namespace sightreading;
+TEST_CASE("Ear integer validation rejects wide values before narrowing", "[final-validation]") {
+ for(const json value:{json(uint64_t{4294967356}),json(UINT64_MAX),json(-1),json(true),json(60.5)}){
+  auto c=defaultEarConfig();c["root"]=value;REQUIRE_THROWS(validateEarConfig(c));
+ }
+ for(int root:{36,84}){auto c=defaultEarConfig();c["root"]=root;REQUIRE_NOTHROW(validateEarConfig(c));}
+}
 TEST_CASE("Intervals honor selected quality direction transpose order and seed",
           "[ear-flash]") {
   auto c = defaultEarConfig();

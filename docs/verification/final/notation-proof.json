@@ -1,0 +1,430 @@
+{
+  "flash": [
+    {
+      "mode": "treble",
+      "seed": 6,
+      "notes": [
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "0",
+          "midiNote": 55,
+          "spelling": {
+            "accidental": "n",
+            "letter": "g",
+            "octave": 3
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "1",
+          "midiNote": 60,
+          "spelling": {
+            "accidental": "n",
+            "letter": "c",
+            "octave": 4
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "2",
+          "midiNote": 64,
+          "spelling": {
+            "accidental": "n",
+            "letter": "e",
+            "octave": 4
+          },
+          "startFrame": 0
+        }
+      ],
+      "geometry": [
+        {
+          "x": -15.619999885559082,
+          "y": 60,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": 45,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": 35,
+          "width": 22.720001220703125,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "mode": "bass",
+      "seed": 6,
+      "notes": [
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "0",
+          "midiNote": 55,
+          "spelling": {
+            "accidental": "n",
+            "letter": "g",
+            "octave": 3
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "1",
+          "midiNote": 60,
+          "spelling": {
+            "accidental": "n",
+            "letter": "c",
+            "octave": 4
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "2",
+          "midiNote": 64,
+          "spelling": {
+            "accidental": "n",
+            "letter": "e",
+            "octave": 4
+          },
+          "startFrame": 0
+        }
+      ],
+      "geometry": [
+        {
+          "x": -15.619999885559082,
+          "y": 0,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": -15,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": -25,
+          "width": 22.720001220703125,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "mode": "grand",
+      "seed": 6,
+      "notes": [
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "0",
+          "midiNote": 55,
+          "spelling": {
+            "accidental": "n",
+            "letter": "g",
+            "octave": 3
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "1",
+          "midiNote": 60,
+          "spelling": {
+            "accidental": "n",
+            "letter": "c",
+            "octave": 4
+          },
+          "startFrame": 0
+        },
+        {
+          "duration": "q",
+          "endFrame": 48000,
+          "highlight": "target",
+          "id": "2",
+          "midiNote": 64,
+          "spelling": {
+            "accidental": "n",
+            "letter": "e",
+            "octave": 4
+          },
+          "startFrame": 0
+        }
+      ],
+      "geometry": [
+        {
+          "x": -15.619999885559082,
+          "y": 72,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": 25,
+          "width": 22.720001220703125,
+          "height": 160
+        },
+        {
+          "x": -15.619999885559082,
+          "y": 15,
+          "width": 22.720001220703125,
+          "height": 160
+        }
+      ]
+    }
+  ],
+  "seek": [
+    {
+      "name": "paused forward seek",
+      "native": {
+        "accompanimentError": "",
+        "accuracy": 0,
+        "channelControllers": {},
+        "config": {
+          "a": 0,
+          "accompaniment": "Off",
+          "accompanimentSpacing": 1,
+          "b": 7680,
+          "hearPractice": false,
+          "loop": false,
+          "mode": "continuous",
+          "practiceEnabled": false,
+          "rate": 1,
+          "spacing": 110,
+          "speed": 1,
+          "toleranceMs": 150
+        },
+        "engineTimeNs": 28795298535900,
+        "error": "",
+        "followError": "",
+        "generation": 3,
+        "group": 0,
+        "hits": 0,
+        "misses": 0,
+        "pumpEntries": 0,
+        "retry": false,
+        "revision": 2,
+        "sampleFrame": 268416,
+        "sampleRate": 48000,
+        "songId": "starter-bach",
+        "songSeconds": 6.9333368,
+        "songTick": 4992,
+        "speed": 1,
+        "state": "paused",
+        "target": [
+          60
+        ],
+        "tempo": 89.9999550000225,
+        "title": "BWV 846 — short excerpt"
+      },
+      "view": {
+        "width": 744,
+        "transform": "translate3d(-582.667px, 0px, 0px)",
+        "segments": [
+          0,
+          480,
+          960,
+          1440,
+          1920,
+          2400
+        ]
+      },
+      "actual": -582.667,
+      "expected": -582.667048
+    },
+    {
+      "name": "paused backward seek",
+      "native": {
+        "accompanimentError": "",
+        "accuracy": 0,
+        "channelControllers": {},
+        "config": {
+          "a": 0,
+          "accompaniment": "Off",
+          "accompanimentSpacing": 1,
+          "b": 7680,
+          "hearPractice": false,
+          "loop": false,
+          "mode": "continuous",
+          "practiceEnabled": false,
+          "rate": 1,
+          "spacing": 110,
+          "speed": 1,
+          "toleranceMs": 150
+        },
+        "engineTimeNs": 28795661773500,
+        "error": "",
+        "followError": "",
+        "generation": 4,
+        "group": 0,
+        "hits": 0,
+        "misses": 0,
+        "pumpEntries": 0,
+        "retry": false,
+        "revision": 2,
+        "sampleFrame": 285696,
+        "sampleRate": 48000,
+        "songId": "starter-bach",
+        "songSeconds": 1.0666672000000001,
+        "songTick": 768.0000000000002,
+        "speed": 1,
+        "state": "paused",
+        "target": [
+          60
+        ],
+        "tempo": 89.9999550000225,
+        "title": "BWV 846 — short excerpt"
+      },
+      "view": {
+        "width": 744,
+        "transform": "translate3d(62.6666px, 0px, 0px)",
+        "segments": [
+          0,
+          480,
+          960,
+          1440
+        ]
+      },
+      "actual": 62.6666,
+      "expected": 62.66660799999998
+    },
+    {
+      "name": "playing then pause late",
+      "native": {
+        "accompanimentError": "",
+        "accuracy": 0,
+        "channelControllers": {},
+        "config": {
+          "a": 0,
+          "accompaniment": "Off",
+          "accompanimentSpacing": 1,
+          "b": 7680,
+          "hearPractice": false,
+          "loop": false,
+          "mode": "continuous",
+          "practiceEnabled": false,
+          "rate": 1,
+          "spacing": 110,
+          "speed": 1,
+          "toleranceMs": 150
+        },
+        "engineTimeNs": 28796281900300,
+        "error": "",
+        "followError": "",
+        "generation": 6,
+        "group": 23,
+        "hits": 0,
+        "misses": 0,
+        "pumpEntries": 0,
+        "retry": false,
+        "revision": 2,
+        "sampleFrame": 315392,
+        "sampleRate": 48000,
+        "songId": "starter-bach",
+        "songSeconds": 7.7226704,
+        "songTick": 5560.319907840046,
+        "speed": 1,
+        "state": "paused",
+        "target": [
+          77
+        ],
+        "tempo": 89.9999550000225,
+        "title": "BWV 846 — short excerpt"
+      },
+      "view": {
+        "width": 744,
+        "transform": "translate3d(-669.494px, 0px, 0px)",
+        "segments": [
+          0,
+          480,
+          960,
+          1440,
+          1920,
+          2400
+        ]
+      },
+      "actual": -669.494,
+      "expected": -669.493744
+    },
+    {
+      "name": "second song after stopped late",
+      "native": {
+        "accompanimentError": "",
+        "accuracy": 0,
+        "channelControllers": {},
+        "config": {
+          "a": 0,
+          "accompaniment": "Off",
+          "accompanimentSpacing": 1,
+          "b": 12480,
+          "hearPractice": false,
+          "loop": false,
+          "mode": "continuous",
+          "practiceEnabled": false,
+          "rate": 1,
+          "spacing": 110,
+          "speed": 1,
+          "toleranceMs": 150
+        },
+        "engineTimeNs": 28796764669500,
+        "error": "",
+        "followError": "",
+        "generation": 7,
+        "group": 23,
+        "hits": 0,
+        "misses": 0,
+        "pumpEntries": 0,
+        "retry": false,
+        "revision": 3,
+        "sampleFrame": 338432,
+        "sampleRate": 48000,
+        "songId": "starter-mary",
+        "songSeconds": 0,
+        "songTick": 0,
+        "speed": 1,
+        "state": "stopped",
+        "target": [
+          64
+        ],
+        "tempo": 89.9999550000225,
+        "title": "Mary Had a Little Lamb"
+      },
+      "view": {
+        "width": 744,
+        "transform": "translate3d(180px, 0px, 0px)",
+        "segments": [
+          0,
+          480,
+          960,
+          1440
+        ]
+      },
+      "actual": 180,
+      "expected": 180
+    }
+  ],
+  "failures": []
+}

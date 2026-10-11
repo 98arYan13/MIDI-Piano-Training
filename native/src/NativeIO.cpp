@@ -42,7 +42,8 @@ void Engine::Impl::pollMidi(){
         for(const auto& [identity,index]:available){auto name=probe.getPortName(index);bool enabled=!disabled[identity];if(enabled&&!ports.contains(identity)){auto port=std::make_unique<InputPort>();port->engine=this;port->port=index;port->identity=identity;port->name=name;port->source=source("midi:"+identity);port->input=std::make_unique<RtMidiIn>(RtMidi::WINDOWS_MM,"Sight Reading input");port->input->ignoreTypes(true,true,true);port->input->setCallback(midiCallback,port.get());port->input->openPort(index);ports[identity]=std::move(port);}devices.push_back({{"id",identity},{"name",name},{"enabled",enabled},{"connected",ports.contains(identity)}});}
         }
         RtMidiOut outputProbe(RtMidi::WINDOWS_MM,"Sight Reading output discovery");outputs=json::array();for(unsigned i=0;i<outputProbe.getPortCount();++i)outputs.push_back({{"id",i},{"name",outputProbe.getPortName(i)}});
-    }catch(const RtMidiError& e){error="MIDI: "+e.getMessage();}
+    }catch(const SourceCapacityError& e){error=e.what();}
+    catch(const RtMidiError& e){error="MIDI: "+e.getMessage();}
 }
 void Engine::Impl::applySettings(){
     volume=settings["volume"].get<float>();monitoring=settings["monitoring"].get<bool>();velocityCurve=settings["velocityCurve"].get<float>();auto mode=settings["outputMode"].get<std::string>();outputMode=mode=="internal"?0:mode=="external"?1:2;
