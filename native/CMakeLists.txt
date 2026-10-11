@@ -13,6 +13,8 @@ set_tests_properties(native_piano_render PROPERTIES WORKING_DIRECTORY "${CMAKE_S
 target_sources(native_tests PRIVATE tests/metronome.cpp)
 
 target_sources(sightreading_engine PRIVATE src/Metronome.cpp)
+target_sources(sightreading_engine PRIVATE src/Practice.cpp)
+target_sources(native_tests PRIVATE tests/practice.cpp)
 add_library(sr_sqlite STATIC "${CMAKE_SOURCE_DIR}/.tools/deps/sqlite/sqlite-amalgamation-3530000/sqlite3.c")
 target_include_directories(sr_sqlite PUBLIC "${CMAKE_SOURCE_DIR}/.tools/deps/sqlite/sqlite-amalgamation-3530000")
 add_executable(sightreading src/Service.cpp)

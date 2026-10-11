@@ -56,6 +56,7 @@ try {
     "C4, MIDI 60",
   );
   await page.getByLabel("Staff view", { exact: true }).selectOption("grand");
+  await page.locator('.staff-clefs[data-clefs="treble bass"] svg').waitFor();
   assert.equal(
     await page.locator('.staff-clefs[data-clefs="treble bass"] svg').count(),
     1,
@@ -198,7 +199,8 @@ try {
   await page.getByRole("button", { name: "Toggle fullscreen" }).click();
   assert.equal(await page.evaluate(() => !!document.fullscreenElement), true);
   await page.evaluate(() => document.exitFullscreen());
-  await page.getByRole("button", { name: "Preview scroll" }).click();
+  await page.getByLabel("Practice mode", { exact: true }).selectOption("scroll");
+  await page.getByRole("button", { name: "Start exercise", exact: true }).click();
   await wait(350);
   const first = await page
     .locator(".staff-track")
@@ -214,7 +216,7 @@ try {
     fullPage: true,
   });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.getByRole("button", { name: "Freeze preview" }).click();
+  await page.getByRole("button", { name: "Stop exercise", exact: true }).click();
   await page.getByLabel("Staff view", { exact: true }).selectOption("grand");
   await page.screenshot({
     path: "web/test-results/keyboard-grand.png",

@@ -174,6 +174,23 @@
   min-width: 0;
   padding: 24px 0;
 }
+.staff-practice {
+  width: 100%;
+  min-width: 0;
+  padding: 16px 0;
+}
+.staff-practice .helper,
+.practice-stats {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.staff-practice .practice-settings {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.staff-segment svg {
+  overflow: visible;
+}
 .staff-preview-tools {
   padding: 0 24px 12px;
   color: #acb9ae;
@@ -218,7 +235,7 @@
   z-index: 2;
   width: 106px;
   height: 100%;
-  box-shadow: 12px 0 20px #1b2820;
+  box-shadow: none;
 }
 .staff-playhead {
   position: absolute;
@@ -238,7 +255,7 @@
   font-size: 8px;
   letter-spacing: 2px;
 }
-.workspace:has(.staff-preview) .workspace-stage {
+.workspace:has(.staff-preview, .staff-practice) .workspace-stage {
   min-height: 260px;
   display: block;
   padding: 0;
@@ -279,4 +296,63 @@
   .staff-playhead {
     left: 28%;
   }
+}
+.practice-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  color: #a5afa8;
+}
+.practice-stats b {
+  color: #eae9e5;
+}
+.practice-settings {
+  border: 1px solid #394040;
+  border-radius: 12px;
+  margin: 16px 0;
+  padding: 12px;
+}
+.practice-settings summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.practice-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.practice-settings-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.practice-settings-grid .practice-check,
+.practice-settings-grid fieldset label {
+  flex-direction: row;
+  align-items: center;
+}
+.practice-settings-grid fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  border: 1px solid #394040;
+  border-radius: 8px;
+  grid-column: 1/-1;
+}
+.chord-symbol-target {
+  min-height: 174px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: #dcb77d;
+  border: 1px solid #394040;
+  border-radius: 12px;
+}
+.chord-symbol-target small {
+  font-size: 14px;
+  color: #a5afa8;
 }

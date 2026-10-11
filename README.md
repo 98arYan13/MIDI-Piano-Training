@@ -2,7 +2,7 @@
 
 Windows 11 x64 native C++ piano service with a self-hosted React interface. MIDI monitoring, sampled piano and metronome belong to the native process and continue across tabs, dialogs, fullscreen, reload and browser closure. No browser sound fallback or runtime CDN dependency.
 
-This stage provides the global piano/metronome, local API, durable settings and five-route shell. Exercise bodies and MIDI import/playback are subsequent tasks; route workspaces identify that boundary.
+This stage provides the global piano/metronome, local API, durable settings, Staff practice and five-route shell. Ear/Flash exercises and MIDI import/playback are subsequent tasks; their route workspaces identify that boundary.
 
 ## Reproducible setup
 
@@ -35,7 +35,11 @@ Native loading, missing samples/audio, overload and deferred changes display acc
 
 The global virtual piano covers A0–C8 (88 keys), with C4=MIDI60. Use mouse/touch or computer keys A W S E D F T G Y H U J K O L P ; for a chromatic range starting at the selected C octave. Space holds virtual sustain; M stays reserved for metronome settings. Keyboard settings change virtual attack velocity and labels. Full range pans horizontally on narrow screens; focused range and octave controls are independent of exercise range. Browser focus loss/cancel releases its virtual ownership only. Live/MIDI, playback and example notes have separate colors; hatching indicates sustained notes.
 
-Staff currently exposes a clearly marked notation preview with Treble/Bass/Grand views. The reusable VexFlow 5.0.0 renderer uses bundled Bravura/Academico fonts (offline, no CDN), joined Grand clefs, pitch spelling separate from MIDI, accidentals/ledger lines/duration bars and native-clock visual scrolling. Generation/scoring and song import/playback are subsequent implementation tasks. VexFlow is pinned in the lockfile; its rendering API follows the [official tutorial](https://github.com/vexflow/vexflow/wiki/Tutorial).
+Staff has native seeded generation and physical-key scoring in Treble/Bass/Grand/chord-symbol modes. Open Staff settings for random 1–5 notes, one/two hands, chord-based targets, triad inversions, open seventh voicings, Autumn Leaves/50s/circle/tritone-substitution progressions, five-finger drills and selected diatonic intervals. Five-finger drills keep one hand position; Starting finger chooses the first pitch and later targets show the corresponding finger. All named keys and Chromatic are available, with major/natural/harmonic/ascending melodic minor scales. Chord symbols offer ordered/random chords, multiple keys, 3/4 tones and common pitch classes through the displayed note/MIDI threshold.
+
+Wait requires the exact physically held pitch set and fresh attacks within 150 ms; wrong attacks count misses and permit retry after release. Sustain and examples never answer. Scroll uses native quarter-note tempo and adjustable timing tolerance (default ±150 ms). Each seeded session has 64 targets; Start/Reset returns to target one. Reset clears score/timing, retains held live notes and requires fresh attacks. Stop/settings edits affect this exercise only; live monitoring and global clicks continue. Invalid combinations are rejected atomically with an actionable message. Smoothness 0 is unrestricted; 1–6 reduces allowed target-center motion from 12 to 2 semitones. Hand groups span at most one octave. Numeric settings commit on blur/Enter; checkboxes/selects follow authoritative native snapshots.
+
+The reusable VexFlow 5.0.0 renderer uses bundled Bravura/Academico fonts (offline, no CDN), joined Grand clefs, native pitch spelling separate from MIDI, accidentals/ledger lines/duration bars and native-clock visual scrolling. Segment SVGs allow glyph overflow so the current target at NOW remains intact. VexFlow is pinned in the lockfile; its rendering API follows the [official tutorial](https://github.com/vexflow/vexflow/wiki/Tutorial).
 
 ## Verification
 
@@ -48,6 +52,7 @@ npm --prefix web run build
 node tests/service.mjs
 node tests/browser.mjs
 node tests/keyboard-notation.mjs
+node tests/staff-practice.mjs
 ```
 
 API/browser tests use temporary databases and actual native executable. Browser tests use installed Edge with fresh headless contexts, no browser download. Restricted environments may need loopback socket access permission.

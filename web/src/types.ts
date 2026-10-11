@@ -41,6 +41,7 @@ export type Device = {
   connected: boolean;
 };
 export type NativeState = {
+  practice: PracticeSnapshot;
   generation: number;
   engineTimeNs: number;
   sampleFrame: number;
@@ -101,7 +102,7 @@ export type Reply = {
 };
 export type NativeEvent = {
   sequence: number;
-  type: "note" | "beat";
+  type: "note" | "beat" | "practice";
   event: Record<string, number | boolean>;
 };
 export type SnapshotMessage = {
@@ -150,3 +151,70 @@ export type MetronomeAccentEdit = {
 export type AudioChannelEdit = { channel: number; enabled: boolean };
 // Shared visual-only timeline contract. Native controllers own generation, scoring and sound.
 export type { StaffMode, SpelledPitch, TimelineNote } from "./notationModel";
+export type PracticeConfig = {
+  staff: "treble" | "bass" | "grand" | "chordSymbol";
+  generator:
+    | "random"
+    | "triads"
+    | "sevenths"
+    | "progression"
+    | "position"
+    | "intervals"
+    | "chordSymbol";
+  key: string;
+  range: { min: number; max: number };
+  smoothness: number;
+  mode: "wait" | "scroll";
+  tempo: number;
+  toleranceMs: number;
+  seed: number;
+  generatorOptions: {
+    notes: number;
+    hands: number;
+    chordBased: boolean;
+    inversions: boolean;
+    openVoicing: boolean;
+    progression: "autumnLeaves" | "fifties" | "circle" | "substitution";
+    startingFinger: number;
+    intervals: number[];
+    randomChords: boolean;
+    multiKey: boolean;
+    keys: string[];
+    scale: "major" | "naturalMinor" | "harmonicMinor" | "melodicMinor";
+    tones: number;
+    commonNotes: number;
+    ignoreAbove: number;
+  };
+};
+export type PracticeSnapshot = {
+  error: string;
+  config: PracticeConfig;
+  running: boolean;
+  revision: number;
+  originFrame: number;
+  clockFrame: number;
+  index: number;
+  hits: number;
+  misses: number;
+  accuracy: number;
+  elapsed: number;
+  notes: import("./notationModel").TimelineNote[];
+  targets: {
+    index: number;
+    symbol: string;
+    fingering: number;
+    result: "target" | "hit" | "miss";
+    startFrame: number;
+    endFrame: number;
+    pitches: {
+      midiNote: number;
+      spelling: import("./notationModel").SpelledPitch;
+    }[];
+  }[];
+  pressed: {
+    sourceId: number;
+    channel: number;
+    instance: number;
+    note: number;
+  }[];
+};

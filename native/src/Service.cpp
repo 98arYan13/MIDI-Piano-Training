@@ -3,6 +3,7 @@
 #include <httplib.h>
 #include <iostream>
 #include <sightreading/Engine.hpp>
+#include <sightreading/Practice.hpp>
 #include <sightreading/Storage.hpp>
 #include <thread>
 #include <unordered_set>
@@ -81,6 +82,11 @@ int main(int argc, char **argv) {
         if (i.value().get<bool>())
           options.disabledInputs.push_back(i.key());
     Engine engine(options);
+    Practice practice(options.sampleRate);
+    std::mutex practiceMutex;
+    auto savedPractice = storage.load("practice");
+    if (!savedPractice.is_null())
+      practice.configure(savedPractice);
     engine.setInputHook(
         [](const InputEvent &e, uint64_t frame, void *c) noexcept {
           auto event = e;
@@ -122,6 +128,10 @@ int main(int argc, char **argv) {
       auto s = engine.snapshot();
       s["generation"] = generation;
       s["engineTimeNs"] = now();
+      {
+        std::lock_guard lock(practiceMutex);
+        s["practice"] = practice.snapshot(engine.sampleFrame());
+      }
       return s;
     };
     auto command = [&](const json &req) {
@@ -134,7 +144,72 @@ int main(int argc, char **argv) {
                     {"ok", true},
                     {"result", state()},
                     {"error", nullptr}};
-      auto reply = engine.command(req);
+      json reply;
+      if (req.is_object() && req.contains("id") &&
+          req.value("version", json()) == 1 &&
+          req.value("type", json()).is_string() &&
+          req["type"].get<std::string>().starts_with("practice.")) {
+        try {
+          std::lock_guard lock(practiceMutex);
+          const auto type = req["type"].get<std::string>();
+          if (type == "practice.answer") {
+            auto answer = req;
+            auto action = answer.at("params").at("action").get<std::string>();
+            if (action != "on" && action != "off")
+              throw std::invalid_argument(
+                  "practice.answer action must be on or off.");
+            answer["type"] =
+                action == "on" ? "virtual.noteOn" : "virtual.noteOff";
+            answer["params"].erase("action");
+            return engine.command(answer);
+          }
+          if (type == "practice.configure")
+            practice.configure(req.value("params", json::object()));
+          else if (type == "practice.option") {
+            const auto &params = req.at("params");
+            auto field = params.at("field").get<std::string>();
+            if ((field != "intervals" && field != "keys") ||
+                !params.at("enabled").is_boolean())
+              throw std::invalid_argument(
+                  "Option toggle requires intervals/keys and boolean enabled.");
+            auto values = practice.snapshot(
+                engine.sampleFrame())["config"]["generatorOptions"][field];
+            auto value = params.at("value");
+            auto it = std::find(values.begin(), values.end(), value);
+            if (params["enabled"] == true && it == values.end())
+              values.push_back(value);
+            if (params["enabled"] == false && it != values.end())
+              values.erase(it);
+            practice.configure({{"generatorOptions", {{field, values}}}});
+          } else if (type == "practice.start") {
+            const auto frame = engine.sampleFrame();
+            engine.followMetronome(practice.snapshot(frame)["config"]["tempo"],
+                                   4, 4, 0, frame);
+            practice.start(frame);
+          } else if (type == "practice.reset") {
+            const auto frame = engine.sampleFrame();
+            engine.followMetronome(practice.snapshot(frame)["config"]["tempo"],
+                                   4, 4, 0, frame);
+            practice.reset(frame);
+          } else if (type == "practice.stop")
+            practice.stop(engine.sampleFrame());
+          else
+            throw std::invalid_argument("Unknown practice command.");
+          reply = {{"version", 1},
+                   {"id", req["id"]},
+                   {"ok", true},
+                   {"result", practice.snapshot(engine.sampleFrame())},
+                   {"error", nullptr}};
+        } catch (const std::exception &e) {
+          reply = {
+              {"version", 1},
+              {"id", req["id"]},
+              {"ok", false},
+              {"result", nullptr},
+              {"error", {{"code", "invalid_practice"}, {"message", e.what()}}}};
+        }
+      } else
+        reply = engine.command(req);
       if (reply["ok"].get<bool>()) {
         auto type = req["type"].get<std::string>();
         auto s = engine.snapshot();
@@ -148,6 +223,11 @@ int main(int argc, char **argv) {
             storage.save("metronome", s["metronome"]["settings"]);
           if (type == "devices.enable")
             storage.save("disabled", s["disabledInputs"]);
+          if (type == "practice.configure" || type == "practice.option") {
+            std::lock_guard lock(practiceMutex);
+            storage.save("practice",
+                         practice.snapshot(engine.sampleFrame())["config"]);
+          }
         } catch (const std::exception &e) {
           auto result = reply["result"];
           if (!result.is_object())
@@ -258,12 +338,19 @@ int main(int argc, char **argv) {
     json events = json::array();
     std::atomic<bool> pumping{true};
     uint64_t sequence{};
+    uint64_t practiceRevision = UINT64_MAX;
+    uint64_t practiceDrops{};
     std::thread pump([&] {
       while (pumping) {
         json additions = json::array();
         InputEvent e;
         BeatEvent b;
-        while (hooks.notes.pop(e))
+        const auto tickFrame = engine.sampleFrame();
+        while (hooks.notes.pop(e)) {
+          {
+            std::lock_guard lock(practiceMutex);
+            practice.input(e);
+          }
           additions.push_back({{"type", "note"},
                                {"event",
                                 {{"kind", unsigned(e.type)},
@@ -274,6 +361,28 @@ int main(int argc, char **argv) {
                                  {"velocity", e.velocity},
                                  {"instance", e.instance},
                                  {"sampleFrame", e.frame}}}});
+        }
+        {
+          std::lock_guard lock(practiceMutex);
+          const auto drops = hooks.notes.dropped.load();
+          if (drops != practiceDrops) {
+            practiceDrops = drops;
+            practice.recoverHeld(engine.snapshot()["heldNotes"], tickFrame);
+          }
+          practice.tick(tickFrame);
+          if (practice.revision() != practiceRevision) {
+            auto p = practice.snapshot(tickFrame);
+            practiceRevision = p["revision"];
+            additions.push_back({{"type", "practice"},
+                                 {"event",
+                                  {{"sampleFrame", tickFrame},
+                                   {"revision", practiceRevision},
+                                   {"index", p["index"]},
+                                   {"hits", p["hits"]},
+                                   {"misses", p["misses"]},
+                                   {"running", p["running"]}}}});
+          }
+        }
         while (hooks.beats.pop(b))
           additions.push_back({{"type", "beat"},
                                {"event",

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NativeProvider, useNative } from "./native";
 import type { AudioSettings, MetronomeSettings } from "./types";
 import { PianoKeyboard } from "./PianoKeyboard";
-import { StaffPreview } from "./StaffPreview";
+import { StaffPractice } from "./StaffPractice";
 import "./style.css";
 const routes = [
   ["staff", "Staff", "01"],
@@ -591,7 +591,7 @@ function Workspace({ route }: { route: string }) {
       </div>
       <div className="workspace-stage">
         {route === "staff" ? (
-          <StaffPreview />
+          <StaffPractice />
         ) : (
           <>
             <div className="staff-decoration" aria-hidden="true">

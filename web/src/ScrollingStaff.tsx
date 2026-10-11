@@ -1,13 +1,12 @@
 import { memo, useEffect, useRef, useState } from "react";
 import {
-  Accidental,
   Barline,
   Renderer,
   Stave,
   StaveConnector,
-  StaveNote,
   TickContext,
 } from "vexflow/bravura";
+import { notationNote } from "./notationNote";
 import {
   frameX,
   staffClefs,
@@ -83,18 +82,7 @@ const Segment = memo(function Segment({
         const first = chord[0],
           clef = first.staff ?? (first.midiNote < 60 ? "bass" : "treble"),
           stave = staves[mode === "grand" && clef === "bass" ? 1 : 0];
-        const note = new StaveNote({
-          clef,
-          keys: chord.map(
-            (n) =>
-              `${n.spelling.letter}${n.spelling.accidental === "n" ? "" : (n.spelling.accidental ?? "")}/${n.spelling.octave}`,
-          ),
-          duration: first.duration ?? "q",
-        });
-        chord.forEach((n, i) => {
-          if (n.spelling.accidental)
-            note.addModifier(new Accidental(n.spelling.accidental), i);
-        });
+        const note = notationNote(chord, clef);
         const x =
           frameX(first.startFrame, sampleRate, spacing) - index * segmentWidth;
         note.setStave(stave);
