@@ -34,6 +34,7 @@ unsigned Engine::Impl::source(const std::string& name){
     if(nextSource>=SourceCount-2)throw std::runtime_error("Source limit reached");sourceNames[nextSource]=name;return nextSource++;
 }
 bool Engine::Impl::submit(InputEvent e){
+    if(e.type==EventType::Panic)e.instance=metronome.boundary();
     if(e.source>=SourceCount||e.channel>15||static_cast<unsigned>(e.bus)>2)return false;
     if(e.type==EventType::On&&(e.note<21||e.note>108||e.velocity==0||e.velocity>127||!e.instance))return false;
     if(e.type==EventType::StopBus&&e.bus==Bus::Live)return false;
@@ -51,16 +52,16 @@ bool Engine::Impl::submit(InputEvent e){
         if(e.type==EventType::Disconnect||e.type==EventType::Panic){for(auto i=externalNotes.begin();i!=externalNotes.end();){auto current=i++;if(e.type==EventType::Panic||std::get<0>(current->first)==e.source)release(current);}for(unsigned channel=0;channel<16;++channel){if(e.type==EventType::Panic)for(auto& source:externalPedals)source[channel]=false;else externalPedals[e.source][channel]=false;bool down=false;for(auto& source:externalPedals)down|=source[channel];send(0xb0|channel,64,down?127:0);}}
     }
     if(events.push(e))return true;++overload;
-    if(e.type==EventType::Panic)emergencyPanic=true;
+    if(e.type==EventType::Panic){emergencyPanicBoundary.store(e.instance);emergencyPanic=true;}
     else if(e.type!=EventType::On){sourceGeneration[e.source].fetch_add(1);emergencySources[e.source/64].fetch_or(uint64_t{1}<<(e.source%64));}
     return false;
 }
 void Engine::Impl::publish(unsigned i){auto& n=notes[i];auto& p=published[i];p.sequence.fetch_add(1,std::memory_order_relaxed);uint64_t bits=n.active?1:0;if(n.active){bits|=(n.held?2:0)|(n.sounding?4:0)|(pedals[unsigned(n.event.bus)][n.event.source][n.event.channel]?8:0);bits|=uint64_t(n.event.note)<<8|uint64_t(n.event.velocity)<<16|uint64_t(n.event.source)<<24|uint64_t(n.event.channel)<<40|uint64_t(n.event.bus)<<44;}p.instance.store(n.event.instance,std::memory_order_relaxed);p.packed.store(bits,std::memory_order_relaxed);p.sequence.fetch_add(1,std::memory_order_release);}
 void Engine::Impl::off(unsigned i,int delay){auto& n=notes[i];if(n.sounding&&pianoReady)synths[unsigned(n.event.bus)]->protectedNoteOff(delay,n.event.note,n.token);if(n.event.bus==Bus::Live&&n.held)--liveHeld;n.active=false;n.held=false;publish(i);}
 void Engine::Impl::disconnect(unsigned source,int delay){for(unsigned b=0;b<3;++b)for(unsigned c=0;c<16;++c){if(pedals[b][source][c]&&b==0)--livePedals;pedals[b][source][c]=false;}for(unsigned i=0;i<NoteCount;++i)if(notes[i].active&&notes[i].event.source==source)off(i,delay);}
-void Engine::Impl::panic(uint64_t absolute){metronome.panic();if(inputHook)inputHook({EventType::Panic},absolute==UINT64_MAX?frame.load():absolute,inputContext);if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths)s->allSoundOff();for(unsigned i=0;i<NoteCount;++i){notes[i].active=false;notes[i].held=false;publish(i);}for(auto& b:pedals)for(auto& s:b)s.fill(false);liveHeld=0;livePedals=0;scheduledSize=0;}
+void Engine::Impl::panic(uint64_t absolute,uint64_t metronomeBoundary){metronome.panic(metronomeBoundary);if(inputHook)inputHook({EventType::Panic},absolute==UINT64_MAX?frame.load():absolute,inputContext);if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths)s->allSoundOff();for(unsigned i=0;i<NoteCount;++i){notes[i].active=false;notes[i].held=false;publish(i);}for(auto& b:pedals)for(auto& s:b)s.fill(false);liveHeld=0;livePedals=0;scheduledSize=0;}
 void Engine::Impl::dispatch(const InputEvent& e,int delay,uint64_t absolute){
-    if(e.type==EventType::Panic){panic(absolute);return;}
+    if(e.type==EventType::Panic){panic(absolute,e.instance);return;}
     if(e.type!=EventType::Disconnect&&e.generation!=sourceGeneration[e.source].load())return;
     if(e.type!=EventType::StopBus&&e.busGeneration!=busGeneration[unsigned(e.bus)].load())return;
     if(e.type==EventType::Disconnect){disconnect(e.source,delay);return;}
@@ -80,7 +81,7 @@ void Engine::Impl::render(float* output,unsigned frames){
         if(retained!=scheduledSize){scheduledSize=retained;std::make_heap(scheduled.begin(),scheduled.begin()+scheduledSize,later);}
         while(events.pop(event)){if(event.type!=EventType::Disconnect&&event.generation!=sourceGeneration[event.source].load())continue;if(event.type!=EventType::StopBus&&event.busGeneration!=busGeneration[unsigned(event.bus)].load())continue;if(event.frame==0||event.frame<begin)event.frame=begin;if(scheduledSize>=ScheduledCount||(event.type==EventType::On&&scheduledSize>=ScheduledCount-1024)){++overload;if(event.type!=EventType::On){sourceGeneration[event.source].fetch_add(1);emergencySources[event.source/64].fetch_or(uint64_t{1}<<(event.source%64));}continue;}scheduled[scheduledSize++]={event,++eventOrder};std::push_heap(scheduled.begin(),scheduled.begin()+scheduledSize,later);}
         while(scheduledSize&&scheduled[0].event.frame<begin+count){std::pop_heap(scheduled.begin(),scheduled.begin()+scheduledSize,later);auto e=scheduled[--scheduledSize].event;dispatch(e,int(e.frame-begin),e.frame);}
-        for(unsigned w=0;w<2;++w){auto bits=emergencySources[w].exchange(0);for(unsigned k=0;k<64;++k)if(bits&(uint64_t{1}<<k))disconnect(w*64+k,0);}if(emergencyPanic.exchange(false))panic();
+        for(unsigned w=0;w<2;++w){auto bits=emergencySources[w].exchange(0);for(unsigned k=0;k<64;++k)if(bits&(uint64_t{1}<<k))disconnect(w*64+k,0);}if(emergencyPanic.exchange(false))panic(UINT64_MAX,emergencyPanicBoundary.load());
         std::fill_n(output,count*2,0.f);std::array<float,BlockFrames> left{},right{};float* channels[]{left.data(),right.data()};
         if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths){s->renderBlock(sfz::AudioSpan<float>(channels,2,0,count));for(unsigned i=0;i<count;++i){output[i*2]+=left[i]*0.25f;output[i*2+1]+=right[i]*0.25f;}}
         if(pianoReady){uint64_t refusals=0;for(auto& s:synths)refusals+=s->getProtectedRefusals();auto previous=voiceRefusals.exchange(refusals);overload.fetch_add(refusals-previous);}

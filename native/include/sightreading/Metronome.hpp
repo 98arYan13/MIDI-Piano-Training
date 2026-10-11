@@ -16,11 +16,13 @@ public:
  nlohmann::json snapshot()const;
  void follow(double tempo,unsigned numerator,unsigned denominator,unsigned beat,uint64_t frame);
  void render(float*,unsigned,uint64_t) noexcept;
- void panic()noexcept;
+ uint64_t boundary()const noexcept{return write.load(std::memory_order_acquire);}
+ void panic(uint64_t boundary=UINT64_MAX)noexcept;
  BeatHook hook{};void* context{};
 private:
- struct Change {MetronomeConfig config;unsigned operation{},beat{};uint64_t frame{};};
- bool push(Change);std::array<Change,64> queue{};std::atomic<unsigned> read{},write{};
+ struct Change {MetronomeConfig config;unsigned operation{},beat{};uint64_t frame{},sequence{};};
+ bool push(Change);std::array<Change,64> queue{};std::atomic<uint64_t> read{},write{};
+ std::array<Change,64> scheduled{};unsigned scheduledSize{};std::atomic<unsigned> followOutstanding{};uint64_t canceled{};
  MetronomeConfig requested{},active{};unsigned rate; bool running{},pending{};MetronomeConfig target{};
  double next{},beatStart{}; unsigned beat{},part{};uint64_t bar{};unsigned countBars{};
  struct Voice {unsigned sound{},position{};float gain{};bool active{};};std::array<Voice,16> voices{};

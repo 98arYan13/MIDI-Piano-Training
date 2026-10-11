@@ -29,7 +29,7 @@ struct Engine::Impl {
     std::array<std::atomic<uint32_t>,SourceCount> sourceGeneration{};
     std::array<std::atomic<uint32_t>,3> busGeneration{};
     std::array<std::atomic<uint64_t>,2> emergencySources{};
-    std::atomic<bool> emergencyPanic{};
+    std::atomic<bool> emergencyPanic{};std::atomic<uint64_t> emergencyPanicBoundary{};
     struct Scheduled {InputEvent event;uint64_t order;};
     std::array<Scheduled,ScheduledCount> scheduled{};
     unsigned scheduledSize{};uint64_t tokenCounter{},eventOrder{};
@@ -54,7 +54,7 @@ struct Engine::Impl {
     std::map<std::string,std::unique_ptr<InputPort>> ports;std::map<std::string,bool> disabled;
     std::array<std::atomic<uint64_t>,64> monitorMessages{};std::atomic<uint64_t> monitorCount{};
     void loadPiano();unsigned source(const std::string& name);bool submit(InputEvent event);
-    void publish(unsigned slot);void off(unsigned slot,int delay);void disconnect(unsigned source,int delay);void panic(uint64_t absolute=UINT64_MAX);
+    void publish(unsigned slot);void off(unsigned slot,int delay);void disconnect(unsigned source,int delay);void panic(uint64_t absolute=UINT64_MAX,uint64_t metronomeBoundary=UINT64_MAX);
     void dispatch(const InputEvent& event,int delay,uint64_t absolute);void render(float* output,unsigned frames);
     static int callback(const void*,void*,unsigned long,const PaStreamCallbackTimeInfo*,PaStreamCallbackFlags,void*);
     void closeAudio();void openAudio();static void midiCallback(double,std::vector<unsigned char>*,void*);void pollMidi();void applySettings();bool applyPending(bool now);

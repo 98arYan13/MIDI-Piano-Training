@@ -53,3 +53,23 @@ TEST_CASE("Original click sounds coexist with sampled live piano and retain bus 
  metroCommand(mixed,"bus.stop",{{"bus","example"}});renderFrames(mixed,128);REQUIRE(mixed.snapshot()["metronome"]["running"]==true);
  }
 }
+TEST_CASE("Panic cancellation respects later metronome commands","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});metroCommand(e,"panic");metroCommand(e,"metronome.start");renderFrames(e,128);REQUIRE(e.snapshot()["metronome"]["running"]==true);
+ metroCommand(e,"metronome.start");metroCommand(e,"panic");renderFrames(e,128);REQUIRE(e.snapshot()["metronome"]["running"]==false);
+}
+TEST_CASE("Metronome settings restore directly","[metronome]"){
+ Engine a({"missing.sfz",48000,128,false,true}),b({"missing.sfz",48000,128,false,true});auto settings=a.snapshot()["metronome"]["settings"];REQUIRE(metroCommand(b,"metronome.config",settings)["ok"]==true);REQUIRE(b.snapshot()["metronome"]["settings"]==settings);
+}
+TEST_CASE("Future Follow changes retain intervening beats and ordered positions","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);e.followMetronome(120,4,4,0,60000);e.followMetronome(200,3,4,1,100000);renderFrames(e,110000);
+ REQUIRE(b.events[1].sampleFrame==28800);REQUIRE(b.events[2].sampleFrame==57600);REQUIRE(b.events[3].sampleFrame==60000);REQUIRE(b.events[4].sampleFrame==84000);REQUIRE(b.events[5].sampleFrame==100000);REQUIRE(b.events[5].beat==1);
+}
+TEST_CASE("Follow reservations refuse overflow and release on Panic","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);
+ for(unsigned i=0;i<63;++i)e.followMetronome(100,4,4,i%4,100000+i*100);REQUIRE_THROWS(e.followMetronome(100,4,4,0,200000));renderFrames(e,128);REQUIRE_THROWS(e.followMetronome(100,4,4,0,200000));
+ metroCommand(e,"panic");renderFrames(e,128);REQUIRE_NOTHROW(e.followMetronome(100,4,4,0,200000));
+}
+TEST_CASE("Follow same-frame changes apply in producer order and restore validates beat unit","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);e.followMetronome(120,4,4,1,1000);e.followMetronome(100,4,4,2,1000);renderFrames(e,1000);REQUIRE(b.events[1].beat==2);
+ REQUIRE(metroCommand(e,"metronome.config",{{"beatUnit",8}})["ok"]==false);
+}
