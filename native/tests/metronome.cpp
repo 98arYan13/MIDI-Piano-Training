@@ -73,3 +73,18 @@ TEST_CASE("Follow same-frame changes apply in producer order and restore validat
  Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);e.followMetronome(120,4,4,1,1000);e.followMetronome(100,4,4,2,1000);renderFrames(e,1000);REQUIRE(b.events[1].beat==2);
  REQUIRE(metroCommand(e,"metronome.config",{{"beatUnit",8}})["ok"]==false);
 }
+TEST_CASE("Scheduled Follow preserves later metronome configuration and pending bar edits","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"},{"countIn",0}});metroCommand(e,"metronome.start");renderFrames(e,128);
+ e.followMetronome(120,4,4,1,40000);metroCommand(e,"metronome.config",{{"mute",true},{"volume",0.1},{"subdivision","eighth"}});renderFrames(e,39872);
+ std::vector<float> out(84001*2);e.render(out.data(),84001);REQUIRE(std::all_of(out.begin(),out.end(),[](float f){return f==0;}));
+ REQUIRE(b.events[2].sampleFrame==40000);REQUIRE(b.events[6].sampleFrame==124000);REQUIRE(b.events[6].subdivision==1);
+ REQUIRE(e.snapshot()["metronome"]["settings"]["volume"]==0.1f);
+}
+TEST_CASE("Scheduled Follow preserves later volume and explicit tempo revisions","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);e.followMetronome(120,4,4,1,40000);metroCommand(e,"metronome.config",{{"volume",0},{"tempo",200}});renderFrames(e,39872);
+ std::vector<float> out(15001*2);e.render(out.data(),15001);REQUIRE(std::all_of(out.begin(),out.end(),[](float f){return f==0;}));REQUIRE(b.events[2].sampleFrame==40000);REQUIRE(b.events[3].sampleFrame==54400);REQUIRE(e.snapshot()["metronome"]["activeTempo"]==200);
+}
+TEST_CASE("Scheduled Follow leaves newer meter waiting for the next bar","[metronome]"){
+ Engine e({"missing.sfz",48000,128,false,true});Beats b;e.setBeatHook(Beats::receive,&b);metroCommand(e,"metronome.config",{{"mode","follow"}});metroCommand(e,"metronome.start");renderFrames(e,128);e.followMetronome(120,4,4,1,40000);metroCommand(e,"metronome.config",{{"tempo",200},{"meter",{{"numerator",3},{"denominator",8}}}});renderFrames(e,83073);
+ REQUIRE(b.events[5].sampleFrame==83200);REQUIRE(b.events[5].beat==0);REQUIRE(e.snapshot()["metronome"]["activeMeter"]["denominator"]==8);renderFrames(e,7200);REQUIRE(b.events[6].sampleFrame==90400);
+}

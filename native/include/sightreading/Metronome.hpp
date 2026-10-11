@@ -20,9 +20,9 @@ public:
  void panic(uint64_t boundary=UINT64_MAX)noexcept;
  BeatHook hook{};void* context{};
 private:
- struct Change {MetronomeConfig config;unsigned operation{},beat{};uint64_t frame{},sequence{};};
+ struct Change {MetronomeConfig config;unsigned operation{},beat{};uint64_t frame{},sequence{};unsigned changedFields{};};
  bool push(Change);std::array<Change,64> queue{};std::atomic<uint64_t> read{},write{};
- std::array<Change,64> scheduled{};unsigned scheduledSize{};std::atomic<unsigned> followOutstanding{};uint64_t canceled{};
+ std::array<Change,64> scheduled{};unsigned scheduledSize{};std::atomic<unsigned> followOutstanding{};uint64_t canceled{},tempoConfigSequence{},meterConfigSequence{};
  MetronomeConfig requested{},active{};unsigned rate; bool running{},pending{};MetronomeConfig target{};
  double next{},beatStart{}; unsigned beat{},part{};uint64_t bar{};unsigned countBars{};
  struct Voice {unsigned sound{},position{};float gain{};bool active{};};std::array<Voice,16> voices{};
