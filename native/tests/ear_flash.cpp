@@ -357,3 +357,103 @@ TEST_CASE("Interval study never scores unrelated global live notes",
   REQUIRE(x.ear(10000)["misses"] == 0);
   REQUIRE(x.ear(10000)["hits"] == 0);
 }
+TEST_CASE("Melody mode ignores inherited interval presentation order",
+          "[ear-flash-review-order]") {
+  for (auto order : {"reverse", "harmonic"}) {
+    Engine e({.pianoPath = "missing-test.sfz"});
+    EarFlash x(e);
+    x.command("ear.configure", {{"mode", "interval"}, {"playOrder", order}}, 0);
+    x.command("ear.configure",
+              {{"mode", "melody"},
+               {"groups", 4},
+               {"pitches", 2},
+               {"tempo", 300},
+               {"melodyDirection", "ascending"}},
+              0);
+    auto s = x.command("ear.replay", json::object(), 0);
+    auto targets = s["target"]["groups"].get<std::vector<std::vector<int>>>();
+    std::map<uint64_t, std::vector<int>> byFrame;
+    for (auto &n : s["notes"])
+      byFrame[n["startFrame"].get<uint64_t>()].push_back(
+          n["midiNote"].get<int>());
+    std::vector<std::vector<int>> scheduled;
+    for (auto &[frame, group] : byFrame)
+      scheduled.push_back(group);
+    REQUIRE(scheduled == targets);
+    x.command("ear.stop", json::object(), 128);
+    for (auto &group : scheduled)
+      x.command("ear.answer", {{"pitches", group}}, 256);
+    REQUIRE(x.ear(256)["hits"] == 4);
+    REQUIRE(x.ear(256)["answered"] == true);
+  }
+}
+TEST_CASE("Physical attacks at example end unlock before the next worker tick",
+          "[ear-flash-review-end]") {
+  for (uint64_t offset : {uint64_t(0), uint64_t(128)}) {
+    Engine e({.pianoPath = "missing-test.sfz"});
+    EarFlash x(e);
+    x.command(
+        "ear.configure",
+        {{"mode", "melody"}, {"groups", 2}, {"pitches", 1}, {"tempo", 300}}, 0);
+    auto s = x.command("ear.replay", json::object(), 0);
+    uint64_t end = s["endFrame"];
+    int pitch = s["target"]["groups"][0][0];
+    x.input({EventType::On, Bus::Live, 1, 0, uint8_t(pitch), 90, 1, end - 2});
+    REQUIRE(x.ear(end - 2)["hits"] == 0);
+    x.input({EventType::Off, Bus::Live, 1, 0, uint8_t(pitch), 0, 1, end - 1});
+    x.input(
+        {EventType::On, Bus::Live, 1, 0, uint8_t(pitch), 90, 2, end + offset});
+    REQUIRE(x.ear(end + offset)["hits"] == 1);
+    REQUIRE(x.ear(end + offset)["playing"] == false);
+  }
+}
+TEST_CASE(
+    "Boundary resolution retains autoplay lock and held-before suppression",
+    "[ear-flash-review-end]") {
+  Engine e({.pianoPath = "missing-test.sfz"});
+  EarFlash x(e);
+  x.command("ear.configure",
+            {{"mode", "melody"}, {"groups", 2}, {"pitches", 1}, {"tempo", 300}},
+            0);
+  auto s = x.command("ear.replay", json::object(), 0);
+  uint64_t end = s["endFrame"];
+  int pitch = s["target"]["groups"][0][0];
+  x.input({EventType::On, Bus::Live, 1, 0, uint8_t(pitch), 90, 1, end - 1});
+  x.input({EventType::On, Bus::Live, 1, 0, uint8_t(pitch), 90, 1, end});
+  x.tick(end);
+  REQUIRE(x.ear(end)["hits"] == 0);
+  x.input({EventType::Disconnect, Bus::Live, 1});
+  s = x.command("ear.autoplay", {{"enabled", true}}, end);
+  auto oldTarget = s["target"];
+  auto nextEnd = s["endFrame"].get<uint64_t>();
+  x.input({EventType::On, Bus::Live, 1, 0, uint8_t(pitch), 90, 2, nextEnd});
+  REQUIRE(x.ear(nextEnd)["playing"] == true);
+  REQUIRE(x.ear(nextEnd)["endFrame"].get<uint64_t>() > nextEnd);
+  REQUIRE(x.ear(nextEnd)["hits"] == 0);
+}
+TEST_CASE("Answer commands resolve example completion at their native frame",
+          "[ear-flash-review-command-end]") {
+  Engine e({.pianoPath = "missing-test.sfz"});
+  EarFlash x(e);
+  x.command("ear.configure",
+            {{"mode", "melody"}, {"groups", 2}, {"pitches", 1}, {"tempo", 300}},
+            0);
+  x.command("flash.configure", {{"roots", {"C"}}, {"distances", {3}}}, 0);
+  auto s = x.command("ear.replay", json::object(), 0);
+  uint64_t end = s["endFrame"];
+  REQUIRE_THROWS(x.command("flash.answer", {{"answer", "E"}}, end - 1));
+  REQUIRE_THROWS(x.command("ear.answer",
+                           {{"pitches", s["target"]["groups"][0]}}, end - 1));
+  REQUIRE(x.command("flash.answer", {{"answer", "E"}}, end)["hits"] == 1);
+  REQUIRE(x.command("ear.answer", {{"pitches", s["target"]["groups"][0]}},
+                    end)["hits"] == 1);
+  x.command("flash.next", json::object(), end);
+  s = x.command("ear.autoplay", {{"enabled", true}}, end);
+  end = s["endFrame"];
+  REQUIRE_THROWS(x.command("flash.answer", {{"answer", "E"}}, end));
+  REQUIRE(x.ear(end)["endFrame"].get<uint64_t>() > end);
+  REQUIRE(x.ear(end)["answerLocked"] == true);
+  x.command("ear.pause", json::object(), end);
+  REQUIRE_THROWS(x.command("flash.answer", {{"answer", "E"}}, end + 100000));
+  REQUIRE(x.ear(end + 100000)["paused"] == true);
+}

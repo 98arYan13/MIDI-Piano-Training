@@ -481,6 +481,7 @@ export function FlashCards() {
         e.ctrlKey ||
         e.metaKey ||
         e.altKey ||
+        e.shiftKey ||
         (e.target as HTMLElement).closest(
           'input,textarea,select,[contenteditable="true"]',
         ) ||

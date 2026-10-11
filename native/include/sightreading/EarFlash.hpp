@@ -36,6 +36,7 @@ private:
   void next(bool, uint64_t);
   void stop();
   void play(const std::string &, uint64_t);
+  void updateExample(uint64_t);
   void evaluate(uint64_t);
 };
 } // namespace sightreading

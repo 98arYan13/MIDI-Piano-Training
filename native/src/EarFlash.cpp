@@ -273,9 +273,10 @@ void EarFlash::play(const std::string &part, uint64_t frame) {
     int root = earTarget_["root"], target = earTarget_["groups"][1][0];
     groups = {{root}, {target}, {root}, {target}};
   }
-  if (earConfig_["playOrder"] == "reverse")
+  if (earConfig_["mode"] == "interval" && earConfig_["playOrder"] == "reverse")
     std::reverse(groups.begin(), groups.end());
-  if (earConfig_["playOrder"] == "harmonic") {
+  if (earConfig_["mode"] == "interval" &&
+      earConfig_["playOrder"] == "harmonic") {
     std::set<int> all;
     for (auto &g : groups)
       all.insert(g.begin(), g.end());
@@ -386,6 +387,8 @@ void EarFlash::input(const InputEvent &e) {
   }
   if (e.bus != Bus::Live)
     return;
+  if (e.type == EventType::On)
+    updateExample(e.frame);
   if (e.type == EventType::PitchWheel) {
     int value = int(e.note) + (int(e.velocity) << 7);
     if (value >= 6000 && value <= 10000) {
@@ -438,7 +441,7 @@ void EarFlash::input(const InputEvent &e) {
     ++revision_;
   }
 }
-void EarFlash::tick(uint64_t frame) {
+void EarFlash::updateExample(uint64_t frame) {
   if (playing_) {
     unsigned sent = 0;
     while (!schedule_.empty() &&
@@ -470,6 +473,9 @@ void EarFlash::tick(uint64_t frame) {
       }
     }
   }
+}
+void EarFlash::tick(uint64_t frame) {
+  updateExample(frame);
   if (!playing_ && !attempt_.empty()) {
     auto first =
         std::min_element(attempt_.begin(), attempt_.end(),
@@ -521,6 +527,8 @@ json EarFlash::flash() const {
 }
 json EarFlash::command(const std::string &type, const json &p, uint64_t frame) {
   require(p.is_object(), "Command params must be an object.");
+  if (type == "ear.answer" || type == "flash.answer")
+    updateExample(frame);
   if (type == "ear.option" || type == "flash.option") {
     auto field = p.at("field").get<std::string>();
     require(p.at("enabled").is_boolean(),

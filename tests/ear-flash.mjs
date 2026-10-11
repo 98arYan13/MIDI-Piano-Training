@@ -228,6 +228,21 @@ try {
   await until(
     async () => (await page.getByText("3rd of C", { exact: true }).count()) > 0,
   );
+  const shortcutBefore = (await state()).flash;
+  await page.dispatchEvent("body", "keydown", {
+    key: "3",
+    code: "Digit3",
+    shiftKey: true,
+  });
+  await sleep(150);
+  const shortcutAfter = (await state()).flash;
+  assert.equal(
+    shortcutAfter.answered,
+    false,
+    "Shift-modified digit must not answer",
+  );
+  assert.equal(shortcutAfter.hits, shortcutBefore.hits);
+  assert.equal(shortcutAfter.misses, shortcutBefore.misses);
   await page.keyboard.press("3");
   await until(async () => (await state()).flash.answered);
   await live();
