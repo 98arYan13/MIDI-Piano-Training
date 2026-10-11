@@ -486,3 +486,17 @@ TEST_CASE("Source recovery cancels newly spawned release-trigger layers", "[revi
  double left=0,right=0;for(unsigned i=3600;i<4800;++i){left+=std::abs(a[i*2]);right+=std::abs(a[i*2+1]);}
  REQUIRE(left<.00001);REQUIRE(right>.001);
 }
+TEST_CASE("Restart from first frozen retry starts a fresh missed group", "[review-score]") {
+  Engine e; Transport t(e); t.load(model());
+  t.command("transport.configure", {{"mode", "pauseOnMiss"}}, 0);
+  t.command("transport.play", {}, 0);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 1, 24256});
+  REQUIRE(t.snapshot(24256)["retry"] == true);
+  REQUIRE(t.snapshot(24256)["misses"] == 1);
+  t.command("transport.restart", {}, 25000);
+  REQUIRE(t.snapshot(25000)["misses"] == 0);
+  REQUIRE(t.snapshot(25000)["retry"] == false);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 2, 49256});
+  REQUIRE(t.snapshot(49256)["misses"] == 1);
+  REQUIRE(t.snapshot(49256)["retry"] == true);
+}

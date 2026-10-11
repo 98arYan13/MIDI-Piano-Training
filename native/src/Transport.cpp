@@ -624,6 +624,8 @@ json Transport::command(const std::string &type, const json &params,
   } else if (type == "transport.restart") {
     cancel();
     position_ = 0;
+    retry_ = false;
+    groupFailed_ = false;
     hits_ = misses_ = 0;
     resume(frame);
   } else if (type == "transport.seek") {
