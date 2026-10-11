@@ -138,15 +138,35 @@ int main(int argc, char **argv) {
       if (reply["ok"].get<bool>()) {
         auto type = req["type"].get<std::string>();
         auto s = engine.snapshot();
-        if (type == "audio.settings" || type == "audio.channel")
-          storage.save("audio", s["pendingChange"].is_null()
-                                    ? s["settings"]
-                                    : s["pendingChange"]);
-        if (type == "metronome.config" || type == "metronome.meter" ||
-            type == "metronome.accent")
-          storage.save("metronome", s["metronome"]["settings"]);
-        if (type == "devices.enable")
-          storage.save("disabled", s["disabledInputs"]);
+        try {
+          if (type == "audio.settings" || type == "audio.channel")
+            storage.save("audio", s["pendingChange"].is_null()
+                                      ? s["settings"]
+                                      : s["pendingChange"]);
+          if (type == "metronome.config" || type == "metronome.meter" ||
+              type == "metronome.accent")
+            storage.save("metronome", s["metronome"]["settings"]);
+          if (type == "devices.enable")
+            storage.save("disabled", s["disabledInputs"]);
+        } catch (const std::exception &e) {
+          auto result = reply["result"];
+          if (!result.is_object())
+            result = json::object();
+          result["accepted"] = true;
+          result["applied"] = !result.value("deferred", false);
+          result["persisted"] = false;
+          return json{{"version", 1},
+                      {"id", reply["id"]},
+                      {"ok", false},
+                      {"result", result},
+                      {"error",
+                       {{"code", "storage_error"},
+                        {"message",
+                         std::string("Native change accepted but could not be "
+                                     "saved; it may be lost on restart. Retry "
+                                     "saving after resolving local storage: ") +
+                             e.what()}}}};
+        }
       }
       return reply;
     };
@@ -186,8 +206,12 @@ int main(int argc, char **argv) {
              [&](auto &, auto &res) { output(res, state()["metronome"]); });
     auto post = [&](const httplib::Request &req, httplib::Response &res) {
       try {
-        output(res, command(json::parse(req.body)));
-      } catch (const json::exception &) {
+        auto reply = command(json::parse(req.body));
+        if (!reply["ok"].get<bool>() &&
+            reply["error"]["code"] == "storage_error")
+          res.status = 500;
+        output(res, reply);
+      } catch (const json::parse_error &) {
         res.status = 400;
         output(res, {{"version", 1},
                      {"id", nullptr},
@@ -196,22 +220,28 @@ int main(int argc, char **argv) {
                      {"error",
                       {{"code", "invalid_json"},
                        {"message", "Expected a JSON command"}}}});
-      } catch (const std::exception &e) {
-        res.status = 500;
-        output(res,
-               {{"error", {{"code", "storage_error"}, {"message", e.what()}}}});
       }
     };
     http.Post("/api/v1/command", post);
     http.Put("/api/v1/settings", [&](const auto &req, auto &res) {
       try {
-        output(res, command({{"version", 1},
-                             {"id", "settings"},
-                             {"type", "audio.settings"},
-                             {"params", json::parse(req.body)}}));
-      } catch (const std::exception &) {
+        json reply = command({{"version", 1},
+                              {"id", "settings"},
+                              {"type", "audio.settings"},
+                              {"params", json::parse(req.body)}});
+        if (!reply["ok"].get<bool>() &&
+            reply["error"]["code"] == "storage_error")
+          res.status = 500;
+        output(res, reply);
+      } catch (const json::parse_error &) {
         res.status = 400;
-        output(res, {{"error", "Invalid settings JSON"}});
+        output(res, {{"version", 1},
+                     {"id", "settings"},
+                     {"ok", false},
+                     {"result", nullptr},
+                     {"error",
+                      {{"code", "invalid_json"},
+                       {"message", "Invalid settings JSON"}}}});
       }
     });
     http.Get("/api/v1/songs",
@@ -336,7 +366,7 @@ int main(int argc, char **argv) {
             }
           }
           ws.send(command(req).dump());
-        } catch (const std::exception &) {
+        } catch (const json::parse_error &) {
           ws.send(json{
               {"version", 1},
               {"id", nullptr},

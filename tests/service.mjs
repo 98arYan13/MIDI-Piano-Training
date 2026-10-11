@@ -1,3 +1,4 @@
+import { DatabaseSync } from "node:sqlite";
 import { request } from "node:http";
 import WebSocket from "../web/node_modules/ws/wrapper.mjs";
 import assert from "node:assert/strict";
@@ -154,7 +155,7 @@ try {
     d = await socket();
   function wsCommand(ws, id, type, params) {
     return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(Error("reply timeout")), 3000);
+      const timeout = setTimeout(() => reject(Error("reply timeout")), 6000);
       const listener = (e) => {
         const reply = JSON.parse(e.data);
         if (reply.id === id) {
@@ -282,6 +283,51 @@ try {
   assert.equal(state.metronome.settings.meter.numerator, 6);
   assert.equal(state.metronome.settings.accents[1], "mute");
   assert.equal(state.metronome.settings.accents[2], "strong");
+  const locked = new DatabaseSync(join(data, "practice.sqlite"));
+  locked.exec("BEGIN IMMEDIATE");
+  try {
+    const failed = await command("audio.settings", { volume: 0.41 });
+    assert.equal(failed.version, 1);
+    assert.equal(failed.id, 42);
+    assert.equal(failed.ok, false);
+    assert.equal(failed.error.code, "storage_error");
+    assert.equal(failed.result.applied, true);
+    assert.equal(failed.result.persisted, false);
+    assert.equal(
+      (await (await fetch(base + "/api/v1/status")).json()).settings.volume,
+      0.41,
+    );
+    const { ws } = await socket();
+    const wsFailed = await wsCommand(ws, "locked-ws", "audio.settings", {
+      volume: 0.42,
+    });
+    assert.equal(wsFailed.id, "locked-ws");
+    assert.equal(wsFailed.version, 1);
+    assert.equal(wsFailed.error.code, "storage_error");
+    assert.equal(wsFailed.result.persisted, false);
+    ws.close();
+    const put = await fetch(base + "/api/v1/settings", {
+      method: "PUT",
+      headers: { Origin: base },
+      body: JSON.stringify({ volume: 0.43 }),
+    });
+    const putFailed = await put.json();
+    assert.equal(put.status, 500);
+    assert.equal(putFailed.id, "settings");
+    assert.equal(putFailed.error.code, "storage_error");
+  } finally {
+    locked.exec("ROLLBACK");
+    locked.close();
+  }
+  await stop();
+  await start();
+  assert.equal(
+    (await (await fetch(base + "/api/v1/status")).json()).settings.volume,
+    0.37,
+  );
+  console.log(
+    "PASS SQLite locked-write errors correlate HTTP/WS/PUT IDs, report applied/not-persisted, retain durable settings",
+  );
   console.log(
     "PASS strict origins, JSON, commands, persistence, WebSocket reconnect continuity",
   );

@@ -192,3 +192,13 @@ TEST_CASE("Rapid audio channel edits merge native settings without lost channels
  auto channels=e.snapshot()["settings"]["channels"];REQUIRE(channels.size()==14);for(auto& channel:channels)REQUIRE((channel!=0&&channel!=1));
  REQUIRE(cmd(e,"audio.channel",{{"channel",16},{"enabled",false}})["ok"]==false);REQUIRE(cmd(e,"audio.channel",{{"channel",1},{"enabled","bad"}})["ok"]==false);REQUIRE(cmd(e,"audio.channel",{{"channel",1},{"enabled",true},{"unknown",true}})["ok"]==false);REQUIRE(e.snapshot()["settings"]["channels"]==channels);
 }
+TEST_CASE("Apply now recovers live ownership with a full non-live future scheduler") {
+ unsigned futurePedals=0;
+ Engine e(fixture());e.setInputHook([](const InputEvent& ev,uint64_t,void* ptr)noexcept{if(ev.type==EventType::Pedal&&ev.bus==Bus::Example)++*static_cast<unsigned*>(ptr);},&futurePedals);cmd(e,"metronome.config",{{"countIn",0}});cmd(e,"metronome.start");
+ REQUIRE(e.submit({EventType::On,Bus::Live,127,0,60,100,1}));REQUIRE(e.submit({EventType::Pedal,Bus::Live,127,0,0,127,0}));REQUIRE(e.submit({EventType::On,Bus::Playback,126,0,64,100,2}));audio(e);
+ for(unsigned batch=0;batch<2;batch++){for(unsigned i=0;i<4096;i++){InputEvent future{EventType::Pedal,Bus::Example,125,0,0,0,0};future.frame=16384;REQUIRE(e.submit(future));}audio(e);}
+ REQUIRE(cmd(e,"audio.settings",{{"monitoring",false}})["result"]["deferred"]==true);REQUIRE(cmd(e,"audio.applyPending",{{"applyNow",true}})["ok"]==true);audio(e);
+ auto notes=e.snapshot()["heldNotes"];REQUIRE(notes.size()==1);REQUIRE(notes[0]["bus"]=="playback");REQUIRE(e.snapshot()["metronome"]["running"]==true);
+ REQUIRE(cmd(e,"audio.settings",{{"monitoring",true}})["result"]["deferred"]==false);
+ audio(e,140);REQUIRE(futurePedals==8192);REQUIRE(e.sampleFrame()>16384);REQUIRE(e.submit({EventType::On,Bus::Live,127,0,67,100,3}));audio(e);REQUIRE(e.snapshot()["heldNotes"].size()==2);
+}
