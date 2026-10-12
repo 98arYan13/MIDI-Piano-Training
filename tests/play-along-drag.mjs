@@ -140,8 +140,12 @@ try {
   assert.equal((await state()).waiting, true, "hints off does not turn wait off");
   await hints.click();
   await until(async () => (await page.locator(".piano-key[data-hint]").count()) > 0);
+  const waitingPlayerY = await page.locator(".song-player").evaluate(el => el.getBoundingClientRect().top + window.scrollY);
   await waitMode.click();
   await until(async () => (await state()).state === "playing" && !(await state()).waiting);
+  await until(async () => await page.locator(".song-workspace .retry:visible").count() === 0);
+  const playingPlayerY = await page.locator(".song-player").evaluate(el => el.getBoundingClientRect().top + window.scrollY);
+  assert.ok(Math.abs(playingPlayerY - waitingPlayerY) < 1, "score stays in place when waiting message disappears");
   assert.equal((await state()).config.hints, true);
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await hints.click();
@@ -155,6 +159,13 @@ try {
   await until(async () => (await page.locator(".piano-key[data-hint]").count()) > 0);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: "web/test-results/play-along-wait-hints.png", fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileWaitingY = await page.locator(".song-player").evaluate(el => el.getBoundingClientRect().top + window.scrollY);
+  await waitMode.click();
+  await until(async () => !(await state()).waiting);
+  await until(async () => await page.locator(".song-workspace .retry:visible").count() === 0);
+  const mobilePlayingY = await page.locator(".song-player").evaluate(el => el.getBoundingClientRect().top + window.scrollY);
+  assert.ok(Math.abs(mobilePlayingY - mobileWaitingY) < 1, "mobile score stays in place when waiting clears");
   assert.deepEqual(errors, []);
   console.log("PASS Play Along dragging + wait left/right/both correct input, wrong-key freeze, hint colors and all wait/hint toggle combinations; no metronome tests");
 } finally {

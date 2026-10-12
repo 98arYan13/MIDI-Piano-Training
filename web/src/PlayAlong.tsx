@@ -164,17 +164,14 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               </button>
               <button className="focus-mode-trigger" onClick={onFocus}>Focus mode</button>
             </div>
-            {p.waiting && (
-              <p className="retry" role="status">
+            <p className={`retry song-status${p.waiting || p.retry ? "" : " inactive"}`} role="status" aria-hidden={!p.waiting && !p.retry}>
+              {p.waiting ? <>
                 Waiting for the selected hand{p.config.hand === "both" ? "s" : ""}: press {p.target.join(" + ")} to continue.
-              </p>
-            )}
-            {p.retry && !p.waiting && (
-              <p className="retry" role="status">
+              </> : p.retry ? <>
                 Paused on miss — play a fresh target chord:{" "}
                 {p.target.join(" + ")}. Backing resumes after your answer.
-              </p>
-            )}
+              </> : null}
+            </p>
             <details className="song-settings">
               <summary>Playback settings, loops & tracks</summary>
               <div className="song-options">
