@@ -63,9 +63,9 @@ try {
     "C4, MIDI 60",
   );
   await page.getByLabel("Staff view", { exact: true }).selectOption("grand");
-  await page.locator('.staff-clefs[data-clefs="treble bass"] svg').waitFor();
+  await page.locator('.engraved-score.grand .score-gutter svg').waitFor();
   assert.equal(
-    await page.locator('.staff-clefs[data-clefs="treble bass"] svg').count(),
+    await page.locator('.engraved-score.grand .score-gutter svg').count(),
     1,
   );
   assert.equal(await page.locator(".piano-key").count(), 88);

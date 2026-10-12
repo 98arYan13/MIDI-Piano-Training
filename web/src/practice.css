@@ -445,6 +445,7 @@
 }
 .paper-staff.engraved-score { height:350px; }
 .score-measure { position:absolute; top:0; }
+.score-measure svg { overflow:visible; }
 .score-gutter { position:absolute; left:0; top:0; width:118px; height:100%; background:white; z-index:2; }
 .paper-staff.engraved-score .staff-playhead { width:2px; background:#ef8b00; z-index:3; }
 .score-lines { position:absolute; inset:0; z-index:0; }

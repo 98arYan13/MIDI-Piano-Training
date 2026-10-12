@@ -1,5 +1,6 @@
 import type { TimelineNote, SpelledPitch } from "./notationModel";
 export type ScoreMetadata = {
+  preserveSpelling?: boolean;
   ppq: number;
   durationTicks: number;
   tempoMap: { tick: number; microseconds: number; seconds?: number }[];
@@ -9,6 +10,7 @@ export type ScoreMetadata = {
 };
 export type ScorePitch = {
   midi: number;
+  highlight?: TimelineNote["highlight"];
   spelling: SpelledPitch;
   accidental?: SpelledPitch["accidental"];
 };
@@ -215,7 +217,10 @@ export function buildScore(
                       .sort((a, b) => a.midiNote - b.midiNote)
                       .map((n) => ({
                         midi: n.midiNote,
-                        spelling: spell(n.midiNote, sharps),
+                        highlight: n.highlight,
+                        spelling: song.preserveSpelling
+                          ? n.spelling
+                          : spell(n.midiNote, sharps),
                       }))
                   : [],
                 ids: chord ? chord.notes.map((n) => String(n.id)) : [],

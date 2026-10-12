@@ -150,9 +150,9 @@ try {
   await page.getByLabel("Staff view", { exact: true }).waitFor();
   await page.getByLabel("Staff view", { exact: true }).selectOption("grand");
   await until(async () => (await state()).practice.config.staff === "grand");
-  await page.locator('.staff-clefs[data-clefs="treble bass"] svg').waitFor();
+  await page.locator('.score-gutter svg').waitFor();
   assert.equal(
-    await page.locator('.staff-clefs[data-clefs="treble bass"] svg').count(),
+    await page.locator('.score-gutter svg').count(),
     1,
   );
   assert.equal(await page.locator(".piano-key").count(), 88);
@@ -201,10 +201,11 @@ try {
       offset: Math.abs(bar.x + bar.width / 2 - score.x - score.width / 2),
     };
   });
-  assert.equal(geometry.width, 20);
+  assert.equal(geometry.width, 2);
   assert(geometry.offset < 1);
+  assert.equal(await page.locator('.practice-score button').count(), 0, 'exercise controls never cover the current note');
   assert(
-    (await page.locator(".staff-measure span").allTextContents()).includes("2"),
+    (await page.locator(".score-measure[data-measure=\"2\"]").count()) === 1,
   );
   await page.locator(".practice-settings summary").click();
   // Native partial edits do not lose independent changes; numeric text stays local until committed.
@@ -431,59 +432,35 @@ try {
   await ok("practice.start");
   await until(
     async () =>
-      (await page.locator(".staff-segment .vf-stavenote").count()) > 0,
+      (await page.locator(".score-measure .vf-stavenote").count()) > 0,
   );
   assert.equal(
     await page
-      .locator(".staff-segment svg")
+      .locator(".score-measure svg")
       .first()
       .evaluate((e) => getComputedStyle(e).overflow),
     "visible",
   );
   assert.equal(
     await page
-      .locator(".staff-clefs")
+      .locator(".score-gutter")
       .evaluate((e) => getComputedStyle(e).boxShadow),
     "none",
   );
   const note = (await state()).practice.notes[0];
   assert.equal(note.midiNote, 59);
   assert.deepEqual(note.spelling, { letter: "c", accidental: "b", octave: 4 });
-  await until(
-    async () =>
-      (await page
-        .locator(".staff-segment .vf-notehead text")
-        .nth(1)
-        .textContent()) === "\uE260",
-  );
-  assert.equal(
-    await page
-      .locator(".staff-segment .vf-notehead text")
-      .first()
-      .getAttribute("y"),
-    "125",
-  );
-  assert.equal(
-    await page
-      .locator(".staff-segment .vf-notehead text")
-      .nth(1)
-      .getAttribute("y"),
-    "125",
-  );
+  // Cb4 is carried by the Gb key signature, not repeated at every note.
+  await until(async () => (await page.locator('.score-gutter .vf-keysignature').count()) === 1);
+  assert.equal(await page.locator('.score-measure .vf-accidental').count(), 0);
+  assert.equal(await page.locator('.score-measure .vf-notehead text').first().getAttribute('y'), '120');
   await ok("practice.configure", { key: "C" });
   await ok("practice.start");
-  await until(
-    async () =>
-      (await page
-        .locator(".staff-segment .vf-notehead text")
-        .first()
-        .getAttribute("y")) === "130",
-  );
+  await until(async () => (await page.locator('.score-measure .vf-notehead text').first().getAttribute('y')) === '125');
   assert.deepEqual((await state()).practice.notes[0].spelling, {
-    letter: "b",
-    accidental: "n",
-    octave: 3,
+    letter: "b", accidental: "n", octave: 3,
   });
+  assert.equal(await page.locator('.score-measure .vf-accidental').count(), 0);
   await page
     .getByRole("button", { name: "Exercise fullscreen", exact: true })
     .click();

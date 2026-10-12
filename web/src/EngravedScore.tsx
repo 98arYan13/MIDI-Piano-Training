@@ -19,7 +19,7 @@ import {
   type ScoreMetadata,
   type ScoreToken,
 } from "./scoreModel";
-import type { TimelineNote } from "./notationModel";
+import { staffClefs, type StaffMode, type TimelineNote } from "./notationModel";
 import type { ScrollingStaffProps } from "./ScrollingStaff";
 import { separateNotationVoices } from "./notationNote";
 const keyNames = [
@@ -39,7 +39,6 @@ const keyNames = [
   "F#",
   "C#",
 ];
-const staffY = { treble: 30, bass: 180 };
 type Point = { frame: number; x: number };
 export function interpolateScore(
   points: Point[],
@@ -92,14 +91,24 @@ function makeNote(
   });
   for (let i = 0; i < token.dots; i++)
     Dot.buildAndAttach([note], { all: true });
-  note.setStyle({
-    fillStyle: token.muted ? "#9ca3aa" : "#202124",
-    strokeStyle: token.muted ? "#9ca3aa" : "#202124",
+  const colors = {
+    target: "#202124",
+    hit: "#28765d",
+    miss: "#c14e3b",
+    muted: "#9ca3aa",
+  };
+  const ink =
+    colors[token.muted ? "muted" : (token.pitches[0]?.highlight ?? "target")];
+  note.setStyle({ fillStyle: ink, strokeStyle: ink });
+  token.pitches.forEach((p, i) => {
+    const ink = colors[p.highlight ?? "target"];
+    note.setKeyStyle(i, { fillStyle: ink, strokeStyle: ink });
   });
   return note;
 }
 export function EngravedScore({
   notes,
+  mode = "grand",
   song,
   fromTick,
   toTick,
@@ -110,10 +119,17 @@ export function EngravedScore({
   label = "Song practice notation",
   scrub,
 }: Omit<ScrollingStaffProps, "mode"> & {
+  mode?: StaffMode;
   song: ScoreMetadata;
   fromTick: number;
   toTick: number;
 }) {
+  const clefs = useMemo(() => staffClefs(mode), [mode]);
+  const staffY = useMemo(
+    () => ({ treble: 30, bass: mode === "grand" ? 180 : 30 }),
+    [mode],
+  );
+  const height = mode === "grand" ? 350 : 220;
   const viewport = useRef<HTMLDivElement>(null),
     track = useRef<HTMLDivElement>(null),
     gutter = useRef<HTMLDivElement>(null);
@@ -129,8 +145,12 @@ export function EngravedScore({
     moved: boolean;
   } | null>(null);
   const measures = useMemo(
-    () => buildScore(notes, song, fromTick, toTick),
-    [notes, song, fromTick, toTick],
+    () =>
+      buildScore(notes, song, fromTick, toTick).map((m) => ({
+        ...m,
+        voices: m.voices.filter((v) => clefs.includes(v.clef)),
+      })),
+    [notes, song, fromTick, toTick, clefs],
   );
   const sections = useRef<
     { start: number; end: number; key: string; time: string }[]
@@ -201,7 +221,7 @@ export function EngravedScore({
       });
       const voices = rows.map((r) => r.voice),
         formatter = new Formatter();
-      for (const clef of ["treble", "bass"] as const)
+      for (const clef of clefs)
         formatter.joinVoices(
           rows.filter((r) => r.clef === clef).map((r) => r.voice),
         );
@@ -213,13 +233,14 @@ export function EngravedScore({
         Math.max(230, min * 1.35 + 60, onsets * 32 + 60) *
           Math.max(0.8, pixelsPerSecond / 110),
       );
-      renderer.resize(width, 350);
+      renderer.resize(width, height);
       el.style.width = `${width}px`;
-      for (const stave of Object.values(staves)) stave.setWidth(width).draw();
-      new StaveConnector(staves.treble, staves.bass)
-        .setType(StaveConnector.type.SINGLE_RIGHT)
-        .setContext(context)
-        .draw();
+      for (const clef of clefs) staves[clef].setWidth(width).draw();
+      if (mode === "grand")
+        new StaveConnector(staves.treble, staves.bass)
+          .setType(StaveConnector.type.SINGLE_RIGHT)
+          .setContext(context)
+          .draw();
       formatter.format(voices, width - 52);
       for (const tick of formatter.getTickContexts()?.array ?? []) {
         // Chord unisons need a check on each staff, never between the two staves.
@@ -307,15 +328,24 @@ export function EngravedScore({
       ...new Map(points.map((p) => [p.frame, p])).values(),
     ].sort((a, b) => a.frame - b.frame);
     sections.current = ranges;
-  }, [measures, song, sampleRate, pixelsPerSecond]);
+  }, [
+    measures,
+    song,
+    sampleRate,
+    pixelsPerSecond,
+    clefs,
+    staffY,
+    height,
+    mode,
+  ]);
   useEffect(() => {
     const el = gutter.current;
     if (!el) return;
     el.replaceChildren();
     const renderer = new Renderer(el, Renderer.Backends.SVG);
-    renderer.resize(118, 350);
+    renderer.resize(118, height);
     const context = renderer.getContext();
-    const staves = (["treble", "bass"] as const).map((c) =>
+    const staves = clefs.map((c) =>
       new Stave(12, staffY[c], 106)
         .setBegBarType(Barline.type.NONE)
         .setEndBarType(Barline.type.NONE)
@@ -325,11 +355,12 @@ export function EngravedScore({
         .setContext(context),
     );
     staves.forEach((s) => s.draw());
-    new StaveConnector(staves[0], staves[1])
-      .setType(StaveConnector.type.BRACE)
-      .setContext(context)
-      .draw();
-  }, [signature]);
+    if (mode === "grand")
+      new StaveConnector(staves[0], staves[1])
+        .setType(StaveConnector.type.BRACE)
+        .setContext(context)
+        .draw();
+  }, [signature, clefs, staffY, height, mode]);
   const stopped = running ? undefined : clockFrame();
   useEffect(() => {
     let raf = 0;
@@ -375,9 +406,10 @@ export function EngravedScore({
   return (
     <div
       ref={viewport}
-      className={`scrolling-staff grand paper-staff engraved-score draggable-staff${dragFrame !== null ? " dragging-staff" : ""}`}
+      style={{ height }}
+      className={`scrolling-staff ${mode} paper-staff engraved-score${scrub ? " draggable-staff" : ""}${dragFrame !== null ? " dragging-staff" : ""}`}
       role="img"
-      aria-label={`${label}, joined treble and bass staves`}
+      aria-label={`${label}, ${mode === "grand" ? "joined treble and bass staves" : `${mode} staff`}`}
       onPointerDown={(e) => {
         if (!scrub || e.button !== 0) return;
         e.preventDefault();
@@ -418,20 +450,27 @@ export function EngravedScore({
         }
       }}
     >
-      <svg className="score-lines" width="100%" height="350" aria-hidden="true">
-        {[70, 220].flatMap((y) =>
-          Array.from({ length: 5 }, (_, i) => (
-            <line
-              key={y + i}
-              x1="0"
-              x2="100%"
-              y1={y + i * 10}
-              y2={y + i * 10}
-              stroke="#777"
-              strokeWidth="1"
-            />
-          )),
-        )}
+      <svg
+        className="score-lines"
+        width="100%"
+        height={height}
+        aria-hidden="true"
+      >
+        {clefs
+          .map((c) => staffY[c] + 40)
+          .flatMap((y) =>
+            Array.from({ length: 5 }, (_, i) => (
+              <line
+                key={y + i}
+                x1="0"
+                x2="100%"
+                y1={y + i * 10}
+                y2={y + i * 10}
+                stroke="#777"
+                strokeWidth="1"
+              />
+            )),
+          )}
       </svg>
       <div className="staff-track" ref={track} />
       <div className="score-gutter" ref={gutter} />

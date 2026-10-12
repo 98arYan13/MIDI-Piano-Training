@@ -1,10 +1,11 @@
 import { pianoKeys } from "./pianoModel";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNative } from "./native";
-import { ScrollingStaff } from "./ScrollingStaff";
+import { EngravedScore } from "./EngravedScore";
+import { staffScore } from "./staffScore";
 import { spelledLabel } from "./notationModel";
 import { practiceAction } from "./practiceTransport";
-import { PlayerControls, RestartButton } from "./PlayerControls";
+import { PlayerControls } from "./PlayerControls";
 import type { PracticeConfig, TimelineNote } from "./types";
 const keys = [
   "C",
@@ -73,6 +74,16 @@ export function StaffPractice() {
     config = p?.config;
   const [error, setError] = useState("");
   const notes = useMemo(() => p?.notes ?? empty, [p?.revision]);
+  const score = useMemo(
+    () =>
+      staffScore(
+        notes,
+        config?.key ?? "C",
+        config?.tempo ?? 100,
+        native.state?.sampleRate ?? 48000,
+      ),
+    [notes, config?.key, config?.tempo, native.state?.sampleRate],
+  );
   const command = (type: string, params: Record<string, unknown> = {}) => {
     setError("");
     void native
@@ -164,6 +175,7 @@ export function StaffPractice() {
         )}
         <button onClick={() => command("practice.reset")}>Reset score</button>
         <button onClick={() => command("practice.stop")}>Stop exercise</button>
+        <button onClick={() => command("practice.reset")}>Restart exercise</button>
         <button
           onClick={() => {
             void document.documentElement
@@ -209,9 +221,13 @@ export function StaffPractice() {
               </small>
             </div>
           ) : (
-            <ScrollingStaff
+            <EngravedScore
               mode={config.staff as "treble" | "bass" | "grand"}
-              notes={notes}
+              notes={score.notes}
+              song={score.song}
+              fromTick={0}
+              toTick={score.song.durationTicks}
+              label="Staff practice notation"
               sampleRate={native.state?.sampleRate ?? 48000}
               clockFrame={() =>
                 config.mode === "wait"
@@ -225,10 +241,6 @@ export function StaffPractice() {
               tempo={config.tempo}
             />
           )}
-          <RestartButton
-            label="Restart exercise"
-            onClick={() => command("practice.reset")}
-          />
         </div>
         <div className="practice-progress" aria-label="Exercise progress">
           <div
