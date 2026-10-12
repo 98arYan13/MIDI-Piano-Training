@@ -173,6 +173,7 @@ export function StaffPractice() {
           ],
           (v) => edit({ mode: v as PracticeConfig["mode"] }),
         )}
+        {check("Hint mode", config.hints ?? false, hints => edit({ hints }))}
         <button onClick={() => command("practice.reset")}>Reset score</button>
         <button onClick={() => command("practice.stop")}>Stop exercise</button>
         <button onClick={() => command("practice.reset")}>Restart exercise</button>

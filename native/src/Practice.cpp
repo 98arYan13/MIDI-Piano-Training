@@ -114,6 +114,7 @@ json PracticeTarget::jsonValue() const {
 }
 json defaultPracticeConfig() {
   return {{"staff", "treble"},
+          {"hints", false},
           {"hand", "both"},
           {"generator", "random"},
           {"key", "C"},
@@ -142,6 +143,8 @@ json defaultPracticeConfig() {
 }
 json validatePracticeConfig(const json &c) {
   known(c, defaultPracticeConfig());
+  if (!c.at("hints").is_boolean())
+    throw std::invalid_argument("hints must be boolean.");
   choice(c, "staff", {"treble", "bass", "grand", "chordSymbol"});
   choice(c, "hand", {"both", "left", "right"});
   choice(c, "generator", generators);
@@ -398,6 +401,11 @@ std::vector<PracticeTarget> generatePractice(const json &raw, unsigned seed,
 }
 json Practice::configure(const json &patch) {
   auto c = validatePracticeConfig(merged(config_, patch));
+  if (patch.size() == 1 && patch.contains("hints")) {
+    config_ = std::move(c);
+    ++revision_;
+    return config_;
+  }
   generatePractice(c, c["seed"], 64);
   config_ = c;
   running_ = false;
@@ -595,7 +603,8 @@ void Practice::tick(uint64_t frame) {
   }
 }
 json Practice::snapshot(uint64_t frame) const {
-  json targets = json::array(), notes = json::array(), held = json::array();
+  json targets = json::array(), notes = json::array(), held = json::array(),
+       hints = json::array();
   for (unsigned i = 0; i < targets_.size(); ++i) {
     auto t = targets_[i].jsonValue();
     t["index"] = i;
@@ -615,6 +624,9 @@ json Practice::snapshot(uint64_t frame) const {
                  : p.midi < 60                               ? "bass"
                                                              : "treble")
               : "treble";
+      if (config_["hints"] == true && i == index_)
+        hints.push_back({{"midiNote", p.midi},
+                         {"hand", staff == "bass" ? "left" : "right"}});
       notes.push_back({{"id", std::to_string(i) + ":" + std::to_string(j)},
                        {"midiNote", p.midi},
                        {"spelling", p.notation()},
@@ -648,6 +660,7 @@ json Practice::snapshot(uint64_t frame) const {
           {"error", error_},
           {"targets", targets},
           {"notes", notes},
+          {"hintKeys", hints},
           {"pressed", held}};
 }
 } // namespace sightreading

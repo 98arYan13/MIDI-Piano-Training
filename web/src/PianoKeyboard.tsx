@@ -9,8 +9,11 @@ import {
 } from "./pianoModel";
 import "./practice.css";
 
-export function PianoKeyboard({ showSongHints = false, focusMode = false }: { showSongHints?: boolean; focusMode?: boolean }) {
+export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?: "play" | "staff" | "ear"; focusMode?: boolean }) {
   const native = useNative();
+  const hinted = hintContext === "play" ? native.state?.transport
+    : hintContext === "staff" ? native.state?.practice
+    : hintContext === "ear" ? native.state?.ear : undefined;
   const input = useMemo(
     () =>
       new VirtualInput((type, params) => {
@@ -239,8 +242,8 @@ export function PianoKeyboard({ showSongHints = false, focusMode = false }: { sh
                     (n) => n.note === k.midi && (n.held || n.sustained),
                   ) ?? [];
                 const buses = [...new Set(notes.map((n) => n.bus))];
-                const hint = showSongHints
-                  ? native.state?.transport.hintKeys?.find(n => n.midiNote === k.midi)?.hand
+                const hint = hinted?.config.hints
+                  ? hinted.hintKeys?.find(n => n.midiNote === k.midi)?.hand
                   : undefined;
                 return (
                   <button
@@ -288,7 +291,7 @@ export function PianoKeyboard({ showSongHints = false, focusMode = false }: { sh
             </div>
           </div>
           <div className="piano-legend">
-            {showSongHints && native.state?.transport.config.hints && <span>Hints · teal left hand · orange right hand</span>}
+            {hinted?.config.hints && <span>Hints · teal left hand · orange right hand</span>}
             <span className="live-dot">Live / MIDI</span>
             <span className="playback-dot">Playback</span>
             <span className="example-dot">Example</span>

@@ -69,6 +69,7 @@ std::set<int> pitches(const json &values) {
 } // namespace
 json defaultEarConfig() {
   return {{"mode", "interval"},
+          {"hints", false},
           {"intervals", intervals},
           {"directions", {"up"}},
           {"root", 60},
@@ -109,7 +110,7 @@ json validateEarConfig(const json &c) {
   number(c.at("range"), "max", 21, 108);
   require(c["range"]["min"] <= c["range"]["max"],
           "Range minimum must not exceed maximum.");
-  for (auto f : {"randomRoot", "continuous", "pitchWheel"})
+  for (auto f : {"randomRoot", "continuous", "pitchWheel", "hints"})
     require(c.at(f).is_boolean(), std::string(f) + " must be boolean.");
   return c;
 }
@@ -493,7 +494,22 @@ void EarFlash::tick(uint64_t frame) {
   }
 }
 json EarFlash::ear(uint64_t frame) const {
+  json hints = json::array();
+  if (earConfig_["hints"] == true && !earTarget_.is_null() && !answered_) {
+    std::set<int> notes;
+    const auto &groups = earTarget_["groups"];
+    if (earConfig_["mode"] == "melody") {
+      if (melodyIndex_ < groups.size())
+        for (const auto &pitch : groups[melodyIndex_]) notes.insert(pitch.get<int>());
+    } else {
+      for (const auto &group : groups)
+        for (const auto &pitch : group) notes.insert(pitch.get<int>());
+    }
+    for (int pitch : notes)
+      hints.push_back({{"midiNote", pitch}, {"hand", pitch < 60 ? "left" : "right"}});
+  }
   return {
+      {"hintKeys", hints},
       {"config", earConfig_},
       {"target", earTarget_},
       {"playing", playing_},
@@ -595,6 +611,11 @@ json EarFlash::command(const std::string &type, const json &p, uint64_t frame) {
   }
   if (type == "ear.configure") {
     auto c = validateEarConfig(merge(earConfig_, p));
+    if (p.size() == 1 && p.contains("hints")) {
+      earConfig_ = std::move(c);
+      ++revision_;
+      return ear(frame);
+    }
     generateEar(c, seed_);
     stop();
     autoplay_ = false;

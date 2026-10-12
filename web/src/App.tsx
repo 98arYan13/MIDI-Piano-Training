@@ -735,7 +735,7 @@ function Shell() {
         </nav>
         <main>
           <Workspace route={route} onFocus={enterFocus} />
-          <PianoKeyboard showSongHints={route === "play"} focusMode={focusActive} />
+          <PianoKeyboard hintContext={route === "play" || route === "staff" || route === "ear" ? route : undefined} focusMode={focusActive} />
         </main>
       </div>
       {(native.error || s?.error) && (

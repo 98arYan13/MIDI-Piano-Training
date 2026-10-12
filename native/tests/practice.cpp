@@ -3,6 +3,54 @@
 #include <sightreading/Engine.hpp>
 #include <sightreading/Practice.hpp>
 using namespace sightreading;
+TEST_CASE("Staff hint toggles preserve paused targets and score with strict booleans", "[practice][hints]") {
+  Practice p;
+  REQUIRE(p.snapshot(0)["config"].value("hints", true) == false);
+  p.configure({{"staff", "grand"}, {"generator", "triads"}, {"range", {{"min", 60}, {"max", 67}}}, {"generatorOptions", {{"inversions", false}}}});
+  p.start(100);
+  p.pause(200);
+  auto before = p.snapshot(200);
+  p.configure({{"hints", true}});
+  auto after = p.snapshot(200);
+  REQUIRE(after["hintKeys"] == json::array({{{"midiNote", 60}, {"hand", "left"}}, {{"midiNote", 64}, {"hand", "left"}}, {{"midiNote", 67}, {"hand", "right"}}}));
+  for (auto field : {"targets", "index", "hits", "misses", "running", "paused", "pressed", "clockFrame"}) REQUIRE(after[field] == before[field]);
+  for (const auto value : {json(1), json("true"), json(nullptr)}) {
+    REQUIRE_THROWS(p.configure({{"hints", value}}));
+    REQUIRE(p.snapshot(200) == after);
+  }
+  p.configure({{"hints", false}});
+  REQUIRE(p.snapshot(200)["hintKeys"].empty());
+  p.resume(300);
+  p.input({EventType::On, Bus::Live, 126, 0, 60, 100, 1, 400});
+  p.configure({{"hints", true}});
+  p.input({EventType::On, Bus::Live, 126, 0, 64, 100, 2, 500});
+  p.input({EventType::On, Bus::Live, 126, 0, 67, 100, 3, 600});
+  REQUIRE(p.snapshot(600)["hits"] == 1);
+  REQUIRE(p.snapshot(600)["index"] == 1);
+  REQUIRE(p.snapshot(600)["running"] == true);
+  auto scored = p.snapshot(600);
+  p.configure({{"hints", false}});
+  for (auto field : {"index", "hits", "misses", "running", "pressed"}) REQUIRE(p.snapshot(600)[field] == scored[field]);
+}
+TEST_CASE("Staff hints use notation hand and clear at terminal completion", "[practice][hints]") {
+  for (auto staff : {"treble", "bass", "grand", "chordSymbol"}) {
+    Practice p;
+    p.configure({{"staff", staff}, {"hints", true}, {"range", {{"min", 48}, {"max", 84}}}});
+    p.start(100);
+    auto s = p.snapshot(100);
+    for (auto hint : s["hintKeys"]) {
+      auto at = std::find_if(s["notes"].begin(), s["notes"].end(), [&](const json &n) {return n["startFrame"] == 0 && n["midiNote"] == hint["midiNote"];});
+      REQUIRE(at != s["notes"].end());
+      REQUIRE(hint["hand"] == ((*at)["staff"] == "bass" ? "left" : "right"));
+    }
+  }
+  Practice p;
+  p.configure({{"hints", true}, {"mode", "scroll"}, {"tempo", 300}, {"range", {{"min", 60}, {"max", 60}}}});
+  p.start(100);
+  p.tick(10000000);
+  REQUIRE(p.snapshot(10000000)["index"] == 64);
+  REQUIRE(p.snapshot(10000000)["hintKeys"].empty());
+}
 TEST_CASE("Hand selection restricts every generator and preserves configured range", "[practice][hand]") {
   for (auto hand : {"left", "right"})
     for (auto generator : {"random", "triads", "sevenths", "progression", "position", "intervals", "chordSymbol"}) {

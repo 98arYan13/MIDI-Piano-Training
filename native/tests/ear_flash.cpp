@@ -1,6 +1,45 @@
 #include <catch2/catch_test_macros.hpp>
 #include <sightreading/EarFlash.hpp>
 using namespace sightreading;
+TEST_CASE("Ear hint toggle preserves example playback and validates booleans", "[ear-flash][hints]") {
+  Engine e({.pianoPath = "missing-test.sfz"}); EarFlash x(e);
+  REQUIRE(x.ear(0)["config"].value("hints", true) == false);
+  x.command("ear.configure", {{"root", 48}, {"intervals", {"P8"}}}, 0);
+  auto before = x.command("ear.replay", json::object(), 0);
+  auto after = x.command("ear.configure", {{"hints", true}}, 0);
+  REQUIRE(after["hintKeys"] == json::array({{{"midiNote",48},{"hand","left"}},{{"midiNote",60},{"hand","right"}}}));
+  for (auto field : {"target", "index", "playing", "paused", "autoplay", "hits", "misses", "notes", "endFrame"}) REQUIRE(after[field] == before[field]);
+  for (const auto value : {json(1), json("true"), json(nullptr)}) {
+    REQUIRE_THROWS(x.command("ear.configure", {{"hints", value}}, 0));
+    REQUIRE(x.ear(0) == after);
+  }
+  auto paused = x.command("ear.pause", json::object(), 100);
+  REQUIRE(paused["hintKeys"] == after["hintKeys"]);
+  x.command("ear.configure", {{"hints", false}}, 100);
+  REQUIRE(x.ear(100)["paused"] == true);
+  REQUIRE(x.ear(100)["hintKeys"].empty());
+  x.command("ear.stop", json::object(), 100);
+  x.command("ear.configure", {{"hints", true}}, 100);
+  auto wrong = x.command("ear.answer", {{"interval", "m2"}}, 100);
+  REQUIRE(wrong["hintKeys"] == after["hintKeys"]);
+  REQUIRE(x.command("ear.answer", {{"interval", "P8"}}, 100)["hintKeys"].empty());
+  REQUIRE(x.command("ear.next", json::object(), 100)["hintKeys"] == after["hintKeys"]);
+}
+TEST_CASE("Ear melody hints track current chord retry advance and completion", "[ear-flash][hints]") {
+  Engine e({.pianoPath = "missing-test.sfz"}); EarFlash x(e);
+  auto s = x.command("ear.configure", {{"mode","melody"},{"hints",true},{"groups",2},{"pitches",3}}, 0);
+  REQUIRE(s["hintKeys"].size() == 3);
+  for (auto h : s["hintKeys"]) REQUIRE(std::find(s["target"]["groups"][0].begin(),s["target"]["groups"][0].end(),h["midiNote"]) != s["target"]["groups"][0].end());
+  auto retry = x.command("ear.answer", {{"pitches",{21}}}, 0);
+  REQUIRE(retry["hintKeys"] == s["hintKeys"]);
+  auto next = x.command("ear.answer", {{"pitches",s["target"]["groups"][0]}}, 0);
+  REQUIRE(next["index"] == 1);
+  REQUIRE(next["hintKeys"].size() == 3);
+  for (auto h : next["hintKeys"]) REQUIRE(std::find(s["target"]["groups"][1].begin(),s["target"]["groups"][1].end(),h["midiNote"]) != s["target"]["groups"][1].end());
+  auto done = x.command("ear.answer", {{"pitches",s["target"]["groups"][1]}}, 0);
+  REQUIRE(done["hintKeys"].empty());
+  REQUIRE(x.command("ear.replay", json::object(), 0)["hintKeys"] == s["hintKeys"]);
+}
 TEST_CASE("Ear integer validation rejects wide values before narrowing", "[final-validation]") {
  for(const json value:{json(uint64_t{4294967356}),json(UINT64_MAX),json(-1),json(true),json(60.5)}){
   auto c=defaultEarConfig();c["root"]=value;REQUIRE_THROWS(validateEarConfig(c));

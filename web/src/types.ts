@@ -91,6 +91,7 @@ export type NativeState = {
   };
 };
 export type EarConfig = {
+  hints: boolean;
   mode: "interval" | "melody";
   intervals: string[];
   directions: string[];
@@ -108,6 +109,7 @@ export type EarConfig = {
   pitchWheel: boolean;
 };
 export type EarSnapshot = {
+  hintKeys: HintKey[];
   config: EarConfig;
   target: null | {
     mode: string;
@@ -223,9 +225,10 @@ export type Song = {
   meterMap: import("./scoreModel").ScoreMetadata["meterMap"];
   keyMap: import("./scoreModel").ScoreMetadata["keyMap"];
 };
+export type HintKey = { midiNote: number; hand: "left" | "right" | "both" };
 export type TransportSnapshot = {
   waiting: boolean;
-  hintKeys: { midiNote: number; hand: "left" | "right" | "both" }[];
+  hintKeys: HintKey[];
   accompanimentError: string;
   followError: string;
   tempo: number;
@@ -282,6 +285,7 @@ export type AudioChannelEdit = { channel: number; enabled: boolean };
 // Shared visual-only timeline contract. Native controllers own generation, scoring and sound.
 export type { StaffMode, SpelledPitch, TimelineNote } from "./notationModel";
 export type PracticeConfig = {
+  hints: boolean;
   hand: "both" | "left" | "right";
   staff: "treble" | "bass" | "grand" | "chordSymbol";
   generator:
@@ -318,6 +322,7 @@ export type PracticeConfig = {
   };
 };
 export type PracticeSnapshot = {
+  hintKeys: HintKey[];
   paused: boolean;
   error: string;
   config: PracticeConfig;

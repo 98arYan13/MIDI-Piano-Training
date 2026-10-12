@@ -212,6 +212,10 @@ export function EarTraining() {
           commit={(mode) => configure({ mode })}
         />
       </div>
+      <label className="check">
+        <input type="checkbox" checked={c.hints ?? false} onChange={e => configure({hints:e.target.checked})} />
+        Hint mode
+      </label>
       <details className="exercise-settings">
         <summary>Exercise settings</summary>
         <div className="form-grid">
