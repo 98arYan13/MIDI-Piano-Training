@@ -361,7 +361,7 @@ export function EngravedScore({
     if (!el) return;
     el.replaceChildren();
     const renderer = new Renderer(el, Renderer.Backends.SVG);
-    renderer.resize(118, height);
+    renderer.resize(260, height);
     const context = renderer.getContext();
     const staves = clefs.map((c) =>
       new Stave(12, staffY[c], 106)
@@ -372,7 +372,15 @@ export function EngravedScore({
         .addTimeSignature(signature.time)
         .setContext(context),
     );
-    staves.forEach((s) => s.draw());
+    // Size the fixed section from the engraved modifiers, including all seven
+    // sharps/flats, rather than clipping longer key signatures to a fixed width.
+    const width = Math.ceil(Math.max(118, ...staves.map((s) => s.getNoteStartX() + 12)));
+    renderer.resize(width + 28, height);
+    el.style.width = `${width + 28}px`;
+    el.dataset.key = signature.key;
+    el.dataset.time = signature.time;
+    // Keep stationary staff lines continuous across the fade while notes vanish.
+    for (const stave of staves) stave.setWidth(width + 16).draw();
     if (mode === "grand")
       new StaveConnector(staves[0], staves[1])
         .setType(StaveConnector.type.BRACE)

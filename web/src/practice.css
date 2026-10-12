@@ -446,7 +446,7 @@
 .paper-staff.engraved-score { height:350px; }
 .score-measure { position:absolute; top:0; }
 .score-measure svg { overflow:visible; }
-.score-gutter { position:absolute; left:0; top:0; width:118px; height:100%; background:white; z-index:2; }
+.score-gutter { position:absolute; left:0; top:0; width:146px; height:100%; background:linear-gradient(to right, white 0, white calc(100% - 28px), transparent 100%); z-index:2; pointer-events:none; }
 .paper-staff.engraved-score .staff-playhead { width:2px; background:#ef8b00; z-index:3; }
 .score-lines { position:absolute; inset:0; z-index:0; }
 .paper-staff .staff-segment {

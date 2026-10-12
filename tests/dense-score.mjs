@@ -295,6 +295,31 @@ try {
     "lower-voice tie curves below the note, away from the upper melody",
   );
   await page.screenshot({ path: "web/test-results/polyphonic-score.png" });
+  // Every MIDI key signature must fit in the fixed section on both staves.
+  for (const fifths of [-7, -3, 3, 7]) {
+    const form = new FormData();
+    form.append("file", new Blob([Buffer.concat([
+      chunk("MThd", Buffer.from([0, 0, 0, 1, 1, 128])),
+      chunk("MTrk", [0, 255, 89, 2, fifths & 255, 0,
+        0, 144, 64, 80, ...variable(384), 128, 64, 0, 0, 255, 47, 0]),
+    ])]), `Signature ${fifths}.mid`);
+    const imported = await (await fetch(url + "/api/v1/songs/import", {
+      method: "POST", headers: { Origin: url }, body: form,
+    })).json();
+    await command("transport.load", { id: imported.id });
+    const key = new Map([[-7, "Cb"], [-3, "Eb"], [3, "A"], [7, "C#"]]).get(fifths);
+    await until(async () => await page.locator(`.score-gutter[data-key="${key}"]`).count() === 1);
+    const geometry = await page.locator('.score-gutter').evaluate(el => {
+      const svg = el.querySelector('svg');
+      return { width: svg.getBoundingClientRect().width,
+        edge: Math.max(...[...svg.querySelectorAll('text')].map(e => e.getBBox().x + e.getBBox().width)),
+        glyphs: svg.querySelectorAll('.vf-keysignature text').length,
+        background: getComputedStyle(el).backgroundImage };
+    });
+    assert.equal(geometry.glyphs, Math.abs(fifths) * 2, 'complete signature on each staff');
+    assert(geometry.edge < geometry.width, 'all signature glyphs fit inside fixed section');
+    assert(geometry.background.includes('linear-gradient') && geometry.background.includes('28px'), 'passing score fades at fixed edge');
+  }
   assert.deepEqual(errors, []);
   console.log(
     "PASS dense 3/8 duplicated piano: original events retained, 24 unique printed notes/bar, beam groups, accidental memory, aligned hands, readable spacing, late seek",
