@@ -13,7 +13,8 @@ void Engine::Impl::openAudio(){
     int device=settings["outputDevice"].get<int>();if(device<0){int host=Pa_HostApiTypeIdToHostApiIndex(paWASAPI);if(host>=0)device=Pa_GetHostApiInfo(host)->defaultOutputDevice;}
     if(device<0||device>=Pa_GetDeviceCount()){error="No WASAPI stereo output available";return;}
     const auto* d=Pa_GetDeviceInfo(device);const auto* h=Pa_GetHostApiInfo(d->hostApi);if(h->type!=paWASAPI||d->maxOutputChannels<2){error="Selected output must be a WASAPI stereo device";return;}
-    PaWasapiStreamInfo info{};info.size=sizeof(info);info.hostApiType=paWASAPI;info.version=1;info.flags=settings["exclusive"].get<bool>()?paWinWasapiExclusive:paWinWasapiAutoConvert;
+    // Always share the endpoint: exclusive playback silences movies/other apps.
+    PaWasapiStreamInfo info{};info.size=sizeof(info);info.hostApiType=paWASAPI;info.version=1;info.flags=paWinWasapiAutoConvert;
     PaStreamParameters output{};output.device=device;output.channelCount=2;output.sampleFormat=paFloat32;output.suggestedLatency=d->defaultLowOutputLatency;output.hostApiSpecificStreamInfo=&info;
     auto code=Pa_IsFormatSupported(nullptr,&output,options.sampleRate);if(code!=paFormatIsSupported){error="Requested sample format unsupported: "+std::string(Pa_GetErrorText(code));return;}
     code=Pa_OpenStream(&stream,nullptr,&output,options.sampleRate,options.blockFrames,paNoFlag,callback,this);if(code!=paNoError){error=Pa_GetErrorText(code);stream=nullptr;return;}

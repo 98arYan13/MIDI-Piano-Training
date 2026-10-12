@@ -6,6 +6,8 @@
 #include <thread>
 #include <chrono>
 #include <portaudio.h>
+#include <sfizz/Synth.h>
+#include <sfizz/AudioSpan.h>
 using namespace sightreading;
 using nlohmann::json;
 static void fillFuture(Engine& e, Bus bus=Bus::Example, unsigned source=125) {
@@ -14,6 +16,39 @@ static void fillFuture(Engine& e, Bus bus=Bus::Example, unsigned source=125) {
 static EngineOptions fixture(){return {SR_ROOT "/native/tests/fixture.sfz",48000,128,false,true};}
 static json cmd(Engine& e,const char* type,json params={}){return e.command({{"version",1},{"id",1},{"type",type},{"params",params}});}
 static double audio(Engine& e,unsigned blocks=1){std::array<float,256> out{}; double sum=0; for(unsigned i=0;i<blocks;i++){e.render(out.data(),128); for(float f:out){REQUIRE(std::isfinite(f)); sum+=f*f;}}return sum;}
+
+TEST_CASE("Maximum piano volume retains sample level with bounded output", "[piano-gain]") {
+ for(auto bus:{Bus::Live,Bus::Playback,Bus::Example}) {
+  Engine e(fixture());REQUIRE(cmd(e,"audio.settings",{{"volume",1}})["ok"]==true);
+  sfz::Synth reference;reference.setSampleRate(48000);reference.setSamplesPerBlock(128);
+  reference.enableFreeWheeling();REQUIRE(reference.loadSfzFile(SR_ROOT "/native/tests/fixture.sfz"));
+  reference.noteOn(0,60,100);
+  REQUIRE(e.submit({EventType::On,bus,static_cast<uint16_t>(bus==Bus::Playback?126:127),0,60,100,1}));
+  std::array<float,128> left{},right{};std::array<float,256> actual{};float* channels[]{left.data(),right.data()};
+  double expectedEnergy=0,actualEnergy=0;
+  for(unsigned block=0;block<30;++block){
+   reference.renderBlock(sfz::AudioSpan<float>(channels,2,0,128));e.render(actual.data(),128);
+   const float lane=bus==Bus::Playback?100.f/127.f:1.f;
+   for(unsigned i=0;i<128;++i)for(unsigned ch=0;ch<2;++ch){
+    const float x=channels[ch][i]*lane;const float expected=x/(1.f+std::abs(x));
+    expectedEnergy+=expected*expected;actualEnergy+=actual[i*2+ch]*actual[i*2+ch];
+    REQUIRE(std::isfinite(actual[i*2+ch]));REQUIRE(std::abs(actual[i*2+ch])<1.f);
+   }
+  }
+  INFO("bus="<<unsigned(bus)<<" actual="<<actualEnergy<<" expected="<<expectedEnergy);
+  REQUIRE(actualEnergy>expectedEnergy*0.9);REQUIRE(actualEnergy<expectedEnergy*1.1);
+  REQUIRE(cmd(e,"audio.settings",{{"volume",0}})["ok"]==true);REQUIRE(audio(e,4)==0);
+ }
+}
+
+TEST_CASE("Legacy exclusive settings cannot reserve system audio", "[audio-sharing]") {
+ auto options=fixture();options.exclusive=true;Engine e(options);
+ REQUIRE(e.snapshot()["settings"]["exclusive"]==false);
+ REQUIRE(cmd(e,"audio.settings",{{"exclusive",true},{"volume",1}})["ok"]==true);
+ REQUIRE(e.snapshot()["settings"]["exclusive"]==false);
+ REQUIRE(e.snapshot()["settings"]["volume"]==1);
+ REQUIRE(e.snapshot()["output"]["exclusive"]==false);
+}
 
 TEST_CASE("Piano readiness requires genuine complete sampled instrument") {
     Engine e(fixture()); REQUIRE(e.snapshot()["pianoReady"]==true); REQUIRE(e.snapshot()["audioReady"]==false);

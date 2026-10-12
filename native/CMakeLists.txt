@@ -1,4 +1,6 @@
 add_library(sightreading_engine STATIC src/Engine.cpp src/NativeIO.cpp src/Commands.cpp)
+add_executable(audio_coexistence_probe src/audio_coexistence_probe.cpp)
+target_link_libraries(audio_coexistence_probe PRIVATE nlohmann_json::nlohmann_json ole32 uuid ksuser)
 target_include_directories(sightreading_engine PUBLIC include)
 target_link_libraries(sightreading_engine PUBLIC nlohmann_json::nlohmann_json PRIVATE sfizz::internal portaudio_static rtmidi)
 add_executable(native_tests tests/protection.cpp tests/queue.cpp tests/engine.cpp)

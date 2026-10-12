@@ -8,7 +8,7 @@ static_assert(sfz::config::maxVoices == 1024, "Run setup-native: protected sfizz
 namespace sightreading {
 static bool scopeControl(EventType type) noexcept {return type==EventType::Panic||type==EventType::StopBus||type==EventType::ResetLive;}
 const char* busName(Bus b){return b==Bus::Live?"live":b==Bus::Playback?"playback":b==Bus::Example?"example":"click";}
-Engine::Impl::Impl(EngineOptions o):options(std::move(o)),settings({{"volume",0.7},{"monitoring",true},{"outputMode","internal"},{"velocityCurve",1.0},{"channels",json::array({0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15})},{"outputDevice",-1},{"exclusive",options.exclusive},{"externalDevice",-1}}){
+Engine::Impl::Impl(EngineOptions o):options(std::move(o)),settings({{"volume",0.7},{"monitoring",true},{"outputMode","internal"},{"velocityCurve",1.0},{"channels",json::array({0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15})},{"outputDevice",-1},{"exclusive",false},{"externalDevice",-1}}){
     if(options.sampleRate<8000||options.sampleRate>192000)throw std::invalid_argument("Unsupported sample rate");
     if(options.blockFrames!=128)throw std::invalid_argument("Initial native block request must be 128 frames");
     for(const auto& id:options.disabledInputs)disabled[id]=true;
@@ -103,7 +103,7 @@ void Engine::Impl::render(float* output,unsigned frames){
         while(scheduledSize&&scheduled[0].event.frame<begin+count){std::pop_heap(scheduled.begin(),scheduled.begin()+scheduledSize,later);auto e=scheduled[--scheduledSize].event;dispatch(e,int(e.frame-begin),e.frame);}
         for(unsigned w=0;w<2;++w){auto bits=emergencySources[w].exchange(0);for(unsigned k=0;k<64;++k)if(bits&(uint64_t{1}<<k)){disconnect(w*64+k,0);if(inputHook){InputEvent recovery;recovery.type=EventType::Disconnect;recovery.source=w*64+k;inputHook(recovery,begin,inputContext);}}}if(emergencyPanic.exchange(false))panic(UINT64_MAX,emergencyPanicBoundary.load());
         std::fill_n(output,count*2,0.f);std::array<float,BlockFrames> left{},right{};float* channels[]{left.data(),right.data()};
-        if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths){s->renderBlock(sfz::AudioSpan<float>(channels,2,0,count));for(unsigned i=0;i<count;++i){output[i*2]+=left[i]*0.25f;output[i*2+1]+=right[i]*0.25f;}}
+        if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths){s->renderBlock(sfz::AudioSpan<float>(channels,2,0,count));for(unsigned i=0;i<count;++i){output[i*2]+=left[i];output[i*2+1]+=right[i];}}
         if(pianoReady){uint64_t refusals=0;for(auto& s:synths)refusals+=s->getProtectedRefusals();auto previous=voiceRefusals.exchange(refusals);overload.fetch_add(refusals-previous);}
         metronome.render(output,count,begin);if(renderHook)renderHook(output,count,begin,renderContext);float gain=volume.load();for(unsigned i=0;i<count*2;++i){float x=output[i]*gain;output[i]=std::isfinite(x)?x/(1.f+std::abs(x)):0.f;}
         frame.store(begin+count);frames-=count;output+=count*2;

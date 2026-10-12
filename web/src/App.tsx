@@ -155,14 +155,7 @@ function AudioDialog() {
         />{" "}
         Live piano monitoring
       </label>
-      <label className="check">
-        <input
-          type="checkbox"
-          checked={settings.exclusive}
-          onChange={(e) => set({ exclusive: e.target.checked })}
-        />{" "}
-        Exclusive WASAPI mode
-      </label>
+      <p>Shared WASAPI keeps movies and other apps audible alongside the piano.</p>
       <h3>MIDI inputs</h3>
       {s.devices.length ? (
         s.devices.map((d) => (

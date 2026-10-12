@@ -11,7 +11,7 @@ struct EngineOptions {
     std::filesystem::path pianoPath{"assets/piano/protected.sfz"};
     unsigned sampleRate{48000};
     unsigned blockFrames{128};
-    bool exclusive{};
+    bool exclusive{}; // Legacy option, ignored: output always uses shared WASAPI.
     bool preloadSynchronously{};
     std::vector<std::string> disabledInputs{};
 };

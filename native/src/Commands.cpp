@@ -56,6 +56,8 @@ json Engine::command(const json& request){
         if(type=="audio.applyPending")return reply(true,{{"applied",s.applyPending(p.value("applyNow",false))}},nullptr);
         if(type=="audio.settings"){
             json proposed=s.pending.is_null()?s.settings:s.pending;for(auto i=p.begin();i!=p.end();++i){if(!proposed.contains(i.key()))throw std::invalid_argument("Unknown audio setting: "+i.key());proposed[i.key()]=i.value();}validateSettings(proposed);
+            // Accept old saved/client settings, but never restore device exclusivity.
+            proposed["exclusive"]=false;
             bool disruptive=false;for(auto key:{"outputDevice","exclusive","outputMode","monitoring","externalDevice"})if(proposed[key]!=s.settings[key])disruptive=true;
             if(disruptive&&(s.liveHeld||s.livePedals)){s.pending=proposed;return reply(true,{{"deferred",true}},nullptr);}
             bool rebuild=proposed["outputDevice"]!=s.settings["outputDevice"]||proposed["exclusive"]!=s.settings["exclusive"];s.settings=proposed;s.pending=nullptr;s.applySettings();if(rebuild&&s.running)s.openAudio();return reply(true,{{"deferred",false}},nullptr);
