@@ -6,6 +6,10 @@ $build=[IO.Path]::GetFullPath((Join-Path $root 'build'))
 if(!$out.StartsWith($build+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Release destination must be inside project build/.'}
 if(Test-Path $out){throw 'Choose a fresh release destination; packaging never overwrites existing releases.'}
 foreach($required in @('build/native/native/sightreading.exe','web/dist/index.html','assets/piano/Samples','assets/piano/protected.sfz','docs/licenses/THIRD-PARTY-NOTICES.txt')){if(!(Test-Path (Join-Path $root $required))){throw "Missing $required. Build/provision first."}}
+foreach($lesson in (Get-Content "$root/assets/music/tutorials.json" -Raw | ConvertFrom-Json)) {
+ $file=Join-Path "$root/assets/music" $lesson.file
+ if(!(Test-Path $file)-or(Get-FileHash $file -Algorithm SHA256).Hash-ne$lesson.download.sha256){throw "Missing or invalid tutorial $($lesson.id). Run node scripts/setup-tutorials.mjs before packaging."}
+}
 New-Item -ItemType Directory -Force "$out/scripts","$out/web","$out/assets","$out/docs","$out/native" | Out-Null
 Copy-Item "$root/build/native/native/sightreading.exe" $out
 # Confirmed non-system PE imports, including libc++'s transitive libunwind.
@@ -19,6 +23,7 @@ Copy-Item "$root/docs/licenses" "$out/docs" -Recurse
 Copy-Item "$root/docs/verification" "$out/docs" -Recurse
 Copy-Item "$root/README.md" $out
 Copy-Item "$root/docs/USER-GUIDE.md" "$out/docs"
+Copy-Item "$root/docs/TUTORIALS.md" "$out/docs"
 Copy-Item "$root/native/CONTRACT.md" "$out/native"
 if(Test-Path "$root/docs/RELEASE-VERIFICATION.md"){Copy-Item "$root/docs/RELEASE-VERIFICATION.md" "$out/docs"}
 '@echo off'+"`r`n"+'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\start.ps1" %*' | Set-Content "$out/Start.cmd" -Encoding ascii

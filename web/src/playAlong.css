@@ -64,6 +64,16 @@
   color: #97a49b;
   margin: 5px 0;
 }
+.library-filters { display: grid; gap: 8px; margin-top: 14px; }
+.library-filters label { display: grid; gap: 4px; font-size: 13px; }
+.library-filters input, .library-filters select { width: 100%; min-width: 0; padding: 8px; border: 1px solid #59675e; border-radius: 6px; background: #19221e; color: #eceeea; }
+.lesson-badge { color: #c3d9a6 !important; font-size: 12px; }
+.lesson-guide { margin: 12px 0; padding: 14px 18px; border: 1px solid #59675e; border-radius: 8px; background: #19221e; }
+.lesson-guide summary { cursor: pointer; font-weight: 600; color: #dcb77d; }
+.lesson-guide p, .lesson-guide li { font-size: 14px; line-height: 1.6; }
+.lesson-guide li { margin: 6px 0; }
+.lesson-guide a { color: #c3d9a6; }
+.lesson-guide small { display: block; margin-top: 10px; color: #97a49b; }
 .upload {
   display: block;
   padding: 12px;

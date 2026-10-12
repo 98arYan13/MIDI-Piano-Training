@@ -199,6 +199,16 @@ export type NoteEvent = {
   endTick: number;
 };
 export type Song = {
+  tutorial?: {
+    collection: string;
+    level: "Beginner" | "Elementary" | "Intermediate";
+    order: number;
+    goal: string;
+    startTempo: number;
+    steps: string[];
+    tips: string[];
+    sourceUrl: string;
+  };
   id: string;
   title: string;
   ppq: number;

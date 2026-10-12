@@ -12,7 +12,15 @@ export function Library({
     [trash, setTrash] = useState<Song[]>([]),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
-    [showTrash, setShowTrash] = useState(false);
+    [showTrash, setShowTrash] = useState(false),
+    [search, setSearch] = useState(""),
+    [level, setLevel] = useState("All"),
+    [collection, setCollection] = useState("All");
+  const filtered = songs.filter(s =>
+    (level === "All" || s.tutorial?.level === level) &&
+    (collection === "All" || s.tutorial?.collection === collection) &&
+    `${s.title} ${s.tutorial?.collection ?? ""} ${s.tutorial?.goal ?? ""}`.toLowerCase().includes(search.trim().toLowerCase())
+  ).sort((a,b) => (a.tutorial?.order ?? 0) - (b.tutorial?.order ?? 0) || a.title.localeCompare(b.title));
   const refresh = async () => {
     const [items, removed] = await Promise.all([
       songApi<Song[]>(""),
@@ -77,15 +85,27 @@ export function Library({
         />
       </label>
       <small>Or drop a file here · stored only on this computer</small>
+      <div className="library-filters">
+        <label>Search<input type="search" aria-label="Search MIDI library" placeholder="Title or skill" value={search} onChange={e => setSearch(e.target.value)} /></label>
+        <label>Difficulty<select aria-label="Lesson difficulty" value={level} onChange={e => setLevel(e.target.value)}>
+          {["All", "Beginner", "Elementary", "Intermediate"].map(v => <option key={v}>{v}</option>)}
+        </select></label>
+        <label>Collection<select aria-label="Lesson collection" value={collection} onChange={e => setCollection(e.target.value)}>
+          <option>All</option>{[...new Set(songs.flatMap(s => s.tutorial ? [s.tutorial.collection] : []))].sort().map(v => <option key={v}>{v}</option>)}
+        </select></label>
+        <small>{filtered.length} of {songs.length} pieces · {songs.filter(s => s.tutorial).length} guided lessons</small>
+      </div>
       {error && <p role="alert">{error}</p>}
       <div className="song-list">
-        {songs.map((s) => (
+        {filtered.length === 0 && <p>No matching pieces. Try another search or difficulty.</p>}
+        {filtered.map((s) => (
           <div
             className={`song-row ${selected === s.id ? "selected" : ""}`}
             key={s.id}
           >
             <button disabled={busy} onClick={() => choose(s)}>
               <strong>{s.title}</strong>
+              {s.tutorial && <small className="lesson-badge">{s.tutorial.level} · {s.tutorial.collection}</small>}
               <small>
                 {Math.round(s.durationSeconds)} sec · {s.tracks.length} tracks{" "}
                 {s.recent > 0 ? "· recent" : ""}

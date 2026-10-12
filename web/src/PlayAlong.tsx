@@ -122,6 +122,18 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                 }}
               />
             </label>
+            {song.tutorial && <section aria-label="Lesson guide" className="lesson-guide">
+              <details key={song.id} open>
+                <summary>Lesson guide · {song.title}</summary>
+                <p className="lesson-badge">{song.tutorial.level} · {song.tutorial.collection}</p>
+                <p>{song.tutorial.goal}</p>
+                <p><strong>Suggested starting tempo: {song.tutorial.startTempo} quarter-note BPM.</strong> Use the tempo control below; slow further if needed.</p>
+                <ol>{song.tutorial.steps.map((step,i) => <li key={i}>{step}</li>)}</ol>
+                <ul>{song.tutorial.tips.map((tip,i) => <li key={i}>{tip}</li>)}</ul>
+                <a href={song.tutorial.sourceUrl} target="_blank" rel="noreferrer">Source / score</a>
+                <small>Guides suggest a practice approach. MIDI scoring checks pitch and timing; it does not judge fingering, tone or physical technique.</small>
+              </details>
+            </section>}
             <div className="transport-buttons">
               <label>
                 <input type="checkbox" checked={p.config.mode === "wait"}

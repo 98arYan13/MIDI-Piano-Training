@@ -131,9 +131,10 @@ void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate) {
             });
 }
 void installStarters(Storage &storage, const std::filesystem::path &folder) {
-  std::ifstream manifest(folder / "manifest.json");
+  for (const auto &name : {"manifest.json", "tutorials.json"}) {
+  std::ifstream manifest(folder / name);
   if (!manifest)
-    return;
+    continue;
   auto list = json::parse(manifest);
   for (auto &entry : list) {
     std::string id = entry["id"];
@@ -144,15 +145,20 @@ void installStarters(Storage &storage, const std::filesystem::path &folder) {
     }
     std::ifstream f(folder / entry["file"].get<std::string>(),
                     std::ios::binary);
-    if (!f)
+    if (!f) {
+      // Optional tutorial downloads are provisioned by setup-tutorials.
+      if (entry.contains("tutorial")) continue;
       throw std::runtime_error("Starter MIDI missing.");
+    }
     std::string bytes((std::istreambuf_iterator<char>(f)), {});
     auto song = importMidi(bytes, entry["title"]);
     song["id"] = id;
     song["chords"] = entry["chords"];
     song["provenance"] = entry["provenance"];
+    if (entry.contains("tutorial")) song["tutorial"] = entry["tutorial"];
     song["recent"] = uint64_t(0);
     storage.putSong(song, bytes);
+  }
   }
 }
 } // namespace sightreading

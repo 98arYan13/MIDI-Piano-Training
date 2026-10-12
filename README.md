@@ -38,6 +38,7 @@ Run from this checkout in PowerShell:
 ```powershell
 pwsh scripts/setup-native.ps1 -DownloadTools
 pwsh scripts/setup-service.ps1
+node scripts/setup-tutorials.mjs
 npm.cmd --prefix web ci --cache .tools/npm-cache
 pwsh scripts/build-native.ps1 -Tests
 npm.cmd --prefix web run build
@@ -61,6 +62,8 @@ npm.cmd --prefix web run build
 ```
 
 `test:e2e` runs maintained service, browser, keyboard/notation, Staff, Play Along, Ear/Flash and final notation regression suites with isolated databases and installed headless Edge/Chrome. Set `SR_BROWSER` to an explicit browser executable if needed. It fails fast and never downloads a browser. The native SQLite experimental notice is suppressed only for these Node integration processes; error warnings remain enabled. Release/performance and 30-minute actual WASAPI tooling are `tests/release.mjs` and `tests/soak.mjs`; see [release verification](docs/RELEASE-VERIFICATION.md) for exact commands, machine, evidence and limitations.
+
+Play Along also has guided MIDI lessons: original foundations, Burgmüller Op. 100, Czerny Op. 840/821 and Hanon Part I. Search by title or skill and filter by difficulty or collection; choosing a tutorial shows its goal, starting tempo, practice steps, tips and source/score link. Provision the checksum-pinned files with `node scripts/setup-tutorials.mjs` before tutorial tests or packaging. Downloaded MIDI stays in ignored `assets/music/tutorials/`; the catalog, original lesson definitions and reproducible setup stay in Git. Startup adds available lessons to existing libraries without replacing imports, edits or trash. Once provisioned, playback and guides work offline; external score links need internet. See [tutorial collection and practice guidance](docs/TUTORIALS.md).
 
 ## Runtime limits and attribution
 

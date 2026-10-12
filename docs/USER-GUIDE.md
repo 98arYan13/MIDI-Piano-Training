@@ -36,6 +36,10 @@ Note Math selects C–B roots and diatonic distances 1–7, counting the root as
 
 ## Play Along & library
 
+The guided tutorial collection includes original beginner foundations, Burgmüller Op. 100, Czerny Op. 840/821 and Hanon Part I. In the library, search by title or skill and use Difficulty and Collection to narrow the list. Select a lesson to read its goal, suggested quarter-note BPM, practice steps and tips beside Play Along. Source / score opens the credited edition separately. Start with Foundations, then choose studies suited to your current reading and coordination; Hanon and the harder studies are optional technique work, not a required beginner sequence. See [the tutorial guide](TUTORIALS.md).
+
+For developer checkouts run `node scripts/setup-tutorials.mjs` once, then restart the service to add the lessons. Complete portable releases include the files and require no download. Guides and MIDI playback work offline; source links are online. Existing imported pieces, track assignments, titles and recoverable trash are preserved. The app checks pitch and timing, not fingering, tone or technique.
+
 Wait targets and hints include the selected hand's notes from all enabled pitched tracks, including tracks marked only as Backing. You do not need to reassign the backing track to practice a left or right hand. Tracks with both Practice and Backing off remain excluded. Ordinary timing scores continue to use the tracks marked Practice.
 
 Turn on **Wait mode** to hold the score at each target until you press the correct note or chord for the selected left, right, or both hands. Waiting itself does not count as a miss. Turn Wait off to continue with normal timing. **Hint mode** independently highlights target keys on the piano below: teal for left hand, orange for right hand, and a split color when both hands share a key. Hints work with Wait on or off and do not play notes for you.

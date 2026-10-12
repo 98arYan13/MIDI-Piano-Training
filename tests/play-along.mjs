@@ -67,7 +67,7 @@ try {
     }
   });
   const initial = (await api("")).body;
-  assert.equal(initial.length, 10);
+  assert.equal(initial.filter(song => song.id.startsWith('starter-')).length, 10);
   assert.equal((await state()).transport.songId, "");
   const original = await readFile("assets/music/twinkle.mid");
   const form = new FormData();

@@ -1,0 +1,4628 @@
+[
+  {
+    "id": "tutorial-foundation-01",
+    "file": "tutorials/tutorial-foundation-01.mid",
+    "title": "Steady quarter notes",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 1,
+      "goal": "Hold a steady four-beat pulse.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Hold a steady four-beat pulse.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          480,
+          480,
+          62,
+          0
+        ],
+        [
+          960,
+          480,
+          64,
+          0
+        ],
+        [
+          1440,
+          480,
+          65,
+          0
+        ],
+        [
+          1920,
+          480,
+          67,
+          0
+        ],
+        [
+          2400,
+          480,
+          65,
+          0
+        ],
+        [
+          2880,
+          480,
+          64,
+          0
+        ],
+        [
+          3360,
+          480,
+          62,
+          0
+        ]
+      ],
+      "sha256": "808835785a8590e22ab6d9b585b197011013a3545c3e9b524cb48294b6dca7f9"
+    }
+  },
+  {
+    "id": "tutorial-foundation-02",
+    "file": "tutorials/tutorial-foundation-02.mid",
+    "title": "Half-note patience",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 2,
+      "goal": "Hold each note for two beats without rushing.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Hold each note for two beats without rushing.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          960,
+          60,
+          0
+        ],
+        [
+          960,
+          960,
+          64,
+          0
+        ],
+        [
+          1920,
+          960,
+          67,
+          0
+        ],
+        [
+          2880,
+          960,
+          64,
+          0
+        ],
+        [
+          3840,
+          960,
+          62,
+          0
+        ],
+        [
+          4800,
+          960,
+          65,
+          0
+        ],
+        [
+          5760,
+          960,
+          67,
+          0
+        ],
+        [
+          6720,
+          960,
+          60,
+          0
+        ]
+      ],
+      "sha256": "9e1df75309b534df3e7081f4ba6cd660a67b33ede7cee7cbe161f6449b20ba4b"
+    }
+  },
+  {
+    "id": "tutorial-foundation-03",
+    "file": "tutorials/tutorial-foundation-03.mid",
+    "title": "Eighth-note subdivision",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 3,
+      "goal": "Play two equal notes per beat.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Play two equal notes per beat.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          240,
+          60,
+          0
+        ],
+        [
+          240,
+          240,
+          62,
+          0
+        ],
+        [
+          480,
+          240,
+          64,
+          0
+        ],
+        [
+          720,
+          240,
+          65,
+          0
+        ],
+        [
+          960,
+          240,
+          67,
+          0
+        ],
+        [
+          1200,
+          240,
+          65,
+          0
+        ],
+        [
+          1440,
+          240,
+          64,
+          0
+        ],
+        [
+          1680,
+          240,
+          62,
+          0
+        ],
+        [
+          1920,
+          240,
+          60,
+          0
+        ],
+        [
+          2160,
+          240,
+          62,
+          0
+        ],
+        [
+          2400,
+          240,
+          64,
+          0
+        ],
+        [
+          2640,
+          240,
+          65,
+          0
+        ],
+        [
+          2880,
+          240,
+          67,
+          0
+        ],
+        [
+          3120,
+          240,
+          65,
+          0
+        ],
+        [
+          3360,
+          240,
+          64,
+          0
+        ],
+        [
+          3600,
+          240,
+          60,
+          0
+        ]
+      ],
+      "sha256": "e3293a1186259309620fd6cde0c44ee31495a449cc0e285318670510f9fbca74"
+    }
+  },
+  {
+    "id": "tutorial-foundation-04",
+    "file": "tutorials/tutorial-foundation-04.mid",
+    "title": "Quarter-note rests",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 4,
+      "goal": "Keep counting through silent beats.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Keep counting through silent beats.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "A rest is a counted silence; release the key while continuing the beat.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          960,
+          480,
+          62,
+          0
+        ],
+        [
+          1920,
+          480,
+          64,
+          0
+        ],
+        [
+          2880,
+          480,
+          65,
+          0
+        ],
+        [
+          3840,
+          480,
+          67,
+          0
+        ],
+        [
+          4800,
+          480,
+          65,
+          0
+        ],
+        [
+          5760,
+          480,
+          64,
+          0
+        ],
+        [
+          6720,
+          480,
+          60,
+          0
+        ]
+      ],
+      "sha256": "cab61248737efd79fa095e15ce401cf625453140ffed6f53295c6a376cbf7b55"
+    }
+  },
+  {
+    "id": "tutorial-foundation-05",
+    "file": "tutorials/tutorial-foundation-05.mid",
+    "title": "Dotted rhythm",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 5,
+      "goal": "Feel a long-short pair inside two beats.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Feel a long-short pair inside two beats.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Count “1-and-2-and”: the first note lasts three eighth-note counts, the second lasts one.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          720,
+          60,
+          0
+        ],
+        [
+          720,
+          240,
+          62,
+          0
+        ],
+        [
+          960,
+          720,
+          64,
+          0
+        ],
+        [
+          1680,
+          240,
+          65,
+          0
+        ],
+        [
+          1920,
+          720,
+          67,
+          0
+        ],
+        [
+          2640,
+          240,
+          65,
+          0
+        ],
+        [
+          2880,
+          720,
+          64,
+          0
+        ],
+        [
+          3600,
+          240,
+          60,
+          0
+        ]
+      ],
+      "sha256": "9bf283918775f5109e374a47bff15e8fe6fd873805d8cc91e7593dc95cc899e2"
+    }
+  },
+  {
+    "id": "tutorial-foundation-06",
+    "file": "tutorials/tutorial-foundation-06.mid",
+    "title": "C major right hand",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 6,
+      "goal": "Read C major ascending and descending.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Read C major ascending and descending.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          480,
+          480,
+          62,
+          0
+        ],
+        [
+          960,
+          480,
+          64,
+          0
+        ],
+        [
+          1440,
+          480,
+          65,
+          0
+        ],
+        [
+          1920,
+          480,
+          67,
+          0
+        ],
+        [
+          2400,
+          480,
+          69,
+          0
+        ],
+        [
+          2880,
+          480,
+          71,
+          0
+        ],
+        [
+          3360,
+          480,
+          72,
+          0
+        ],
+        [
+          3840,
+          480,
+          71,
+          0
+        ],
+        [
+          4320,
+          480,
+          69,
+          0
+        ],
+        [
+          4800,
+          480,
+          67,
+          0
+        ],
+        [
+          5280,
+          480,
+          65,
+          0
+        ],
+        [
+          5760,
+          480,
+          64,
+          0
+        ],
+        [
+          6240,
+          480,
+          62,
+          0
+        ],
+        [
+          6720,
+          480,
+          60,
+          0
+        ]
+      ],
+      "sha256": "81fdc3365c1596c12cf6674ef453dd875080ec6bdabb70012fc1685400bb4a4c"
+    }
+  },
+  {
+    "id": "tutorial-foundation-07",
+    "file": "tutorials/tutorial-foundation-07.mid",
+    "title": "A natural minor",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 7,
+      "goal": "Notice the minor sound using only white keys.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Notice the minor sound using only white keys.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          57,
+          0
+        ],
+        [
+          480,
+          480,
+          59,
+          0
+        ],
+        [
+          960,
+          480,
+          60,
+          0
+        ],
+        [
+          1440,
+          480,
+          62,
+          0
+        ],
+        [
+          1920,
+          480,
+          64,
+          0
+        ],
+        [
+          2400,
+          480,
+          65,
+          0
+        ],
+        [
+          2880,
+          480,
+          67,
+          0
+        ],
+        [
+          3360,
+          480,
+          69,
+          0
+        ],
+        [
+          3840,
+          480,
+          67,
+          0
+        ],
+        [
+          4320,
+          480,
+          65,
+          0
+        ],
+        [
+          4800,
+          480,
+          64,
+          0
+        ],
+        [
+          5280,
+          480,
+          62,
+          0
+        ],
+        [
+          5760,
+          480,
+          60,
+          0
+        ],
+        [
+          6240,
+          480,
+          59,
+          0
+        ],
+        [
+          6720,
+          480,
+          57,
+          0
+        ]
+      ],
+      "sha256": "058c431c288fe9341c69a2099f87c8a514ca075dbd2845f23101fdd5a3c559d8"
+    }
+  },
+  {
+    "id": "tutorial-foundation-08",
+    "file": "tutorials/tutorial-foundation-08.mid",
+    "title": "G major and F sharp",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 8,
+      "goal": "Read F sharp consistently in G major.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Read F sharp consistently in G major.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          55,
+          0
+        ],
+        [
+          480,
+          480,
+          57,
+          0
+        ],
+        [
+          960,
+          480,
+          59,
+          0
+        ],
+        [
+          1440,
+          480,
+          60,
+          0
+        ],
+        [
+          1920,
+          480,
+          62,
+          0
+        ],
+        [
+          2400,
+          480,
+          64,
+          0
+        ],
+        [
+          2880,
+          480,
+          66,
+          0
+        ],
+        [
+          3360,
+          480,
+          67,
+          0
+        ],
+        [
+          3840,
+          480,
+          66,
+          0
+        ],
+        [
+          4320,
+          480,
+          64,
+          0
+        ],
+        [
+          4800,
+          480,
+          62,
+          0
+        ],
+        [
+          5280,
+          480,
+          60,
+          0
+        ],
+        [
+          5760,
+          480,
+          59,
+          0
+        ],
+        [
+          6240,
+          480,
+          57,
+          0
+        ],
+        [
+          6720,
+          480,
+          55,
+          0
+        ]
+      ],
+      "sha256": "dc28117c0e75ffb19ee11775c6a0cf1d7bbbfc2fda24e4c9fcc4c22e1256708c"
+    }
+  },
+  {
+    "id": "tutorial-foundation-09",
+    "file": "tutorials/tutorial-foundation-09.mid",
+    "title": "F major and B flat",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 9,
+      "goal": "Read B flat consistently in F major.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Read B flat consistently in F major.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          53,
+          0
+        ],
+        [
+          480,
+          480,
+          55,
+          0
+        ],
+        [
+          960,
+          480,
+          57,
+          0
+        ],
+        [
+          1440,
+          480,
+          58,
+          0
+        ],
+        [
+          1920,
+          480,
+          60,
+          0
+        ],
+        [
+          2400,
+          480,
+          62,
+          0
+        ],
+        [
+          2880,
+          480,
+          64,
+          0
+        ],
+        [
+          3360,
+          480,
+          65,
+          0
+        ],
+        [
+          3840,
+          480,
+          64,
+          0
+        ],
+        [
+          4320,
+          480,
+          62,
+          0
+        ],
+        [
+          4800,
+          480,
+          60,
+          0
+        ],
+        [
+          5280,
+          480,
+          58,
+          0
+        ],
+        [
+          5760,
+          480,
+          57,
+          0
+        ],
+        [
+          6240,
+          480,
+          55,
+          0
+        ],
+        [
+          6720,
+          480,
+          53,
+          0
+        ]
+      ],
+      "sha256": "4b0943a7a1d257dee192f61550433fbf9e1f70908114f1006a859e1fd3e66e82"
+    }
+  },
+  {
+    "id": "tutorial-foundation-10",
+    "file": "tutorials/tutorial-foundation-10.mid",
+    "title": "C major broken triad",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 10,
+      "goal": "Recognize C E G as one chord shape.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Recognize C E G as one chord shape.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          480,
+          480,
+          64,
+          0
+        ],
+        [
+          960,
+          480,
+          67,
+          0
+        ],
+        [
+          1440,
+          480,
+          72,
+          0
+        ],
+        [
+          1920,
+          480,
+          67,
+          0
+        ],
+        [
+          2400,
+          480,
+          64,
+          0
+        ],
+        [
+          2880,
+          480,
+          60,
+          0
+        ],
+        [
+          3360,
+          480,
+          64,
+          0
+        ],
+        [
+          3840,
+          480,
+          67,
+          0
+        ],
+        [
+          4320,
+          480,
+          72,
+          0
+        ],
+        [
+          4800,
+          480,
+          67,
+          0
+        ],
+        [
+          5280,
+          480,
+          64,
+          0
+        ],
+        [
+          5760,
+          480,
+          60,
+          0
+        ]
+      ],
+      "sha256": "0c43d54be268df7e9516d3e948f546a2050811e38b9789ae655104da803c8419"
+    }
+  },
+  {
+    "id": "tutorial-foundation-11",
+    "file": "tutorials/tutorial-foundation-11.mid",
+    "title": "A minor broken triad",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 11,
+      "goal": "Recognize A C E as one chord shape.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Recognize A C E as one chord shape.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          57,
+          0
+        ],
+        [
+          480,
+          480,
+          60,
+          0
+        ],
+        [
+          960,
+          480,
+          64,
+          0
+        ],
+        [
+          1440,
+          480,
+          69,
+          0
+        ],
+        [
+          1920,
+          480,
+          64,
+          0
+        ],
+        [
+          2400,
+          480,
+          60,
+          0
+        ],
+        [
+          2880,
+          480,
+          57,
+          0
+        ],
+        [
+          3360,
+          480,
+          60,
+          0
+        ],
+        [
+          3840,
+          480,
+          64,
+          0
+        ],
+        [
+          4320,
+          480,
+          69,
+          0
+        ],
+        [
+          4800,
+          480,
+          64,
+          0
+        ],
+        [
+          5280,
+          480,
+          60,
+          0
+        ],
+        [
+          5760,
+          480,
+          57,
+          0
+        ]
+      ],
+      "sha256": "8cacdc94e493eda47cc1c6c24d74da3b0ebb306326443398462bfa280758e236"
+    }
+  },
+  {
+    "id": "tutorial-foundation-12",
+    "file": "tutorials/tutorial-foundation-12.mid",
+    "title": "Thirds and skips",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 12,
+      "goal": "Read skips instead of treating every move as a step.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Read skips instead of treating every move as a step.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          480,
+          480,
+          64,
+          0
+        ],
+        [
+          960,
+          480,
+          62,
+          0
+        ],
+        [
+          1440,
+          480,
+          65,
+          0
+        ],
+        [
+          1920,
+          480,
+          64,
+          0
+        ],
+        [
+          2400,
+          480,
+          67,
+          0
+        ],
+        [
+          2880,
+          480,
+          65,
+          0
+        ],
+        [
+          3360,
+          480,
+          69,
+          0
+        ],
+        [
+          3840,
+          480,
+          67,
+          0
+        ],
+        [
+          4320,
+          480,
+          71,
+          0
+        ],
+        [
+          4800,
+          480,
+          69,
+          0
+        ],
+        [
+          5280,
+          480,
+          72,
+          0
+        ],
+        [
+          5760,
+          480,
+          67,
+          0
+        ],
+        [
+          6240,
+          480,
+          64,
+          0
+        ],
+        [
+          6720,
+          480,
+          60,
+          0
+        ]
+      ],
+      "sha256": "2c61998b3553e48cc5834970dc265a3532294bc8ca8f8cbe7ce4ff2fed20b306"
+    }
+  },
+  {
+    "id": "tutorial-foundation-13",
+    "file": "tutorials/tutorial-foundation-13.mid",
+    "title": "Left-hand reading",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 13,
+      "goal": "Read a five-note pattern in the lower register.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Read a five-note pattern in the lower register.",
+        "Listen once and count four beats aloud before starting.",
+        "Name the notes first, then tap the rhythm before playing.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          48,
+          1
+        ],
+        [
+          480,
+          480,
+          50,
+          1
+        ],
+        [
+          960,
+          480,
+          52,
+          1
+        ],
+        [
+          1440,
+          480,
+          53,
+          1
+        ],
+        [
+          1920,
+          480,
+          55,
+          1
+        ],
+        [
+          2400,
+          480,
+          53,
+          1
+        ],
+        [
+          2880,
+          480,
+          52,
+          1
+        ],
+        [
+          3360,
+          480,
+          50,
+          1
+        ],
+        [
+          3840,
+          480,
+          48,
+          1
+        ],
+        [
+          4320,
+          480,
+          52,
+          1
+        ],
+        [
+          4800,
+          480,
+          50,
+          1
+        ],
+        [
+          5280,
+          480,
+          53,
+          1
+        ],
+        [
+          5760,
+          480,
+          52,
+          1
+        ],
+        [
+          6240,
+          480,
+          55,
+          1
+        ],
+        [
+          6720,
+          480,
+          48,
+          1
+        ]
+      ],
+      "sha256": "f2ed045c6deb84360de61cf6efcbaa6ee88d81591c3c1b03e0903dd5c4e2e306"
+    }
+  },
+  {
+    "id": "tutorial-foundation-14",
+    "file": "tutorials/tutorial-foundation-14.mid",
+    "title": "Hands in unison",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 14,
+      "goal": "Coordinate simultaneous attacks one octave apart.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Coordinate simultaneous attacks one octave apart.",
+        "Listen once and count four beats aloud before starting.",
+        "Practice each hand separately, then combine them slowly.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Use a comfortable hand position and keep movements small.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          0,
+          480,
+          48,
+          1
+        ],
+        [
+          480,
+          480,
+          62,
+          0
+        ],
+        [
+          480,
+          480,
+          50,
+          1
+        ],
+        [
+          960,
+          480,
+          64,
+          0
+        ],
+        [
+          960,
+          480,
+          52,
+          1
+        ],
+        [
+          1440,
+          480,
+          65,
+          0
+        ],
+        [
+          1440,
+          480,
+          53,
+          1
+        ],
+        [
+          1920,
+          480,
+          67,
+          0
+        ],
+        [
+          1920,
+          480,
+          55,
+          1
+        ],
+        [
+          2400,
+          480,
+          65,
+          0
+        ],
+        [
+          2400,
+          480,
+          53,
+          1
+        ],
+        [
+          2880,
+          480,
+          64,
+          0
+        ],
+        [
+          2880,
+          480,
+          52,
+          1
+        ],
+        [
+          3360,
+          480,
+          62,
+          0
+        ],
+        [
+          3360,
+          480,
+          50,
+          1
+        ],
+        [
+          3840,
+          480,
+          60,
+          0
+        ],
+        [
+          3840,
+          480,
+          48,
+          1
+        ],
+        [
+          4320,
+          480,
+          64,
+          0
+        ],
+        [
+          4320,
+          480,
+          52,
+          1
+        ],
+        [
+          4800,
+          480,
+          62,
+          0
+        ],
+        [
+          4800,
+          480,
+          50,
+          1
+        ],
+        [
+          5280,
+          480,
+          65,
+          0
+        ],
+        [
+          5280,
+          480,
+          53,
+          1
+        ],
+        [
+          5760,
+          480,
+          64,
+          0
+        ],
+        [
+          5760,
+          480,
+          52,
+          1
+        ],
+        [
+          6240,
+          480,
+          67,
+          0
+        ],
+        [
+          6240,
+          480,
+          55,
+          1
+        ],
+        [
+          6720,
+          480,
+          60,
+          0
+        ],
+        [
+          6720,
+          480,
+          48,
+          1
+        ]
+      ],
+      "sha256": "cc23de3c0f1dc93192ea04ffe247db63c3cf622d7ced0d3b79f3d2d2b14d283e"
+    }
+  },
+  {
+    "id": "tutorial-foundation-15",
+    "file": "tutorials/tutorial-foundation-15.mid",
+    "title": "Melody over held bass",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 15,
+      "goal": "Keep a bass note held while the melody moves.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Keep a bass note held while the melody moves.",
+        "Listen once and count four beats aloud before starting.",
+        "Practice each hand separately, then combine them slowly.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "The bass lasts four beats; avoid releasing it for each melody note.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          480,
+          60,
+          0
+        ],
+        [
+          480,
+          480,
+          62,
+          0
+        ],
+        [
+          960,
+          480,
+          64,
+          0
+        ],
+        [
+          1440,
+          480,
+          65,
+          0
+        ],
+        [
+          1920,
+          480,
+          67,
+          0
+        ],
+        [
+          2400,
+          480,
+          65,
+          0
+        ],
+        [
+          2880,
+          480,
+          64,
+          0
+        ],
+        [
+          3360,
+          480,
+          62,
+          0
+        ],
+        [
+          3840,
+          480,
+          60,
+          0
+        ],
+        [
+          4320,
+          480,
+          64,
+          0
+        ],
+        [
+          4800,
+          480,
+          62,
+          0
+        ],
+        [
+          5280,
+          480,
+          65,
+          0
+        ],
+        [
+          5760,
+          480,
+          64,
+          0
+        ],
+        [
+          6240,
+          480,
+          67,
+          0
+        ],
+        [
+          6720,
+          480,
+          62,
+          0
+        ],
+        [
+          7200,
+          480,
+          60,
+          0
+        ],
+        [
+          0,
+          1920,
+          48,
+          1
+        ],
+        [
+          1920,
+          1920,
+          48,
+          1
+        ],
+        [
+          3840,
+          1920,
+          48,
+          1
+        ],
+        [
+          5760,
+          1920,
+          48,
+          1
+        ]
+      ],
+      "sha256": "f585a7bd8327b18a9b9274b883506a47bc6950a786249af4b763d87828f66fea"
+    }
+  },
+  {
+    "id": "tutorial-foundation-16",
+    "file": "tutorials/tutorial-foundation-16.mid",
+    "title": "Block chord changes",
+    "chords": [],
+    "provenance": {
+      "source": "Sight Reading independently authored educational note pattern, 2026-10-13",
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "license": "CC0-1.0",
+      "maintainer": "Sight Reading project",
+      "method": "Original note events and deterministic standard MIDI encoding; no external arrangement used."
+    },
+    "tutorial": {
+      "collection": "Foundations",
+      "level": "Beginner",
+      "order": 16,
+      "goal": "Move together between C F and G triads.",
+      "startTempo": 60,
+      "steps": [
+        "Before playing, say the goal: Move together between C F and G triads.",
+        "Listen once and count four beats aloud before starting.",
+        "Practice each hand separately, then combine them slowly.",
+        "Play the entire short lesson three times at 60 BPM with steady timing.",
+        "Increase by 5 BPM only when notes and releases remain accurate."
+      ],
+      "tips": [
+        "Read each triad as a group; release all three keys together.",
+        "A clean slow attempt is more useful than a rushed fast attempt."
+      ],
+      "sourceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "download": {
+      "notes": [
+        [
+          0,
+          960,
+          60,
+          0
+        ],
+        [
+          0,
+          960,
+          64,
+          0
+        ],
+        [
+          0,
+          960,
+          67,
+          0
+        ],
+        [
+          960,
+          960,
+          65,
+          0
+        ],
+        [
+          960,
+          960,
+          69,
+          0
+        ],
+        [
+          960,
+          960,
+          72,
+          0
+        ],
+        [
+          1920,
+          960,
+          67,
+          0
+        ],
+        [
+          1920,
+          960,
+          71,
+          0
+        ],
+        [
+          1920,
+          960,
+          74,
+          0
+        ],
+        [
+          2880,
+          960,
+          60,
+          0
+        ],
+        [
+          2880,
+          960,
+          64,
+          0
+        ],
+        [
+          2880,
+          960,
+          67,
+          0
+        ],
+        [
+          3840,
+          960,
+          65,
+          0
+        ],
+        [
+          3840,
+          960,
+          69,
+          0
+        ],
+        [
+          3840,
+          960,
+          72,
+          0
+        ],
+        [
+          4800,
+          960,
+          60,
+          0
+        ],
+        [
+          4800,
+          960,
+          64,
+          0
+        ],
+        [
+          4800,
+          960,
+          67,
+          0
+        ],
+        [
+          5760,
+          960,
+          67,
+          0
+        ],
+        [
+          5760,
+          960,
+          71,
+          0
+        ],
+        [
+          5760,
+          960,
+          74,
+          0
+        ],
+        [
+          6720,
+          960,
+          60,
+          0
+        ],
+        [
+          6720,
+          960,
+          64,
+          0
+        ],
+        [
+          6720,
+          960,
+          67,
+          0
+        ]
+      ],
+      "sha256": "a33a9c11f4f2ceff58185003ad7f36abea2385b2c58fe4b32335283e0375fd9a"
+    }
+  },
+  {
+    "id": "tutorial-25ef-01",
+    "file": "tutorials/25EF-01.mid",
+    "title": "Burgmüller Op. 100 No. 1 — La Candeur",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-01/25EF-01.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 101,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C3, E3, G3, G5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G5 → E5 → D5 → C5 → G5 → E5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B2–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-01/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-01/25EF-01.mid",
+      "sha256": "ad185dbf3cb7e3e187cbe6e38c5ead706cf375b9d441f7191429027436b2a8e4"
+    }
+  },
+  {
+    "id": "tutorial-25ef-02",
+    "file": "tutorials/25EF-02.mid",
+    "title": "Burgmüller Op. 100 No. 2 — l'Arabesque",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-02/25EF-02.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 102,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (A3, C4, E4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E4 → E4 → E4 → E4 → A4 → B4. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans A2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-02/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-02/25EF-02.mid",
+      "sha256": "9b689a9b3f178e7bb2b5899d0559e223e9d8de7081d83fc087760ac2b4d378e1"
+    }
+  },
+  {
+    "id": "tutorial-25ef-03",
+    "file": "tutorials/25EF-03.mid",
+    "title": "Burgmüller Op. 100 No. 3 — La Pastorale",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-03/25EF-03.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 103,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G4 → B4 → C5 → D5 → B4 → E5. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-03/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-03/25EF-03.mid",
+      "sha256": "192500ee12358537bf92811064ee4ad0b680c78302d5762175a3c32fe573a577"
+    }
+  },
+  {
+    "id": "tutorial-25ef-04",
+    "file": "tutorials/25EF-04.mid",
+    "title": "Burgmüller Op. 100 No. 4 — La Petite Réunion",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-04/25EF-04.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 104,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G3 → A3 → B3 → C4 → E3 → F3. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-04/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-04/25EF-04.mid",
+      "sha256": "c88010cace8858c30ca95e3075cf5e4afdde19b5ad7c37cceb96159f6c55326c"
+    }
+  },
+  {
+    "id": "tutorial-25ef-05",
+    "file": "tutorials/25EF-05.mid",
+    "title": "Burgmüller Op. 100 No. 5 — Innocence",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-05/25EF-05.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 105,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, A3, C4, A5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: A5 → G5 → F5 → E5 → F5 → E5. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-05/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-05/25EF-05.mid",
+      "sha256": "39768b50abb623d24986b0e3993518ca92a6f1340d6154fc092f218cb6b97fee"
+    }
+  },
+  {
+    "id": "tutorial-25ef-06",
+    "file": "tutorials/25EF-06.mid",
+    "title": "Burgmüller Op. 100 No. 6 — Progrès",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-06/25EF-06.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 106,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C3, E4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E4 → F4 → G4 → A4 → B4 → C5. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-06/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-06/25EF-06.mid",
+      "sha256": "d28e280d333d8a97262a4ffeba00fab251d382cd9a17e45a517d6613cb03f722"
+    }
+  },
+  {
+    "id": "tutorial-25ef-07",
+    "file": "tutorials/25EF-07.mid",
+    "title": "Burgmüller Op. 100 No. 7 — Le Courant Limpide",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-07/25EF-07.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 107,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G2, B3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: B3 → G4 → D4 → B3 → G4 → D4. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-07/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-07/25EF-07.mid",
+      "sha256": "9547c21afbaa004cd95174752098bf6997a541d97759d2ef34f499432c5ecab5"
+    }
+  },
+  {
+    "id": "tutorial-25ef-08",
+    "file": "tutorials/25EF-08.mid",
+    "title": "Burgmüller Op. 100 No. 8 — La Gracieuse",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-08/25EF-08.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 108,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, A3, C4, C5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C5 → D5 → C5 → B4 → C5 → F5. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–F7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-08/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-08/25EF-08.mid",
+      "sha256": "f103bc6cb67cdbbad517170d6a7c51428e9a8481c74eec10258ea34a58b832fd"
+    }
+  },
+  {
+    "id": "tutorial-25ef-09",
+    "file": "tutorials/25EF-09.mid",
+    "title": "Burgmüller Op. 100 No. 9 — La Chasse",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-09/25EF-09.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 109,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C3, E3, G3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G3 → G3 → G3 → G3 → G3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-09/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-09/25EF-09.mid",
+      "sha256": "eb2d52c7df1681e23b8dc258d6933060984c7013d32c1a140c121fda48801848"
+    }
+  },
+  {
+    "id": "tutorial-25ef-10",
+    "file": "tutorials/25EF-10.mid",
+    "title": "Burgmüller Op. 100 No. 10 — Tendre Fleur",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-10/25EF-10.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 110,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (D4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D4 → E4 → F♯4 → A4 → A4 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans E3–F♯6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-10/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-10/25EF-10.mid",
+      "sha256": "58dd9eec57bfcb7fb8a924530e8f6c1e1599a02fc10cc4f79ae6d1ef6e2a0c85"
+    }
+  },
+  {
+    "id": "tutorial-25ef-11",
+    "file": "tutorials/25EF-11.mid",
+    "title": "Burgmüller Op. 100 No. 11 — La Bergeronnette",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-11/25EF-11.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 111,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C5, G6) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G6 → E6 → C6 → E6 → C6 → G5. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-11/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-11/25EF-11.mid",
+      "sha256": "815d6886a43312608acfe1a8ffbd3b4ff982a8ac857be771dc102b1916d34754"
+    }
+  },
+  {
+    "id": "tutorial-25ef-12",
+    "file": "tutorials/25EF-12.mid",
+    "title": "Burgmüller Op. 100 No. 12 — L'Adieu",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-12/25EF-12.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 112,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E5 → F5 → E5 → E5 → A4 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans A2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-12/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-12/25EF-12.mid",
+      "sha256": "4df722747c392323660dc4f9940acbb38af8b9952759d4c5cc7a02cf2e7f5cf8"
+    }
+  },
+  {
+    "id": "tutorial-25ef-13",
+    "file": "tutorials/25EF-13.mid",
+    "title": "Burgmüller Op. 100 No. 13 — Consolation",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-13/25EF-13.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 113,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, F4, G4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G4 → D5 → E5 → D5 → E5 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-13/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-13/25EF-13.mid",
+      "sha256": "e06faed242a40debad24cfd95f0376bbba8ec12f88a75cc6443dc53c9db5eb6e"
+    }
+  },
+  {
+    "id": "tutorial-25ef-14",
+    "file": "tutorials/25EF-14.mid",
+    "title": "Burgmüller Op. 100 No. 14 — La Styrienne",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-14/25EF-14.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 114,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C♯4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C♯4 → D4 → A4 → A4 → C♯4 → D4. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–D6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-14/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-14/25EF-14.mid",
+      "sha256": "99052280f7e0895f4850f7691540ad8931b3f0fec3961ee6ad538faace0190fc"
+    }
+  },
+  {
+    "id": "tutorial-25ef-15",
+    "file": "tutorials/25EF-15.mid",
+    "title": "Burgmüller Op. 100 No. 15 — Ballade",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-15/25EF-15.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 115,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C4, E♭4, G4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G4 → G4 → G4 → G4 → G4 → G4. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-15/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-15/25EF-15.mid",
+      "sha256": "cfba2544b8049f72bfda038620ff0543e9e1845b6e4d7431e4798f50ce06f716"
+    }
+  },
+  {
+    "id": "tutorial-25ef-16",
+    "file": "tutorials/25EF-16.mid",
+    "title": "Burgmüller Op. 100 No. 16 — Douce Plainte",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-16/25EF-16.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 116,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, D5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D5 → B♭3 → G3 → B♭3 → D4 → B♭3. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans D3–D6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-16/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-16/25EF-16.mid",
+      "sha256": "c2ae841112f76ee00732264d501f9c66df048d7626f61f95883292a8867ece8c"
+    }
+  },
+  {
+    "id": "tutorial-25ef-17",
+    "file": "tutorials/25EF-17.mid",
+    "title": "Burgmüller Op. 100 No. 17 — La Babillarde",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-17/25EF-17.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 117,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E4, G4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G4 → C2 → C3 → C4 → G4 → B♭4. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C2–F6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-17/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-17/25EF-17.mid",
+      "sha256": "5893fa14e84e9c5e19080a365b76db400f861e4197dcf5ee402d9fea79f68e8c"
+    }
+  },
+  {
+    "id": "tutorial-25ef-18",
+    "file": "tutorials/25EF-18.mid",
+    "title": "Burgmüller Op. 100 No. 18 — Inquiétude",
+    "chords": [],
+    "provenance": {
+      "source": "Collection Litolff, 19th Century",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-18/25EF-18.mid",
+      "license": "Public Domain",
+      "maintainer": "Bas Wassink",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Burgmüller Op. 100",
+      "level": "Elementary",
+      "order": 118,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 55,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E3, G3, B3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: B3 → G5 → F♯5 → E5 → C4 → E5. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans E2–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-18/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/BurgmullerJFF/O100/25EF-18/25EF-18.mid",
+      "sha256": "355c12bf2789ad7d95b2afab18b08556c9d1e31602256026ce5fa71c1f9244fe"
+    }
+  },
+  {
+    "id": "tutorial-op840-1",
+    "file": "tutorials/op840-1.mid",
+    "title": "Czerny Op. 840 No. 1",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-1/op840-1.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 201,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (A5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: A5 → G5 → F♯5 → G4 → G5 → G5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–E7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-1/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-1/op840-1.mid",
+      "sha256": "6ee0bf432211a3e3372ea67266a255d99b0cf9db5ad35ba6dd2787e06b087f14"
+    }
+  },
+  {
+    "id": "tutorial-op840-2",
+    "file": "tutorials/op840-2.mid",
+    "title": "Czerny Op. 840 No. 2",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-2/op840-2.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 202,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C5 → F5 → G5 → F5 → A3 → C5. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–D7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-2/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-2/op840-2.mid",
+      "sha256": "7d8ba07e3836e2a5fac7f7ce3eabc94238b63ed0435b3927f14807677ef64f5a"
+    }
+  },
+  {
+    "id": "tutorial-op840-3",
+    "file": "tutorials/op840-3.mid",
+    "title": "Czerny Op. 840 No. 3",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-3/op840-3.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 203,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C3, E♭4, C5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C5 → C5 → C5 → E♭5 → C3 → C5. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-3/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-3/op840-3.mid",
+      "sha256": "8bbe2f4e99c5cffc46904c927e326e1ec084f580fe142fb5397131a896fb7399"
+    }
+  },
+  {
+    "id": "tutorial-op840-4",
+    "file": "tutorials/op840-4.mid",
+    "title": "Czerny Op. 840 No. 4",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-4/op840-4.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 204,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (D5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D5 → D5 → D4 → G5 → B♭5 → D4. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans D2–D7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-4/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-4/op840-4.mid",
+      "sha256": "08c4c946c5a93b5ab3da3aec17a02a20d723e3bf461787e9240813744d6f52e7"
+    }
+  },
+  {
+    "id": "tutorial-op840-5",
+    "file": "tutorials/op840-5.mid",
+    "title": "Czerny Op. 840 No. 5",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-5/op840-5.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 205,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C4 → C5 → D5 → E5 → F5 → G5. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-5/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-5/op840-5.mid",
+      "sha256": "87bd494877ca42f4c3f046d62fad148ce85270cafe0069b62a2380b78c63b6a1"
+    }
+  },
+  {
+    "id": "tutorial-op840-6",
+    "file": "tutorials/op840-6.mid",
+    "title": "Czerny Op. 840 No. 6",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-6/op840-6.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 206,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: F5 → E5 → E♭5 → E5 → A5 → C6. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans E2–B6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-6/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-6/op840-6.mid",
+      "sha256": "bc112ad07760fc1e42fd33ac837ea34cd7a7bf47c3ac7521d8da132f7b102f65"
+    }
+  },
+  {
+    "id": "tutorial-op840-7",
+    "file": "tutorials/op840-7.mid",
+    "title": "Czerny Op. 840 No. 7",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-7/op840-7.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 207,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E5 → G5 → D5 → B5 → G5 → F♯5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F♯2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-7/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-7/op840-7.mid",
+      "sha256": "8e30e2598893fbfcd84d775ec7c40d09438a6ed29d03857bfb29a1b17ca2f36a"
+    }
+  },
+  {
+    "id": "tutorial-op840-8",
+    "file": "tutorials/op840-8.mid",
+    "title": "Czerny Op. 840 No. 8",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-8/op840-8.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 208,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C3, G3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G3 → E4 → F4 → G4 → A4 → B4. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C2–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-8/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-8/op840-8.mid",
+      "sha256": "dfb16b4e376c545e816306e38c0acbf92dc5a5d769d2f2ea2de9b14aebedd9d8"
+    }
+  },
+  {
+    "id": "tutorial-op840-9",
+    "file": "tutorials/op840-9.mid",
+    "title": "Czerny Op. 840 No. 9",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-9/op840-9.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 209,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: F4 → B♭4 → D5 → F4 → B♭4 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B♭2–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-9/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-9/op840-9.mid",
+      "sha256": "a08ab8554d83e54476b1000a8ec2d977835c9f207c3016e7d955cd37dad55a62"
+    }
+  },
+  {
+    "id": "tutorial-op840-10",
+    "file": "tutorials/op840-10.mid",
+    "title": "Czerny Op. 840 No. 10",
+    "chords": [],
+    "provenance": {
+      "source": "IMSLP; Mainz: Schott, n.d.[1855]. Plate 13253",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-10/op840-10.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuela",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 840",
+      "level": "Intermediate",
+      "order": 210,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E3, G3, B3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: B3 → E4 → F♯4 → G4 → A4 → B4. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans E2–A♭6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-10/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/O840/op840-10/op840-10.mid",
+      "sha256": "a9fe82814a7684bed177d5ad54ee3b29f11328e8b4452a46d7726d20c8d510dd"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-001",
+    "file": "tutorials/Czerny_Op_821_No_001.mid",
+    "title": "Czerny Op. 821 No. 1",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_001/Czerny_Op_821_No_001.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 301,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C4, G4, E5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E5 → G5 → F5 → G5 → E5 → F5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_001/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_001/Czerny_Op_821_No_001.mid",
+      "sha256": "4592e80dbc7e4bb76c9f8009e488774ccd751f08bf9f09cb3da83665471d345d"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-002",
+    "file": "tutorials/Czerny_Op_821_No_002.mid",
+    "title": "Czerny Op. 821 No. 2",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_002/Czerny_Op_821_No_002.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 302,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (E5, G5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G5 → C3 → D3 → E3 → F3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C2–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_002/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_002/Czerny_Op_821_No_002.mid",
+      "sha256": "2e1c2f560c5fecf1646a9435f03f1efe377fc63ca1b1137a8f6192ae1dc921f9"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-003",
+    "file": "tutorials/Czerny_Op_821_No_003.mid",
+    "title": "Czerny Op. 821 No. 3",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_003/Czerny_Op_821_No_003.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 303,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C4, G4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G4 → E5 → F5 → E5 → G4 → E5. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_003/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_003/Czerny_Op_821_No_003.mid",
+      "sha256": "2ef71cfa4c27166c3fe77126d4e7e22e1c0f1b34928d1f69493c064aba1dbc35"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-004",
+    "file": "tutorials/Czerny_Op_821_No_004.mid",
+    "title": "Czerny Op. 821 No. 4",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_004/Czerny_Op_821_No_004.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 304,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (C4, E5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E5 → G4 → F5 → G4 → G5 → G4. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F3–D6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_004/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_004/Czerny_Op_821_No_004.mid",
+      "sha256": "23676e4d016c013c34d1e1fb1ccd10b13b9b38524945d688e08f770a6cd835ad"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-005",
+    "file": "tutorials/Czerny_Op_821_No_005.mid",
+    "title": "Czerny Op. 821 No. 5",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_005/Czerny_Op_821_No_005.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 305,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, F5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: F5 → G5 → F5 → G5 → F5 → G5. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_005/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_005/Czerny_Op_821_No_005.mid",
+      "sha256": "2c3a935fa76c4d860df16af79695ba470d42de2c601400953cec5bd1071574cc"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-006",
+    "file": "tutorials/Czerny_Op_821_No_006.mid",
+    "title": "Czerny Op. 821 No. 6",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_006/Czerny_Op_821_No_006.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 306,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, F4, A4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: A4 → G3 → F3 → C5 → F3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_006/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_006/Czerny_Op_821_No_006.mid",
+      "sha256": "febeae7dff845c37091870b3a6738554346e02d90b0fb60a7c1897236aa560d1"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-007",
+    "file": "tutorials/Czerny_Op_821_No_007.mid",
+    "title": "Czerny Op. 821 No. 7",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_007/Czerny_Op_821_No_007.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 307,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, A3, C5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C5 → C♯5 → D5 → E♭5 → E5 → F5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_007/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_007/Czerny_Op_821_No_007.mid",
+      "sha256": "7c6b3fc566069b2443c41fa227ac1fe50fd3b240c126e42db79d90dc7f80d0da"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-008",
+    "file": "tutorials/Czerny_Op_821_No_008.mid",
+    "title": "Czerny Op. 821 No. 8",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_008/Czerny_Op_821_No_008.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 308,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F2, A5, C6) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C6 → F♯2 → G2 → A♭2 → A2 → B♭2. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F2–C6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_008/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_008/Czerny_Op_821_No_008.mid",
+      "sha256": "33fe0d0c29fd4f1f76e813e1777e198ee32f0a3179d335a15e8cc00bf5073a85"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-009",
+    "file": "tutorials/Czerny_Op_821_No_009.mid",
+    "title": "Czerny Op. 821 No. 9",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_009/Czerny_Op_821_No_009.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 309,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, C7) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C7 → B♭6 → A6 → G6 → F6 → E6. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F3–F7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_009/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_009/Czerny_Op_821_No_009.mid",
+      "sha256": "98fcbcb0722ece74f57a60e709ba0009823d4e46b7ab2db0cddffc1f43d34ef2"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-010",
+    "file": "tutorials/Czerny_Op_821_No_010.mid",
+    "title": "Czerny Op. 821 No. 10",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_010/Czerny_Op_821_No_010.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 310,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F3, A4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: A4 → C4 → A3 → C4 → C5 → C4. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans E3–G6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_010/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_010/Czerny_Op_821_No_010.mid",
+      "sha256": "d05f6d371cbc272e181952c7d6d4116019ccb48bb210e722c8f74015e5e90858"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-011",
+    "file": "tutorials/Czerny_Op_821_No_011.mid",
+    "title": "Czerny Op. 821 No. 11",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_011/Czerny_Op_821_No_011.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 311,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (B♭3, F4, D5, D6) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D6 → D6 → D6 → D6 → D6 → D6. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C♯3–C7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_011/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_011/Czerny_Op_821_No_011.mid",
+      "sha256": "a33bbf85e91bd16aab4b8be63f04d9f44fca9b2ea2d3fe6f12252d8e1aa9c226"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-012",
+    "file": "tutorials/Czerny_Op_821_No_012.mid",
+    "title": "Czerny Op. 821 No. 12",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.1888. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_012/Czerny_Op_821_No_012.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 312,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (B♭4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: B♭4 → D5 → C5 → E♭5 → D5 → F5. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B♭2–F7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_012/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_012/Czerny_Op_821_No_012.mid",
+      "sha256": "6d0295f540e2c605971c0dd7394c2b30bad0c661c56141c490b37dc957424276"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-013",
+    "file": "tutorials/Czerny_Op_821_No_013.mid",
+    "title": "Czerny Op. 821 No. 13",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_013/Czerny_Op_821_No_013.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 313,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (F5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: F5 → D6 → C4 → B♭3 → A3 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B♭2–F6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_013/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_013/Czerny_Op_821_No_013.mid",
+      "sha256": "2f28a22b1a9ca38c194f6d9db2782c9680ebf5a1f404a5f81db04a4993f91a8c"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-014",
+    "file": "tutorials/Czerny_Op_821_No_014.mid",
+    "title": "Czerny Op. 821 No. 14",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_014/Czerny_Op_821_No_014.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 314,
+      "goal": "Note reading: Find each change of direction before playing.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (B♭3, D4, F4, F5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: F5 → G5 → F5 → E5 → F5 → B♭5. Compare their directions with the linked score, then rehearse slowly.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B♭2–B♭6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_014/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_014/Czerny_Op_821_No_014.mid",
+      "sha256": "48997225619ea5aff194f4cf66ca565cf19f808ac3850f36f9c04b85b8dcf7c7"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-015",
+    "file": "tutorials/Czerny_Op_821_No_015.mid",
+    "title": "Czerny Op. 821 No. 15",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_015/Czerny_Op_821_No_015.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 315,
+      "goal": "Hand balance: Keep the supporting hand quieter than the musical line.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, B3, D4, B4) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: B4 → C5 → C♯5 → D5 → E5 → D5. Compare their directions with the linked score, then rehearse slowly.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans G2–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_015/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_015/Czerny_Op_821_No_015.mid",
+      "sha256": "38fb63ef4b5e2591163a16ed3356bd7082205c5d753ddf6a2900d6cbb6bed2a5"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-016",
+    "file": "tutorials/Czerny_Op_821_No_016.mid",
+    "title": "Czerny Op. 821 No. 16",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_016/Czerny_Op_821_No_016.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 316,
+      "goal": "Phrase endings: Release notes deliberately at the end of each phrase.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, D5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D5 → D5 → D5 → D5 → D4 → B3. Compare their directions with the linked score, then rehearse slowly.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans C3–D7; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_016/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_016/Czerny_Op_821_No_016.mid",
+      "sha256": "2dbcf117eb1213b1a55fd642723393722ac5d912a9ffb9afa3b5de52fac39c5f"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-017",
+    "file": "tutorials/Czerny_Op_821_No_017.mid",
+    "title": "Czerny Op. 821 No. 17",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_017/Czerny_Op_821_No_017.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 317,
+      "goal": "Transitions: Make position changes without interrupting the beat.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, D5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D5 → D5 → D5 → D5 → B5 → C5. Compare their directions with the linked score, then rehearse slowly.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans B2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_017/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_017/Czerny_Op_821_No_017.mid",
+      "sha256": "d6be8a38eacbecc54aeb37c58d45e553e5d549f979b9d371ba47edbbad4e8aac"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-018",
+    "file": "tutorials/Czerny_Op_821_No_018.mid",
+    "title": "Czerny Op. 821 No. 18",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_018/Czerny_Op_821_No_018.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 318,
+      "goal": "Even attacks: Keep repeated rhythmic values evenly spaced.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (G3, B4, D5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: D5 → A3 → B3 → C4 → D5 → D4. Compare their directions with the linked score, then rehearse slowly.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans F♯2–D6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_018/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_018/Czerny_Op_821_No_018.mid",
+      "sha256": "b51bf6b92170b9ea1b8385324ec8a1067f3614523f354c958a66df05d29e4bd1"
+    }
+  },
+  {
+    "id": "tutorial-czerny-op-821-no-019",
+    "file": "tutorials/Czerny_Op_821_No_019.mid",
+    "title": "Czerny Op. 821 No. 19",
+    "chords": [],
+    "provenance": {
+      "source": "IMLSP; Leipzig: Edition Peters, n.d.[1888]. Plate 6990-6993.",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_019/Czerny_Op_821_No_019.mid",
+      "license": "Public Domain",
+      "maintainer": "Manuel Castejon Limas",
+      "method": "Unmodified Mutopia MIDI download. Practice guide independently authored; focus is a suggested exercise, not an edition annotation."
+    },
+    "tutorial": {
+      "collection": "Czerny Op. 821",
+      "level": "Intermediate",
+      "order": 319,
+      "goal": "Pulse: Count the beat aloud before adding notes.",
+      "startTempo": 50,
+      "steps": [
+        "Open the linked Mutopia score; check the key, time signature and written rhythm.",
+        "Locate the opening attack (D3, F♯5, A5) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: A5 → A5 → A5 → A5 → G5 → F♯5. Compare their directions with the linked score, then rehearse slowly.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Listen once in Play Along, then work on a short phrase with one hand.",
+        "Combine the hands at the suggested starting tempo; repeat accurately three times before raising tempo by 5 BPM."
+      ],
+      "tips": [
+        "The starting tempo is a practice recommendation, not the composer’s tempo.",
+        "Use fingerings and articulation from the source score or your teacher; MIDI does not encode fingering.",
+        "This MIDI spans A2–A6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_019/"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/CzernyC/Op_821/Czerny_Op_821_No_019/Czerny_Op_821_No_019.mid",
+      "sha256": "f1ccdbc14ef242d11b0d87e48be3c211d6256ef7bb6a2eff2da1784223cb8aef"
+    }
+  },
+  {
+    "id": "tutorial-hanon-1",
+    "file": "tutorials/hanon01.mid",
+    "title": "Hanon Part I — Exercise 1",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 401,
+      "goal": "Exercise 1: pulse while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → F3 → G3 → A3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 1; play slowly with a relaxed hand.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans B1–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon01.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "e60585903312be8649bc7beec4b838737022205db1da484496fc360edcd7a059"
+    }
+  },
+  {
+    "id": "tutorial-hanon-2",
+    "file": "tutorials/hanon02.mid",
+    "title": "Hanon Part I — Exercise 2",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 402,
+      "goal": "Exercise 2: note reading while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → A3 → G3 → F3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 2; play slowly with a relaxed hand.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon02.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "f9dfc5819d384d90b5f410afc2cea976d8dd2c2e69fb812a0250430262e4e5cf"
+    }
+  },
+  {
+    "id": "tutorial-hanon-3",
+    "file": "tutorials/hanon03.mid",
+    "title": "Hanon Part I — Exercise 3",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 403,
+      "goal": "Exercise 3: hand balance while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → A3 → G3 → F3 → E3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 3; play slowly with a relaxed hand.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon03.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "c76d3634b56e6a6d7f93916bde408a655d89a9c63de46544a4589a58fdf6f526"
+    }
+  },
+  {
+    "id": "tutorial-hanon-4",
+    "file": "tutorials/hanon04.mid",
+    "title": "Hanon Part I — Exercise 4",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 404,
+      "goal": "Exercise 4: phrase endings while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → D3 → C3 → E3 → A3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 4; play slowly with a relaxed hand.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon04.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "b89bbda571b17af606826cf058f6145087997e1507ddac9dde006b91eb9738e9"
+    }
+  },
+  {
+    "id": "tutorial-hanon-5",
+    "file": "tutorials/hanon05.mid",
+    "title": "Hanon Part I — Exercise 5",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 405,
+      "goal": "Exercise 5: transitions while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → A3 → G3 → A3 → F3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 5; play slowly with a relaxed hand.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon05.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "ad2dc0cb1032c2fcf05122a94be68fceac4b08ff9ee29f54da282cd3bfd653f5"
+    }
+  },
+  {
+    "id": "tutorial-hanon-6",
+    "file": "tutorials/hanon06.mid",
+    "title": "Hanon Part I — Exercise 6",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 406,
+      "goal": "Exercise 6: even attacks while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → A3 → G3 → A3 → F3 → A3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 6; play slowly with a relaxed hand.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon06.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "8e4e70330a10a3eddbfb2cea6506046102f511fc4840d2157a25820d1553ab8f"
+    }
+  },
+  {
+    "id": "tutorial-hanon-7",
+    "file": "tutorials/hanon07.mid",
+    "title": "Hanon Part I — Exercise 7",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 407,
+      "goal": "Exercise 7: pulse while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → D3 → F3 → E3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 7; play slowly with a relaxed hand.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon07.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "fbf25493c374ac618f980232410f707252a21bd9eb7456fb6bb65cc6caaf6195"
+    }
+  },
+  {
+    "id": "tutorial-hanon-8",
+    "file": "tutorials/hanon08.mid",
+    "title": "Hanon Part I — Exercise 8",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 408,
+      "goal": "Exercise 8: note reading while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → G3 → A3 → F3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 8; play slowly with a relaxed hand.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon08.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "fa7727338af28e45b9477d09ec390e8451284cbc16378072a842fbb1021cdd95"
+    }
+  },
+  {
+    "id": "tutorial-hanon-9",
+    "file": "tutorials/hanon09.mid",
+    "title": "Hanon Part I — Exercise 9",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 409,
+      "goal": "Exercise 9: hand balance while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → F3 → E3 → G3 → F3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 9; play slowly with a relaxed hand.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon09.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "db073f42cb6ff5ad1fbaaed054f6620f36cf81796e065c3289fdb310c5add9f2"
+    }
+  },
+  {
+    "id": "tutorial-hanon-10",
+    "file": "tutorials/hanon10.mid",
+    "title": "Hanon Part I — Exercise 10",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 410,
+      "goal": "Exercise 10: phrase endings while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → A3 → G3 → F3 → E3 → F3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 10; play slowly with a relaxed hand.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon10.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "abb18da7e1373c054f0addb2008c233f0b488859c0fd4ab3bf934505e1bb57da"
+    }
+  },
+  {
+    "id": "tutorial-hanon-11",
+    "file": "tutorials/hanon11.mid",
+    "title": "Hanon Part I — Exercise 11",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 411,
+      "goal": "Exercise 11: transitions while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → A3 → G3 → A3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 11; play slowly with a relaxed hand.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon11.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "8742444586be1b36ec336dae22a190bc3b2a7ccf6965c4022d90e06d4f44e5c1"
+    }
+  },
+  {
+    "id": "tutorial-hanon-12",
+    "file": "tutorials/hanon12.mid",
+    "title": "Hanon Part I — Exercise 12",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 412,
+      "goal": "Exercise 12: even attacks while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (G2, G3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: G3 → C3 → E3 → D3 → C3 → D3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 12; play slowly with a relaxed hand.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon12.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "f442af600199e354afef0605b6c5c56f53013bbf2b9e9b8140746cc8c9fe960f"
+    }
+  },
+  {
+    "id": "tutorial-hanon-13",
+    "file": "tutorials/hanon13.mid",
+    "title": "Hanon Part I — Exercise 13",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 413,
+      "goal": "Exercise 13: pulse while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (E2, E3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E3 → C3 → F3 → D3 → G3 → E3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 13; play slowly with a relaxed hand.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon13.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "64b3fda48167dfe8a7a529783e33d791267735f8529d14202b2597926ba6f65b"
+    }
+  },
+  {
+    "id": "tutorial-hanon-14",
+    "file": "tutorials/hanon14.mid",
+    "title": "Hanon Part I — Exercise 14",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 414,
+      "goal": "Exercise 14: note reading while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → D3 → F3 → E3 → F3 → E3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 14; play slowly with a relaxed hand.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon14.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "150bbd462302a78d5ab5c01000bce86e062dff5c039ed09c9b3433ed54376ebe"
+    }
+  },
+  {
+    "id": "tutorial-hanon-15",
+    "file": "tutorials/hanon15.mid",
+    "title": "Hanon Part I — Exercise 15",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 415,
+      "goal": "Exercise 15: hand balance while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → D3 → F3 → E3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 15; play slowly with a relaxed hand.",
+        "Practice each hand separately, then listen for the melody when combining them.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon15.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "5a9497059450b8306ea703368353a4396a0657258f0933ca433b10fe8bc261f1"
+    }
+  },
+  {
+    "id": "tutorial-hanon-16",
+    "file": "tutorials/hanon16.mid",
+    "title": "Hanon Part I — Exercise 16",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 416,
+      "goal": "Exercise 16: phrase endings while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → D3 → E3 → A3 → G3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 16; play slowly with a relaxed hand.",
+        "Loop the last beat of one phrase and the first beat of the next.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon16.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "78c34cc159c4f078bf3ed2a8a4a90ae901ff98203b02a07d5c521716c9487d43"
+    }
+  },
+  {
+    "id": "tutorial-hanon-17",
+    "file": "tutorials/hanon17.mid",
+    "title": "Hanon Part I — Exercise 17",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 417,
+      "goal": "Exercise 17: transitions while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → E3 → A3 → G3 → B3 → A3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 17; play slowly with a relaxed hand.",
+        "Locate the largest move and loop the beat before and after it.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–A5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon17.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "f920acad072ce82d269314925bdb67ebb080c5db66465381d5129075c44e9aba"
+    }
+  },
+  {
+    "id": "tutorial-hanon-18",
+    "file": "tutorials/hanon18.mid",
+    "title": "Hanon Part I — Exercise 18",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 418,
+      "goal": "Exercise 18: even attacks while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → D3 → F3 → E3 → G3 → F3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 18; play slowly with a relaxed hand.",
+        "Tap subdivisions, then play two short phrases at the same spacing.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon18.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "29c0dc29e4bc1118cd10613e72d12ddc84cd622796347e32ad1fa1025f790b1b"
+    }
+  },
+  {
+    "id": "tutorial-hanon-19",
+    "file": "tutorials/hanon19.mid",
+    "title": "Hanon Part I — Exercise 19",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 419,
+      "goal": "Exercise 19: pulse while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (C2, C3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: C3 → A3 → F3 → G3 → A3 → F3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 19; play slowly with a relaxed hand.",
+        "Clap the rhythm of the first phrase, then play it without changing the pulse.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–G5; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon19.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "e44399aeaee6fd061f27c62468fb61a043a3b07b09699779a46674ba4addf70b"
+    }
+  },
+  {
+    "id": "tutorial-hanon-20",
+    "file": "tutorials/hanon20.mid",
+    "title": "Hanon Part I — Exercise 20",
+    "chords": [],
+    "provenance": {
+      "source": "Charles-Louis Hanon, The Virtuoso Pianist Part I (1873); Schirmer, 1900",
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "license": "CC-BY-SA-4.0",
+      "maintainer": "Steve Taylor and Javier Ruiz-Alma",
+      "method": "Unmodified Mutopia MIDI extracted from the official Part I archive. Guide independently authored."
+    },
+    "tutorial": {
+      "collection": "Hanon Part I",
+      "level": "Elementary",
+      "order": 420,
+      "goal": "Exercise 20: note reading while reading the repeating ascending and descending pattern.",
+      "startTempo": 50,
+      "steps": [
+        "Open the source score and inspect the first pattern and its fingering.",
+        "Locate the opening attack (E2, E3) on the keyboard before starting playback.",
+        "Read the highest notes at the first six attacks: E3 → G3 → C4 → E4 → C4 → B3. Compare their directions with the linked score, then rehearse slowly.",
+        "Isolate the first pattern of Exercise 20; play slowly with a relaxed hand.",
+        "Name the first note of each phrase and trace steps and skips in the score.",
+        "Follow the pattern up and down; pause to reset if tension increases.",
+        "Try both hands together at 50 BPM; aim for even sound before increasing speed."
+      ],
+      "tips": [
+        "Keep sessions short; stop if playing causes discomfort.",
+        "Consult the score for this exercise’s fingering; do not assume every Hanon pattern uses the same sequence.",
+        "This MIDI spans C2–E6; preview register changes before moving your hands."
+      ],
+      "sourceUrl": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-a4.pdf"
+    },
+    "download": {
+      "url": "https://www.mutopiaproject.org/ftp/HanonCL/virtuoso-pianist-pt1/virtuoso-pianist-pt1-mids.zip",
+      "archiveMember": "hanon20.mid",
+      "archiveSha256": "bc2aeb0f1b1792bc01a92f53b32cf9a40e34dc9f46a9a3d4c2122bdbcac3376a",
+      "sha256": "4a3590d07969130ae11250aba520903fb3a5a2dbf0250161512e1b9cfb723ff3"
+    }
+  }
+]
