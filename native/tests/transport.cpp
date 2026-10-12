@@ -56,6 +56,180 @@ static json model() {
            json::array({{{"tick", 0}, {"numerator", 4}, {"denominator", 4}}})},
           {"keyMap", json::array()}};
 }
+TEST_CASE("Score dragging seeks seconds through the native tempo map", "[song-drag]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  s["tempoMap"].push_back({{"tick", 960}, {"microseconds", 1000000}});
+  s["durationSeconds"] = 3.0;
+  t.load(s);
+  t.command("transport.seek", {{"seconds", 2.0}}, 0);
+  REQUIRE(t.snapshot(0)["songTick"] == 1440);
+  REQUIRE(t.snapshot(0)["songSeconds"] == 2.0);
+  REQUIRE_THROWS(t.command("transport.seek", {{"seconds", -1}}, 0));
+  REQUIRE_THROWS(t.command("transport.seek", {{"seconds", 4}}, 0));
+  REQUIRE(t.snapshot(0)["songTick"] == 1440);
+}
+TEST_CASE("Wait mode freezes at the selected hand and continues only after correct input", "[song-wait]") {
+  for (auto hand : {"left", "right", "both"}) {
+    Engine e;
+    Transport t(e);
+    auto s = model();
+    s["tracks"][1]["practice"] = true;
+    s["notes"][1]["startTick"] = 480;
+    t.load(s);
+    t.command("transport.configure", {{"mode", "wait"}, {"hand", hand}, {"hints", true}}, 0);
+    t.command("transport.play", {}, 0);
+    t.tick(24256);
+    auto p = t.snapshot(24256);
+    REQUIRE(p["waiting"] == true);
+    REQUIRE(p["songTick"] == 480);
+    REQUIRE(p["misses"] == 0);
+    REQUIRE(p["hintKeys"].size() == (std::string(hand) == "both" ? 2 : 1));
+    t.tick(100000);
+    REQUIRE(t.snapshot(100000)["songTick"] == 480);
+    t.input({EventType::On, Bus::Live, 1, 0, 70, 90, 1, 100000});
+    REQUIRE(t.snapshot(100000)["waiting"] == true);
+    if (std::string(hand) != "right")
+      t.input({EventType::On, Bus::Live, 1, 0, 48, 90, 2, 100100});
+    if (std::string(hand) == "both") REQUIRE(t.snapshot(100100)["waiting"] == true);
+    if (std::string(hand) != "left")
+      t.input({EventType::On, Bus::Live, 1, 0, 60, 90, 3, 100200});
+    REQUIRE(t.snapshot(100200)["waiting"] == false);
+    REQUIRE(t.snapshot(100200)["state"] == "playing");
+    REQUIRE(t.snapshot(100200)["hits"] == 1);
+  }
+}
+TEST_CASE("Hints are independent of wait and disabling wait resumes a frozen song", "[song-wait]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  t.command("transport.configure", {{"mode", "wait"}, {"hand", "right"}}, 0);
+  t.command("transport.play", {}, 0);
+  t.tick(24256);
+  REQUIRE(t.snapshot(24256)["waiting"] == true);
+  REQUIRE(t.snapshot(24256)["hintKeys"].empty());
+  t.command("transport.configure", {{"hints", true}}, 24256);
+  t.tick(24512);
+  REQUIRE(t.snapshot(24512)["waiting"] == true);
+  REQUIRE(t.snapshot(24512)["hintKeys"][0]["hand"] == "right");
+  t.command("transport.configure", {{"mode", "continuous"}}, 24512);
+  REQUIRE(t.snapshot(24512)["state"] == "playing");
+  REQUIRE(t.snapshot(24512)["waiting"] == false);
+  REQUIRE_FALSE(t.snapshot(24512)["hintKeys"].empty());
+}
+TEST_CASE("Hint colors honor explicit staff and seek clears stale targets", "[song-wait]") {
+  Engine e;
+  Transport t(e);
+  auto s = model();
+  s["tracks"][0]["staff"] = "bass";
+  s["tracks"][1]["backing"] = false;
+  t.load(s);
+  t.command("transport.configure", {{"hints", true}, {"hand", "left"}}, 0);
+  REQUIRE(t.snapshot(0)["hintKeys"][0]["midiNote"] == 60);
+  REQUIRE(t.snapshot(0)["hintKeys"][0]["hand"] == "left");
+  t.command("transport.seek", {{"tick", 1500}}, 0);
+  REQUIRE(t.snapshot(0)["hintKeys"].empty());
+}
+TEST_CASE("Selected backing hand supplies wait and hint targets", "[song-wait]") {
+  for (bool reverse : {false, true}) {
+  for (auto hand : {"left", "right", "both"}) {
+    Engine e;
+    Transport t(e);
+    auto s = model(); // Bass is backing-only, matching imported starter songs.
+    if (reverse) {
+      s["tracks"][0]["practice"] = false;
+      s["tracks"][0]["backing"] = true;
+      s["tracks"][1]["practice"] = true;
+      s["tracks"][1]["backing"] = false;
+    }
+    s["notes"][0]["startTick"] = 0;
+    t.load(s);
+    t.command("transport.configure", {{"mode", "wait"}, {"hand", hand}, {"hints", true}}, 0);
+    t.command("transport.play", {}, 0);
+    t.tick(256);
+    auto p = t.snapshot(256);
+    REQUIRE(p["waiting"] == true);
+    REQUIRE(p["target"].size() == (std::string(hand) == "both" ? 2 : 1));
+    REQUIRE(p["hintKeys"].size() == p["target"].size());
+    if (std::string(hand) != "right") REQUIRE(p["hintKeys"][0]["hand"] == "left");
+    t.command("transport.configure", {{"mode", "continuous"}}, 256);
+    REQUIRE_FALSE(t.snapshot(256)["hintKeys"].empty());
+  }
+  }
+}
+TEST_CASE("Transport hand scoring follows explicit staff before split pitch", "[transport][hand]") {
+  Engine e;
+  Transport t(e);
+  auto song = model();
+  song["tracks"][1]["practice"] = true;
+  song["tracks"][0]["staff"] = "bass";
+  song["tracks"][1]["staff"] = "treble";
+  for (auto &note : song["notes"]) note["startTick"] = 480;
+  t.load(song);
+  REQUIRE(t.snapshot(0)["config"]["hand"] == "both");
+  t.command("transport.configure", {{"hand", "left"}}, 0);
+  REQUIRE(t.snapshot(0)["target"] == json::array({60}));
+  t.command("transport.configure", {{"hand", "right"}}, 0);
+  REQUIRE(t.snapshot(0)["target"] == json::array({48}));
+  auto before = t.snapshot(0);
+  REQUIRE_THROWS(t.command("transport.configure", {{"hand", "feet"}}, 0));
+  REQUIRE(t.snapshot(0) == before);
+  song["tracks"][0]["staff"] = "grand";
+  song["tracks"][1]["staff"] = "split";
+  t.load(song);
+  REQUIRE(t.snapshot(0)["target"] == json::array({60}));
+  t.command("transport.configure", {{"hand", "left"}}, 0);
+  REQUIRE(t.snapshot(0)["target"] == json::array({48}));
+}
+TEST_CASE("Windowed measures honor tempo meter changes and fractional bar ticks", "[window][measures]") {
+  auto song = model();
+  song["durationTicks"] = 10000;
+  song["meterMap"] = json::array({{{"tick", 0}, {"numerator", 4}, {"denominator", 4}},
+                                 {{"tick", 2400}, {"numerator", 3}, {"denominator", 8}}});
+  song["tempoMap"].push_back({{"tick", 1920}, {"microseconds", 1000000}});
+  SongWindow window(song);
+  auto bars = window.measures(1800, 3200, 48000);
+  REQUIRE(bars == json::array({{{"number", 2}, {"startFrame", 96000}},
+                              {{"number", 3}, {"startFrame", 144000}},
+                              {{"number", 4}, {"startFrame", 216000}}}));
+  song["ppq"] = 101;
+  song["durationTicks"] = 1000000;
+  song["meterMap"] = json::array({{{"tick", 0}, {"numerator", 1}, {"denominator", 64}}});
+  song["tempoMap"] = json::array({{{"tick", 0}, {"microseconds", 500000}}});
+  SongWindow fractional(song);
+  auto late = fractional.measures(6300, 6326, 48000);
+  REQUIRE(late.size() == 4);
+  REQUIRE(late[0]["number"] == 1000);
+  REQUIRE(late[0]["startFrame"] == 1498500);
+  REQUIRE_THROWS(fractional.measures(0, 1000000, 48000));
+  REQUIRE_THROWS(fractional.measures(-1, 1, 48000));
+}
+TEST_CASE("Hand scoring changes retain playback audio and global live ownership", "[transport][hand]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  e.submit({EventType::On, Bus::Live, 1, 0, 72, 90, 100, 0});
+  std::vector<float> audio(48000);
+  e.render(audio.data(), 128);
+  t.command("transport.configure", {{"hand", "left"}}, 0);
+  t.command("transport.play", {}, 0);
+  t.tick(0);
+  e.render(audio.data(), 24000);
+  t.tick(24000);
+  e.render(audio.data(), 512);
+  bool live = false, melody = false, backing = false;
+  auto held = e.snapshot()["heldNotes"];
+  for (auto note : held) {
+    live |= note["note"] == 72;
+    melody |= note["note"] == 60;
+    backing |= note["note"] == 48;
+  }
+  REQUIRE(live);
+  REQUIRE(melody);
+  REQUIRE(backing);
+  REQUIRE(t.snapshot(24512)["target"].empty());
+}
 TEST_CASE("Transport native play seek cancel ownership and score use physical "
           "attacks",
           "[transport]") {

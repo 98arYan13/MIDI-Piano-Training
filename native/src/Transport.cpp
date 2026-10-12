@@ -109,17 +109,22 @@ void Transport::load(json s) {
   hits_ = misses_ = 0;
   groupFailed_ = false;
   build();
+  group_ = 0;
   ++revision_;
 }
 void Transport::build() {
   timeline_.clear();
   groups_.clear();
+  hintGroups_.clear();
   inferenceNotes_.clear();
   cachedChord_ = nullptr;
   for (auto &channel : controls_)
     for (auto &values : channel)
       values.clear();
   std::map<double, std::set<unsigned>> grouped;
+  std::map<double, std::map<unsigned, unsigned>> hands;
+  std::map<double, std::set<unsigned>> hintPitches;
+  std::map<double, std::map<unsigned, unsigned>> hintHands;
   for (auto &n : song_["notes"]) {
     if (n["channel"] != 9)
       inferenceNotes_.push_back({n["startTick"].get<double>(),
@@ -128,8 +133,23 @@ void Transport::build() {
     auto track = n["trackId"].get<unsigned>(),
          pitch = n["midiNote"].get<unsigned>();
     double from = n["startTick"], to = n["endTick"];
-    if (song_["tracks"][track]["practice"] == true && n["channel"] != 9)
+    const auto staff = song_["tracks"][track]["staff"];
+    const bool left = staff == "bass" || (staff != "treble" && pitch < 60);
+    const bool selected = config_["hand"] == "both" ||
+                          (config_["hand"] == "left" ? left : !left);
+    const bool practice = song_["tracks"][track]["practice"] == true;
+    const bool enabled = practice || song_["tracks"][track]["backing"] == true;
+    const bool pitched = n["channel"] != 9 &&
+                         !song_["tracks"][track].value("percussion", false) &&
+                         pitch >= 21 && pitch <= 108;
+    if (selected && enabled && pitched) {
+      hintPitches[from].insert(pitch);
+      hintHands[from][pitch] |= left ? 1 : 2;
+    }
+    if (selected && pitched && (practice || (config_["mode"] == "wait" && enabled))) {
       grouped[from].insert(pitch);
+      hands[from][pitch] |= left ? 1 : 2;
+    }
     if (!audible(track) || pitch < 21 || pitch > 108)
       continue;
     InputEvent on{EventType::On,
@@ -147,7 +167,9 @@ void Transport::build() {
                          n.value("endOrder", n["id"].get<uint64_t>() * 2 + 1)});
   }
   for (auto &[tick, pitches] : grouped)
-    groups_.push_back({tickSeconds(song_, tick), tick, pitches});
+    groups_.push_back({tickSeconds(song_, tick), tick, pitches, hands[tick]});
+  for (auto &[tick, pitches] : hintPitches)
+    hintGroups_.push_back({tickSeconds(song_, tick), tick, pitches, hintHands[tick]});
   for (auto &c : song_["controllers"]) {
     if (!audible(c["trackId"]))
       continue;
@@ -631,13 +653,24 @@ json Transport::command(const std::string &type, const json &params,
     hits_ = misses_ = 0;
     resume(frame);
   } else if (type == "transport.seek") {
-    double tick = params.at("tick");
+    double tick;
+    if (params.contains("seconds")) {
+      double seconds = params.at("seconds");
+      if (!std::isfinite(seconds) || seconds < 0 ||
+          seconds > song_["durationSeconds"].get<double>())
+        throw std::invalid_argument("Seek is outside this song.");
+      tick = secondsTick(song_, seconds);
+    } else {
+      tick = params.at("tick");
+    }
     if (!std::isfinite(tick) || tick < 0 ||
         tick > song_["durationTicks"].get<double>())
       throw std::invalid_argument("Seek is outside this song.");
     bool running = playing_;
     cancel();
     position_ = tickSeconds(song_, tick);
+    group_ = std::lower_bound(groups_.begin(), groups_.end(), position_,
+                             [](const auto &g, double p) { return g.seconds < p; }) - groups_.begin();
     retry_ = false;
     groupFailed_ = false;
     attempt_.clear();
@@ -660,9 +693,13 @@ json Transport::command(const std::string &type, const json &params,
         throw std::invalid_argument("Unknown transport option.");
       next[it.key()] = it.value();
     }
-    for (auto field : {"hearPractice", "practiceEnabled", "loop"})
+    for (auto field : {"hearPractice", "practiceEnabled", "loop", "hints"})
       if (!next[field].is_boolean())
         throw std::invalid_argument("Transport switches must be boolean.");
+    if (params.size() == 1 && params.contains("hints")) {
+      config_["hints"] = next["hints"];
+      return snapshot(frame);
+    }
     auto number = [&](const char *key, double min, double max) {
       if (!next[key].is_number() || !std::isfinite(next[key].get<double>()) ||
           next[key].get<double>() < min || next[key].get<double>() > max)
@@ -678,15 +715,17 @@ json Transport::command(const std::string &type, const json &params,
     if (next["loop"] == true &&
         next["a"].get<double>() >= next["b"].get<double>())
       throw std::invalid_argument("Loop A must be before B.");
-    if (next["mode"] != "continuous" && next["mode"] != "pauseOnMiss")
+    if (next["mode"] != "continuous" && next["mode"] != "pauseOnMiss" && next["mode"] != "wait")
       throw std::invalid_argument("Unknown practice mode.");
+    if (next["hand"] != "both" && next["hand"] != "left" && next["hand"] != "right")
+      throw std::invalid_argument("Unknown practice hand.");
     std::set<std::string> styles = {"Off",    "Root", "Triad",
                                     "Root+5", "Arp",  "Bossa Nova"};
     if (!next["accompaniment"].is_string() ||
         !styles.contains(next["accompaniment"]))
       throw std::invalid_argument("Unknown accompaniment style.");
     position_ = position(frame);
-    bool running = playing_;
+    bool running = playing_ || (retry_ && config_["mode"] == "wait");
     cancel();
     config_ = next;
     build();
@@ -703,6 +742,21 @@ void Transport::tick(uint64_t frame) {
   double speed = config_["speed"], rate = engine_.sampleRate(),
          lookahead = .05 * speed;
   double now = frameSeconds(frame), until = now + lookahead;
+  if (config_["mode"] == "wait") {
+    selectScoreCycle(frame);
+    if (group_ < groups_.size() && groups_[group_].seconds < cycleEnd_) {
+      const double target = groups_[group_].seconds;
+      if (position(frame) >= target) {
+        position_ = target;
+        cancel();
+        retry_ = true;
+        waitFrom_ = frame;
+        return;
+      }
+      // Do not schedule target or later notes before the learner answers.
+      until = std::min(until, target - 1e-9);
+    }
+  }
   unsigned submitted = 0;
   pumpEntries_ = 0;
   while (playing_) {
@@ -799,7 +853,7 @@ void Transport::tick(uint64_t frame) {
     groupFailed_ = false;
   }
   lastScorePosition_ = now;
-  if (config_["practiceEnabled"] != true || group_ >= groups_.size())
+  if (config_["mode"] == "wait" || config_["practiceEnabled"] != true || group_ >= groups_.size())
     return;
   while (group_ < groups_.size() &&
          now > groups_[group_].seconds +
@@ -870,8 +924,10 @@ void Transport::input(const InputEvent &e) {
     return;
   held_[key] = e.note;
   selectScoreCycle(e.frame);
-  if (config_["practiceEnabled"] != true || (!playing_ && !retry_) ||
+  if ((config_["practiceEnabled"] != true && config_["mode"] != "wait") || (!playing_ && !retry_) ||
       group_ >= groups_.size())
+    return;
+  if (config_["mode"] == "wait" && (!retry_ || e.frame < waitFrom_))
     return;
   auto &g = groups_[group_];
   double time = retry_ ? g.seconds : position(e.frame),
@@ -944,6 +1000,18 @@ json Transport::snapshot(uint64_t frame) const {
       if (entry["tick"].get<double>() <= tick)
         micro = entry["microseconds"];
   }
+  json hintKeys = json::array();
+  const Group *hintGroup = nullptr;
+  if (config_["mode"] == "wait") {
+    if (group_ < groups_.size()) hintGroup = &groups_[group_];
+  } else {
+    const auto next = std::lower_bound(hintGroups_.begin(), hintGroups_.end(), pos,
+                                      [](const auto &g, double p) { return g.seconds < p; });
+    if (next != hintGroups_.end()) hintGroup = &*next;
+  }
+  if (config_["hints"] == true && hintGroup)
+    for (auto &[pitch, hand] : hintGroup->hands)
+      hintKeys.push_back({{"midiNote", pitch}, {"hand", hand == 1 ? "left" : hand == 2 ? "right" : "both"}});
   return {{"songId",
            song_.is_null() ? std::string{} : song_.value("id", std::string{})},
           {"title", song_.is_null() ? std::string{}
@@ -961,6 +1029,8 @@ json Transport::snapshot(uint64_t frame) const {
           {"speed", config_["speed"]},
           {"config", config_},
           {"retry", retry_},
+          {"waiting", retry_ && config_["mode"] == "wait"},
+          {"hintKeys", hintKeys},
           {"hits", hits_},
           {"misses", misses_},
           {"accuracy", hits_ + misses_ ? 100.0 * hits_ / (hits_ + misses_) : 0},
@@ -1017,6 +1087,24 @@ json Transport::events(double from, double to, unsigned limit) const {
 }
 SongWindow::SongWindow(json song) : metadata_(std::move(song)) {
   prepareSongTiming(metadata_);
+  auto meterMap = metadata_.value("meterMap", json::array());
+  if (meterMap.empty() || meterMap[0]["tick"].get<double>() > 0)
+    meterMap.insert(meterMap.begin(), json{{"tick", 0}, {"numerator", 4}, {"denominator", 4}});
+  uint64_t number = 1;
+  for (size_t i = 0; i < meterMap.size(); ++i) {
+    const double start = meterMap[i]["tick"],
+                 end = i + 1 < meterMap.size() ? meterMap[i + 1]["tick"].get<double>() : std::numeric_limits<double>::infinity(),
+                 bar = ppq() * 4.0 * meterMap[i]["numerator"].get<double>() / meterMap[i]["denominator"].get<double>();
+    if (!std::isfinite(start) || start < 0 || end < start || !std::isfinite(bar) || bar <= 0)
+      throw std::invalid_argument("Invalid meter map.");
+    if (end == start) continue;
+    meters_.push_back({start, end, bar, number});
+    if (std::isfinite(end)) {
+      const double bars = std::ceil((end - start) / bar);
+      if (bars >= double(UINT64_MAX - number)) throw std::invalid_argument("Too many song measures.");
+      number += uint64_t(bars);
+    }
+  }
   notes_ = std::move(metadata_["notes"]); metadata_.erase("notes"); metadata_.erase("rawEvents"); metadata_.erase("controllers");
   order_.resize(notes_.size()); std::iota(order_.begin(),order_.end(),0);
   std::stable_sort(order_.begin(),order_.end(),[&](size_t a,size_t b){return notes_[a]["startTick"].get<double>()<notes_[b]["startTick"].get<double>();});
@@ -1037,5 +1125,31 @@ json SongWindow::query(double from,double to,unsigned rate,unsigned limit) const
   std::sort(found.begin(),found.end()); auto selected=metadata_; selected["notes"]=json::array();
   for(auto i:found)selected["notes"].push_back(notes_[i]);
   return songEvents(selected,from,to,rate,limit);
+}
+json SongWindow::measures(double from, double to, unsigned rate) const {
+  if (!std::isfinite(from) || !std::isfinite(to) || from < 0 || to < from || !rate)
+    throw std::invalid_argument("Invalid measure window.");
+  to = std::min(to, metadata_.value("durationTicks", to));
+  json result = json::array();
+  auto section = std::upper_bound(meters_.begin(), meters_.end(), from,
+                                 [](double tick, const MeterSection &m) { return tick < m.start; });
+  if (section != meters_.begin()) --section;
+  for (; section != meters_.end() && section->start <= to; ++section) {
+    const auto &m = *section;
+    const double first = std::max(0.0, std::ceil((from - m.start) / m.barTicks)),
+                 last = std::min(std::floor((to - m.start) / m.barTicks),
+                                 std::isfinite(m.end) ? std::ceil((m.end - m.start) / m.barTicks) - 1 : std::numeric_limits<double>::infinity());
+    if (last < first) continue;
+    if (last - first + 1 > 4096 - result.size() || last >= double(UINT64_MAX - m.number))
+      throw std::invalid_argument("Measure window exceeds 4096 markers.");
+    for (uint64_t bar = uint64_t(first); bar <= uint64_t(last); ++bar) {
+      const double tick = m.start + double(bar) * m.barTicks;
+      const double frame = tickSeconds(metadata_, tick) * rate;
+      if (!std::isfinite(frame) || frame >= double(INT64_MAX))
+        throw std::invalid_argument("Measure frame exceeds native clock range.");
+      result.push_back({{"number", m.number + bar}, {"startFrame", std::llround(frame)}});
+    }
+  }
+  return result;
 }
 } // namespace sightreading

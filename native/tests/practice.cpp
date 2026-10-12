@@ -3,6 +3,31 @@
 #include <sightreading/Engine.hpp>
 #include <sightreading/Practice.hpp>
 using namespace sightreading;
+TEST_CASE("Hand selection restricts every generator and preserves configured range", "[practice][hand]") {
+  for (auto hand : {"left", "right"})
+    for (auto generator : {"random", "triads", "sevenths", "progression", "position", "intervals", "chordSymbol"}) {
+      Practice p;
+      p.configure({{"hand", hand}, {"staff", "grand"}, {"generator", generator},
+                   {"range", {{"min", 36}, {"max", 96}}}, {"smoothness", 0}});
+      p.start(100);
+      auto s = p.snapshot(100);
+      REQUIRE(s["config"]["range"]["min"] == 36);
+      REQUIRE(s["config"]["range"]["max"] == 96);
+      for (auto target : s["targets"])
+        REQUIRE(target["pitches"].back()["midiNote"].get<int>() -
+                target["pitches"].front()["midiNote"].get<int>() <= 12);
+      for (auto note : s["notes"]) {
+        REQUIRE((std::string(hand) == "left" ? note["midiNote"].get<int>() < 60 : note["midiNote"].get<int>() >= 60));
+        REQUIRE(note["staff"] == (std::string(hand) == "left" ? "bass" : "treble"));
+      }
+    }
+  Practice p;
+  p.start(100);
+  auto before = p.snapshot(100);
+  REQUIRE_THROWS(p.configure({{"hand", "left"}, {"range", {{"min", 60}, {"max", 84}}}}));
+  REQUIRE(p.snapshot(100) == before);
+  REQUIRE_THROWS(p.configure({{"hand", "feet"}}));
+}
 TEST_CASE("Practice integer validation rejects wide values before narrowing", "[practice][bounds]") {
   for (const json value : {json(4294967296ULL), json(UINT64_MAX), json(-1), json(true), json(1.5)}) {
     auto config = defaultPracticeConfig();
@@ -71,6 +96,78 @@ static InputEvent on(int pitch, uint64_t frame, uint64_t instance = 1,
   e.instance = instance;
   e.source = source;
   return e;
+}
+TEST_CASE("Pause freezes scroll clock and resume excludes paused time without restarting", "[practice][pause]") {
+  Practice p;
+  p.configure({{"mode", "scroll"}, {"tempo", 120}, {"range", {{"min", 60}, {"max", 60}}}});
+  p.start(1000);
+  p.input(on(60, 1000));
+  p.pause(11000);
+  auto paused = p.snapshot(11000);
+  REQUIRE(paused["paused"] == true);
+  REQUIRE(paused["running"] == false);
+  p.tick(1000000);
+  p.input(on(60, 999999, 2));
+  REQUIRE(p.snapshot(1000000)["clockFrame"] == 10000);
+  REQUIRE(p.snapshot(1000000)["elapsed"] == paused["elapsed"]);
+  REQUIRE(p.snapshot(1000000)["hits"] == 1);
+  p.resume(1001000);
+  auto resumed = p.snapshot(1001000);
+  REQUIRE(resumed["paused"] == false);
+  REQUIRE(resumed["running"] == true);
+  REQUIRE(resumed["targets"] == paused["targets"]);
+  REQUIRE(resumed["index"] == 1);
+  REQUIRE(resumed["pressed"].size() == 2);
+  p.tick(1022200);
+  REQUIRE(p.snapshot(1022200)["misses"] == 0);
+  p.tick(1022201);
+  REQUIRE(p.snapshot(1022201)["misses"] == 1);
+  p.pause(1022300);
+  auto elapsed = p.snapshot(1022300)["elapsed"];
+  p.stop(2000000);
+  p.resume(3000000);
+  REQUIRE(p.snapshot(3000000)["paused"] == false);
+  REQUIRE(p.snapshot(3000000)["running"] == false);
+  REQUIRE(p.snapshot(3000000)["elapsed"] == elapsed);
+  p.reset(4000000);
+  REQUIRE(p.snapshot(4000000)["running"] == true);
+  REQUIRE(p.snapshot(4000000)["hits"] == 0);
+}
+TEST_CASE("Paused chord attempts cannot carry over while held notes remain live", "[practice][pause]") {
+  Practice p;
+  p.configure({{"generator", "triads"}, {"range", {{"min", 60}, {"max", 67}}},
+               {"generatorOptions", {{"inversions", false}}}});
+  p.start(100);
+  p.input(on(60, 200, 1));
+  p.pause(300);
+  p.resume(10000);
+  p.input(on(64, 10100, 2));
+  p.input(on(67, 10200, 3));
+  REQUIRE(p.snapshot(10200)["hits"] == 0);
+  REQUIRE(p.snapshot(10200)["pressed"].size() == 3);
+  auto off = on(60, 10300, 1); off.type = EventType::Off;
+  p.input(off);
+  p.input(on(60, 10400, 4));
+  REQUIRE(p.snapshot(10400)["hits"] == 1);
+}
+TEST_CASE("Queued attacks from the pause remain held but cannot score after resume", "[practice][pause]") {
+  Practice p;
+  p.configure({{"range", {{"min", 60}, {"max", 60}}}});
+  p.start(1000);
+  p.pause(11000);
+  p.resume(1011000);
+  p.input(on(60, 1010000, 1));
+  p.input(on(61, 1010500, 2));
+  auto s = p.snapshot(1011000);
+  REQUIRE(s["hits"] == 0);
+  REQUIRE(s["misses"] == 0);
+  REQUIRE(s["pressed"].size() == 2);
+  auto off = on(60, 1011100, 1); off.type = EventType::Off;
+  p.input(off);
+  off = on(61, 1011200, 2); off.type = EventType::Off;
+  p.input(off);
+  p.input(on(60, 1011300, 3));
+  REQUIRE(p.snapshot(1011300)["hits"] == 1);
 }
 TEST_CASE("Wait scores physical chords within 150ms and permits retry",
           "[practice]") {

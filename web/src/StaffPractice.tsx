@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNative } from "./native";
 import { ScrollingStaff } from "./ScrollingStaff";
 import { spelledLabel } from "./notationModel";
+import { practiceAction } from "./practiceTransport";
+import { PlayerControls, RestartButton } from "./PlayerControls";
 import type { PracticeConfig, TimelineNote } from "./types";
 const keys = [
   "C",
@@ -160,14 +162,8 @@ export function StaffPractice() {
           ],
           (v) => edit({ mode: v as PracticeConfig["mode"] }),
         )}
-        <button
-          onClick={() =>
-            command(p.running ? "practice.stop" : "practice.start")
-          }
-        >
-          {p.running ? "Stop exercise" : "Start exercise"}
-        </button>
         <button onClick={() => command("practice.reset")}>Reset score</button>
+        <button onClick={() => command("practice.stop")}>Stop exercise</button>
         <button
           onClick={() => {
             void document.documentElement
@@ -177,6 +173,70 @@ export function StaffPractice() {
         >
           Exercise fullscreen
         </button>
+      </div>
+      <div className="practice-player">
+        <PlayerControls
+          hand={config.hand}
+          onHand={(hand) =>
+            edit({
+              hand,
+              staff:
+                hand === "both" ? "grand" : hand === "left" ? "bass" : "treble",
+            })
+          }
+          playing={p.running}
+          playLabel={
+            p.running
+              ? "Pause exercise"
+              : p.paused
+                ? "Resume exercise"
+                : "Start exercise"
+          }
+          onPlay={() => command(practiceAction(p.running, p.paused))}
+        />
+        <div className="practice-score">
+          {symbol ? (
+            <div
+              className="chord-symbol-target"
+              aria-label="Chord symbol target"
+            >
+              {current?.symbol ?? "Start an exercise"}
+              <small>
+                Play the displayed chord voicing:{" "}
+                {current?.pitches
+                  .map((n) => spelledLabel(n.spelling))
+                  .join(" · ")}
+              </small>
+            </div>
+          ) : (
+            <ScrollingStaff
+              mode={config.staff as "treble" | "bass" | "grand"}
+              notes={notes}
+              sampleRate={native.state?.sampleRate ?? 48000}
+              clockFrame={() =>
+                config.mode === "wait"
+                  ? p.clockFrame
+                  : p.running
+                    ? Math.max(0, native.frame() - p.originFrame)
+                    : p.clockFrame
+              }
+              running={p.running}
+              paper
+              tempo={config.tempo}
+            />
+          )}
+          <RestartButton
+            label="Restart exercise"
+            onClick={() => command("practice.reset")}
+          />
+        </div>
+        <div className="practice-progress" aria-label="Exercise progress">
+          <div
+            style={{
+              width: `${p.targets.length ? (p.index / p.targets.length) * 100 : 0}%`,
+            }}
+          />
+        </div>
       </div>
       <div className="practice-stats" aria-live="polite">
         <span>
@@ -194,38 +254,15 @@ export function StaffPractice() {
         <span>
           {p.running
             ? `Target ${p.index + 1} / ${p.targets.length}`
-            : "Exercise stopped"}
+            : p.paused
+              ? `Paused · Target ${p.index + 1} / ${p.targets.length}`
+              : "Exercise stopped"}
         </span>
       </div>
       {(error || p.error) && (
         <p role="alert" className="error">
           {error || p.error}
         </p>
-      )}
-      {symbol ? (
-        <div className="chord-symbol-target" aria-label="Chord symbol target">
-          {current?.symbol ?? "Start an exercise"}
-          <small>
-            Play the displayed chord voicing:{" "}
-            {current?.pitches
-              .map((n) => spelledLabel(n.spelling))
-              .join(" · ")}
-          </small>
-        </div>
-      ) : (
-        <ScrollingStaff
-          mode={config.staff as "treble" | "bass" | "grand"}
-          notes={notes}
-          sampleRate={native.state?.sampleRate ?? 48000}
-          clockFrame={() =>
-            config.mode === "wait"
-              ? p.clockFrame
-              : p.running
-                ? Math.max(0, native.frame() - p.originFrame)
-                : p.clockFrame
-          }
-          running={p.running}
-        />
       )}
       {generator === "position" && current && (
         <p className="helper">

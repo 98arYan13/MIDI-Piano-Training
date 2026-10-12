@@ -22,7 +22,10 @@ const until = async (predicate) => {
     if (await predicate()) return;
     await wait(100);
   }
-  throw Error("Native Staff condition timeout");
+  const s = await state();
+  throw Error(
+    `Native Staff condition timeout: ${JSON.stringify({ frame: s.sampleFrame, error: s.error, practice: { running: s.practice.running, paused: s.practice.paused, hits: s.practice.hits, misses: s.practice.misses, error: s.practice.error, pressed: s.practice.pressed }, held: s.heldNotes, output })}`,
+  );
 };
 const command = async (type, params = {}) => {
   const request = { version: 1, id: `staff-${++id}`, type, params };
@@ -94,7 +97,12 @@ try {
   });
   await wait(100);
   assert.equal((await state()).practice.hits, 0);
-  await ok("practice.answer", { action: "off", source: "staff-api", channel: 0, instance: 1 });
+  await ok("practice.answer", {
+    action: "off",
+    source: "staff-api",
+    channel: 0,
+    instance: 1,
+  });
   await ok("virtual.noteOff", { source: "staff-api", channel: 0, instance: 2 });
   await ok("virtual.noteOn", {
     source: "staff-api",
@@ -131,8 +139,7 @@ try {
     smoothness: 3,
   });
   browser = await chromium.launch({
-    executablePath:
-      browserPath(),
+    executablePath: browserPath(),
     headless: true,
   });
   const page = await browser.newPage({
@@ -149,6 +156,56 @@ try {
     1,
   );
   assert.equal(await page.locator(".piano-key").count(), 88);
+  // Hand controls select native generators, and transport preserves progress while paused.
+  await page.getByRole("button", { name: "Left hand", exact: true }).click();
+  await until(async () => (await state()).practice.config.hand === "right");
+  await page
+    .getByRole("button", { name: "Start exercise", exact: true })
+    .click();
+  await until(async () => (await state()).practice.running);
+  assert((await state()).practice.notes.every((n) => n.midiNote >= 60));
+  await page
+    .getByRole("button", { name: "Pause exercise", exact: true })
+    .click();
+  await until(async () => (await state()).practice.paused);
+  const paused = (await state()).practice;
+  await wait(250);
+  assert.equal((await state()).practice.elapsed, paused.elapsed);
+  await page
+    .getByRole("button", { name: "Resume exercise", exact: true })
+    .click();
+  await until(async () => (await state()).practice.running);
+  assert.deepEqual((await state()).practice.targets, paused.targets);
+  await page.getByRole("button", { name: "Left hand", exact: true }).click();
+  await until(async () => (await state()).practice.config.hand === "both");
+  await page.getByRole("button", { name: "Right hand", exact: true }).click();
+  await until(async () => (await state()).practice.config.hand === "left");
+  await page
+    .getByRole("button", { name: "Start exercise", exact: true })
+    .click();
+  await until(async () => (await state()).practice.running);
+  assert((await state()).practice.notes.every((n) => n.midiNote < 60));
+  await page.getByRole("button", { name: "Right hand", exact: true }).click();
+  await until(async () => (await state()).practice.config.hand === "both");
+  assert.equal(
+    await page
+      .locator(".paper-staff")
+      .evaluate((e) => getComputedStyle(e).backgroundColor),
+    "rgb(255, 255, 255)",
+  );
+  const geometry = await page.locator(".paper-staff").evaluate((e) => {
+    const score = e.getBoundingClientRect(),
+      bar = e.querySelector(".staff-playhead").getBoundingClientRect();
+    return {
+      width: bar.width,
+      offset: Math.abs(bar.x + bar.width / 2 - score.x - score.width / 2),
+    };
+  });
+  assert.equal(geometry.width, 20);
+  assert(geometry.offset < 1);
+  assert(
+    (await page.locator(".staff-measure span").allTextContents()).includes("2"),
+  );
   await page.locator(".practice-settings summary").click();
   // Native partial edits do not lose independent changes; numeric text stays local until committed.
   const tempo = page.getByLabel("Practice tempo", { exact: true });
@@ -199,6 +256,21 @@ try {
   );
   await page.getByRole("button", { name: "Reset score", exact: true }).click();
   await until(async () => (await state()).practice.hits === 0);
+  assert((await state()).heldNotes.some((n) => n.instance === 999 && n.held));
+  assert((await state()).metronome.running);
+  await page
+    .getByRole("button", { name: "Pause exercise", exact: true })
+    .click();
+  await until(async () => (await state()).practice.paused);
+  assert((await state()).heldNotes.some((n) => n.instance === 999 && n.held));
+  assert((await state()).metronome.running);
+  await page
+    .getByRole("button", { name: "Restart exercise", exact: true })
+    .click();
+  await until(
+    async () =>
+      (await state()).practice.running && (await state()).practice.index === 0,
+  );
   assert((await state()).heldNotes.some((n) => n.instance === 999 && n.held));
   assert((await state()).metronome.running);
   await page.getByRole("link", { name: /Ear Training/ }).click();
@@ -420,6 +492,28 @@ try {
   await mkdir("web/test-results", { recursive: true });
   await page.screenshot({
     path: "web/test-results/staff-practice.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobile = await page.locator(".paper-staff").evaluate((e) => {
+    const score = e.getBoundingClientRect(),
+      bar = e.querySelector(".staff-playhead").getBoundingClientRect();
+    return {
+      width: score.width,
+      offset: Math.abs(bar.x + bar.width / 2 - score.x - score.width / 2),
+    };
+  });
+  assert(mobile.width <= 390);
+  assert(mobile.offset < 1);
+  await page
+    .getByRole("button", { name: "Restart exercise", exact: true })
+    .click();
+  await until(
+    async () =>
+      (await state()).practice.running && (await state()).practice.index === 0,
+  );
+  await page.screenshot({
+    path: "web/test-results/staff-practice-mobile.png",
     fullPage: true,
   });
   assert.deepEqual(errors, []);

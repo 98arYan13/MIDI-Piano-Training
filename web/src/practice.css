@@ -359,3 +359,196 @@
   font-size: 14px;
   color: #a5afa8;
 }
+
+.practice-player {
+  background: #fff;
+  color: #202124;
+  margin-top: 10px;
+}
+.practice-transport {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  min-height: 96px;
+  border-bottom: 1px solid #e4e6e9;
+  background: #f3f5f8;
+}
+.practice-transport button,
+.practice-restart {
+  border-radius: 50%;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.practice-transport .hand-control {
+  width: 58px;
+  height: 58px;
+  position: relative;
+  background: transparent;
+  border: 1px solid #a9afb8;
+  color: #9fa6af;
+}
+.hand-control svg {
+  width: 27px;
+  height: 31px;
+}
+.left-hand svg {
+  transform: scaleX(-1);
+}
+.hand-control span {
+  position: absolute;
+  top: 62px;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.2px;
+}
+.practice-transport .hand-control[aria-pressed="true"] {
+  color: #555e69;
+  border-color: #858e99;
+}
+.practice-transport .hand-control[aria-pressed="false"] svg {
+  opacity: 0.45;
+}
+.practice-transport .hand-control:disabled {
+  cursor: default;
+  opacity: 1;
+}
+.practice-transport .practice-play {
+  order: 1;
+  width: 60px;
+  height: 60px;
+  border: 0;
+  background: #ef8500;
+  color: white;
+}
+.practice-transport .right-hand { order: 2; }
+.practice-play svg {
+  width: 27px;
+  height: 27px;
+  fill: currentColor;
+}
+.practice-transport .practice-play:hover {
+  background: #d97500;
+}
+.practice-score {
+  position: relative;
+}
+.paper-staff {
+  background: #fff;
+  border: 0;
+  height: 270px;
+}
+.paper-staff.grand {
+  height: 320px;
+}
+.paper-staff .staff-segment {
+  top: 40px;
+}
+.paper-staff .staff-clefs {
+  top: 40px;
+  left: -130px;
+  background: transparent;
+  width: 106px;
+}
+.paper-staff .staff-playhead {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  background: #d0d1d4;
+  z-index: 0;
+}
+.paper-staff .staff-track,
+.paper-staff .staff-lines {
+  z-index: 1;
+}
+.paper-staff .staff-lines {
+  position: relative;
+}
+.staff-measure {
+  position: absolute;
+  border-left: 1px solid #34383c;
+}
+.staff-measure span {
+  position: absolute;
+  left: 5px;
+  top: -31px;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: #30343a;
+}
+.practice-score .practice-restart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  width: 56px;
+  height: 56px;
+  background: white;
+  border: 1px solid #bdc1c7;
+  color: #ef8500;
+  box-shadow: 0 2px 4px #00000008;
+}
+.practice-restart svg {
+  width: 26px;
+  height: 26px;
+}
+.practice-score .practice-restart:hover {
+  background: #fff6e9;
+}
+.practice-progress {
+  height: 18px;
+  padding: 7px 20px;
+  background: #ef8500;
+}
+.practice-progress::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: #ffffff5c;
+}
+.practice-progress > div {
+  position: relative;
+  top: -3px;
+  height: 3px;
+  background: white;
+}
+.practice-progress > div::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: -5px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: white;
+}
+.practice-player .chord-symbol-target {
+  border: 0;
+  border-radius: 0;
+  min-height: 270px;
+  color: #202124;
+}
+.practice-player .chord-symbol-target small {
+  color: #555e69;
+}
+.practice-transport button:focus-visible,
+.practice-restart:focus-visible {
+  outline: 3px solid #ef8500;
+  outline-offset: 4px;
+}
+.piano-key .key-hint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 3px solid #249c9b;
+  background: #249c9b55;
+  box-shadow: inset 0 -12px #249c9b;
+  border-radius: inherit;
+}
+.piano-key .hint-right { border-color: #ef8700; background: #ef870055; box-shadow: inset 0 -12px #ef8700; }
+.piano-key .hint-both { border-color: #249c9b; background: linear-gradient(90deg, #249c9b70 50%, #ef870070 50%); box-shadow: inset 0 -12px #ef8700; }

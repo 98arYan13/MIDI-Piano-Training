@@ -35,6 +35,8 @@ public:
   json configure(const json &patch);
   void start(uint64_t frame);
   void stop(uint64_t frame);
+  void pause(uint64_t frame);
+  void resume(uint64_t frame);
   void reset(uint64_t frame);
   void input(const InputEvent &event);
   void tick(uint64_t frame);
@@ -49,9 +51,9 @@ private:
   std::map<std::tuple<unsigned, unsigned, uint64_t>, int> pressed_;
   std::map<int, uint64_t> attempt_;
   std::vector<std::string> results_;
-  uint64_t origin_{}, stoppedFrame_{}, revision_{};
+  uint64_t origin_{}, stoppedFrame_{}, scoringFrom_{}, revision_{};
   unsigned index_{}, hits_{}, misses_{};
-  bool running_{};
+  bool running_{}, paused_{};
   std::string error_;
   uint64_t targetFrame(unsigned index) const;
   void miss();

@@ -12,6 +12,7 @@ class SongWindow {
 public:
   explicit SongWindow(nlohmann::json song);
   nlohmann::json query(double from, double to, unsigned rate, unsigned limit = 4096) const;
+  nlohmann::json measures(double from, double to, unsigned rate) const;
   size_t inspected() const { return inspected_; }
   double ppq() const { return metadata_["ppq"].get<double>(); }
 private:
@@ -20,6 +21,8 @@ private:
   std::vector<double> ends_;
   size_t base_{};
   mutable size_t inspected_{};
+  struct MeterSection { double start, end, barTicks; uint64_t number; };
+  std::vector<MeterSection> meters_;
   void collect(size_t node,size_t left,size_t right,double from,double to,std::vector<size_t> &found,unsigned limit) const;
 };
 class Transport {
@@ -38,6 +41,8 @@ public:
 private:
   Engine &engine_;
   nlohmann::json song_, config_ = {{"speed", 1.0},
+                                   {"hand", "both"},
+                                   {"hints", false},
                                    {"hearPractice", true},
                                    {"practiceEnabled", true},
                                    {"mode", "continuous"},
@@ -59,13 +64,16 @@ private:
   struct Group {
     double seconds, tick;
     std::set<unsigned> pitches;
+    std::map<unsigned, unsigned> hands;
   };
   std::vector<Event> timeline_;
   std::vector<Group> groups_;
+  std::vector<Group> hintGroups_;
   std::map<std::tuple<unsigned, unsigned, uint64_t>, unsigned> held_;
   std::map<unsigned, uint64_t> attempt_;
   size_t cursor_{}, group_{};
   uint64_t origin_{}, generation_{}, revision_{}, cycle_{};
+  uint64_t waitFrom_{};
   uint64_t clockOrigin_{}, scoreCycle_{};
   double clockStart_{}, lastScorePosition_{};
   std::map<std::pair<unsigned, uint64_t>, InputEvent> active_;

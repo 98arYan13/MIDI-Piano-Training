@@ -222,6 +222,10 @@ int main(int argc, char **argv) {
             practice.reset(frame);
           } else if (type == "practice.stop")
             practice.stop(engine.sampleFrame());
+          else if (type == "practice.pause")
+            practice.pause(engine.sampleFrame());
+          else if (type == "practice.resume")
+            practice.resume(engine.sampleFrame());
           else
             throw std::invalid_argument("Unknown practice command.");
           reply = {{"version", 1},

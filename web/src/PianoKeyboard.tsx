@@ -9,7 +9,7 @@ import {
 } from "./pianoModel";
 import "./practice.css";
 
-export function PianoKeyboard() {
+export function PianoKeyboard({ showSongHints = false }: { showSongHints?: boolean }) {
   const native = useNative();
   const input = useMemo(
     () =>
@@ -218,11 +218,15 @@ export function PianoKeyboard() {
                     (n) => n.note === k.midi && (n.held || n.sustained),
                   ) ?? [];
                 const buses = [...new Set(notes.map((n) => n.bus))];
+                const hint = showSongHints
+                  ? native.state?.transport.hintKeys?.find(n => n.midiNote === k.midi)?.hand
+                  : undefined;
                 return (
                   <button
                     key={k.midi}
                     data-midi={k.midi}
                     data-buses={buses.join(" ")}
+                    data-hint={hint}
                     className={`piano-key ${k.black ? "black" : "white"} ${buses.join(" ")} ${notes.some((n) => n.sustained && !n.held) ? "sustained" : ""}`}
                     style={{
                       left: (k.left - firstLeft) * unit,
@@ -255,6 +259,7 @@ export function PianoKeyboard() {
                     onBlur={() => input.off(`button:${k.midi}`)}
                   >
                     {labels && <span>{k.label}</span>}
+                    {hint && <i className={`key-hint hint-${hint}`} aria-hidden="true" />}
                     {buses.length > 1 && <i className="mixed-source" />}
                   </button>
                 );
@@ -262,6 +267,7 @@ export function PianoKeyboard() {
             </div>
           </div>
           <div className="piano-legend">
+            {showSongHints && native.state?.transport.config.hints && <span>Hints · teal left hand · orange right hand</span>}
             <span className="live-dot">Live / MIDI</span>
             <span className="playback-dot">Playback</span>
             <span className="example-dot">Example</span>

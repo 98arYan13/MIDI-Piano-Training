@@ -12,7 +12,7 @@ export type TimelineNote = {
   endFrame: number;
   staff?: "treble" | "bass";
   duration?: "w" | "h" | "q" | "8" | "16";
-  highlight?: "target" | "hit" | "miss";
+  highlight?: "target" | "hit" | "miss" | "muted";
 };
 export const spelledLabel = (pitch: SpelledPitch) =>
   `${pitch.letter.toUpperCase()}${pitch.accidental === 'n' ? '' : pitch.accidental ?? ''}${pitch.octave}`;

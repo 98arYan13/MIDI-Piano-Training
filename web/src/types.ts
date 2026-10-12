@@ -214,6 +214,8 @@ export type Song = {
   keyMap: unknown[];
 };
 export type TransportSnapshot = {
+  waiting: boolean;
+  hintKeys: { midiNote: number; hand: "left" | "right" | "both" }[];
   accompanimentError: string;
   followError: string;
   tempo: number;
@@ -246,10 +248,12 @@ export type SongTrack = {
   staff: "split" | "treble" | "bass" | "grand";
 };
 export type TransportConfig = {
+  hints: boolean;
+  hand: "both" | "left" | "right";
   speed: number;
   hearPractice: boolean;
   practiceEnabled: boolean;
-  mode: "continuous" | "pauseOnMiss";
+  mode: "continuous" | "pauseOnMiss" | "wait";
   toleranceMs: number;
   spacing: number;
   loop: boolean;
@@ -268,6 +272,7 @@ export type AudioChannelEdit = { channel: number; enabled: boolean };
 // Shared visual-only timeline contract. Native controllers own generation, scoring and sound.
 export type { StaffMode, SpelledPitch, TimelineNote } from "./notationModel";
 export type PracticeConfig = {
+  hand: "both" | "left" | "right";
   staff: "treble" | "bass" | "grand" | "chordSymbol";
   generator:
     | "random"
@@ -303,6 +308,7 @@ export type PracticeConfig = {
   };
 };
 export type PracticeSnapshot = {
+  paused: boolean;
   error: string;
   config: PracticeConfig;
   running: boolean;

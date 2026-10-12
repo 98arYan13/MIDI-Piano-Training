@@ -800,5 +800,5 @@ summary {
   .play-along .song-workspace > label:nth-of-type(2) { grid-column: 1; grid-row: 2; margin: 4px 0; }
   .play-along .song-settings { grid-column: 2; grid-row: 2; align-self: center; margin: 4px 0; padding: 8px; }
   .play-along .song-settings[open] { grid-column: 1 / -1; grid-row: auto; }
-  .play-along .song-workspace > .scrolling-staff,.play-along .scoreline,.play-along .song-workspace > p { grid-column: 1 / -1; }
+  .play-along .song-workspace > .scrolling-staff,.play-along .song-player,.play-along .scoreline,.play-along .song-workspace > p { grid-column: 1 / -1; }
 }

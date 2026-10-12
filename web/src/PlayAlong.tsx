@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNative } from "./native";
 import { Library } from "./Library";
 import { songApi } from "./songApi";
@@ -6,11 +6,21 @@ import { ScrollingStaff } from "./ScrollingStaff";
 import type { Song, SongTrack, TimelineNote, TransportConfig } from "./types";
 import "./playAlong.css";
 import { NumericInput } from "./NumericInput";
+import { PlayerControls, RestartButton } from "./PlayerControls";
 export function PlayAlong() {
   const native = useNative(),
     p = native.state?.transport;
+  const dragPause = useRef<Promise<void>>(Promise.resolve());
+  const [seekPreview, setSeekPreview] = useState<number | null>(null);
+  useEffect(() => {
+    if (seekPreview !== null && p && Math.abs(p.songSeconds - seekPreview) < .001)
+      setSeekPreview(null);
+  }, [p?.songSeconds, seekPreview]);
   const [song, setSong] = useState<Song | null>(null),
     [notes, setNotes] = useState<TimelineNote[]>([]),
+    [measures, setMeasures] = useState<
+      { number: number; startFrame: number }[]
+    >([]),
     [error, setError] = useState("");
   const run = async (type: string, params: Record<string, unknown> = {}) => {
     setError("");
@@ -21,8 +31,10 @@ export function PlayAlong() {
     }
   };
   const choose = async (s: Song) => {
+    setSeekPreview(null);
     setSong(s);
     setNotes([]);
+    setMeasures([]);
     await run("transport.load", { id: s.id });
   };
   useEffect(() => {
@@ -35,12 +47,17 @@ export function PlayAlong() {
   useEffect(() => {
     if (!song) return;
     let current = true;
-    void songApi<{ notes: TimelineNote[]; truncated?: boolean }>(
+    void songApi<{
+      notes: TimelineNote[];
+      measures: { number: number; startFrame: number }[];
+      truncated?: boolean;
+    }>(
       `/${song.id}/events?fromTick=${Math.max(0, (bucket - 2) * song.ppq * 8)}&toTick=${(bucket + 6) * song.ppq * 8}`,
     )
       .then((s) => {
         if (current) {
           setNotes(s.notes);
+          setMeasures(s.measures ?? []);
           if (s.truncated)
             setError(
               "Dense notation window exceeded 4096 notes; the displayed window is truncated. Original playback remains intact.",
@@ -70,6 +87,17 @@ export function PlayAlong() {
   };
   const track = (t: SongTrack, key: string, value: unknown) =>
     void patch({ tracks: [{ id: t.id, [key]: value }] });
+  const displayedNotes = useMemo(
+    () =>
+      notes.map((n) =>
+        p?.config.hand &&
+        p.config.hand !== "both" &&
+        n.staff !== (p.config.hand === "left" ? "bass" : "treble")
+          ? { ...n, highlight: "muted" as const }
+          : n,
+      ),
+    [notes, p?.config.hand],
+  );
   return (
     <div className="play-along">
       <Library selected={song?.id ?? ""} choose={(s) => void choose(s)} />
@@ -96,6 +124,16 @@ export function PlayAlong() {
             </label>
             <div className="transport-buttons">
               <label>
+                <input type="checkbox" checked={p.config.mode === "wait"}
+                  onChange={(e) => config({ mode: e.target.checked ? "wait" : "continuous" })} />
+                Wait mode
+              </label>
+              <label>
+                <input type="checkbox" checked={p.config.hints ?? false}
+                  onChange={(e) => config({ hints: e.target.checked })} />
+                Hint mode
+              </label>
+              <label>
                 <input
                   type="checkbox"
                   checked={p.config.hearPractice}
@@ -104,21 +142,7 @@ export function PlayAlong() {
                 Hear practice part
               </label>
 
-              <button
-                onClick={() =>
-                  void run(
-                    p.state === "playing"
-                      ? "transport.pause"
-                      : "transport.play",
-                  )
-                }
-              >
-                {p.state === "playing" ? "Pause" : "Play"}
-              </button>
               <button onClick={() => void run("transport.stop")}>Stop</button>
-              <button onClick={() => void run("transport.restart")}>
-                Restart
-              </button>
               <button
                 onClick={() =>
                   void document.documentElement.requestFullscreen()
@@ -127,22 +151,12 @@ export function PlayAlong() {
                 Fullscreen
               </button>
             </div>
-            <label>
-              Position · {Math.round(p.songSeconds)} /{" "}
-              {Math.round(song.durationSeconds)} sec
-              <input
-                aria-label="Song position"
-                type="range"
-                min="0"
-                max={song.durationTicks}
-                step="1"
-                value={p.songTick}
-                onChange={(e) =>
-                  void run("transport.seek", { tick: Number(e.target.value) })
-                }
-              />
-            </label>
-            {p.retry && (
+            {p.waiting && (
+              <p className="retry" role="status">
+                Waiting for the selected hand{p.config.hand === "both" ? "s" : ""}: press {p.target.join(" + ")} to continue.
+              </p>
+            )}
+            {p.retry && !p.waiting && (
               <p className="retry" role="status">
                 Paused on miss — play a fresh target chord:{" "}
                 {p.target.join(" + ")}. Backing resumes after your answer.
@@ -207,6 +221,7 @@ export function PlayAlong() {
                     }
                   >
                     <option value="continuous">Continuous timing</option>
+                    <option value="wait">Wait for correct keys</option>
                     <option value="pauseOnMiss">Pause on miss</option>
                   </select>
                 </label>
@@ -346,25 +361,81 @@ export function PlayAlong() {
                 ))}
               </div>
             </details>
-            <ScrollingStaff
-              mode="grand"
-              notes={notes}
-              sampleRate={p.sampleRate}
-              clockFrame={() =>
-                p.songSeconds * p.sampleRate +
-                (p.state === "playing"
-                  ? Math.max(0, native.frame() - p.sampleFrame) * p.speed
-                  : 0)
-              }
-              pixelsPerSecond={p.config.spacing}
-              running={p.state === "playing"}
-              label="Song practice notation"
-            />
+            <div className="practice-player song-player">
+              <PlayerControls
+                hand={p.config.hand ?? "both"}
+                onHand={(hand) => config({ hand })}
+                playing={p.state === "playing" || p.waiting}
+                playLabel={p.state === "playing" || p.waiting ? "Pause" : "Play"}
+                onPlay={() =>
+                  void run(
+                    p.state === "playing" || p.waiting
+                      ? "transport.pause"
+                      : "transport.play",
+                  )
+                }
+              />
+              <div className="practice-score">
+                <ScrollingStaff
+                  key={song.id}
+                  mode="grand"
+                  notes={displayedNotes}
+                  sampleRate={p.sampleRate}
+                  clockFrame={() =>
+                    (seekPreview ?? p.songSeconds) * p.sampleRate +
+                    (p.state === "playing"
+                      ? Math.max(0, native.frame() - p.sampleFrame) * p.speed
+                      : 0)
+                  }
+                  pixelsPerSecond={p.config.spacing}
+                  running={p.state === "playing"}
+                  label="Song practice notation"
+                  paper
+                  measures={measures}
+                  scrub={{
+                    durationFrames: song.durationSeconds * p.sampleRate,
+                    start: () => { dragPause.current = run("transport.pause"); },
+                    seek: async (frame) => {
+                      const seconds = frame / p.sampleRate;
+                      setSeekPreview(seconds);
+                      await dragPause.current;
+                      try {
+                        await native.command("transport.seek", { seconds });
+                      } catch (e) {
+                        setSeekPreview(null);
+                        setError((e as Error).message);
+                      }
+                    },
+                  }}
+                />
+                <RestartButton
+                  label="Restart"
+                  onClick={() => void run("transport.restart")}
+                />
+              </div>
+              <div className="practice-progress song-progress">
+                <input
+                  aria-label="Song position"
+                  type="range"
+                  min="0"
+                  max={song.durationTicks}
+                  step="1"
+                  value={p.songTick}
+                  onChange={(e) =>
+                    void run("transport.seek", { tick: Number(e.target.value) })
+                  }
+                />
+              </div>
+            </div>
             <div className="scoreline">
               <span>{p.hits} hits</span>
               <span>{p.misses} misses</span>
               <span>{p.accuracy.toFixed(0)}% accuracy</span>
               <span>{p.state}</span>
+              <span>
+                Position · {Math.round(p.songSeconds)} /{" "}
+                {Math.round(song.durationSeconds)} sec
+              </span>
             </div>
           </>
         )}

@@ -95,6 +95,7 @@ void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate) {
       const bool truncated = notes.size() > limit;
       if (truncated) notes.erase(notes.end()-1);
       output(res, {{"notes", notes}, {"truncated", truncated},
+                   {"measures", cache->window->measures(from, to, rate)},
                    {"inspected", cache->window->inspected()},
                    {"fromTick", from},
                    {"toTick", to},

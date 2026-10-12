@@ -114,6 +114,7 @@ json PracticeTarget::jsonValue() const {
 }
 json defaultPracticeConfig() {
   return {{"staff", "treble"},
+          {"hand", "both"},
           {"generator", "random"},
           {"key", "C"},
           {"range", {{"min", 48}, {"max", 84}}},
@@ -142,6 +143,7 @@ json defaultPracticeConfig() {
 json validatePracticeConfig(const json &c) {
   known(c, defaultPracticeConfig());
   choice(c, "staff", {"treble", "bass", "grand", "chordSymbol"});
+  choice(c, "hand", {"both", "left", "right"});
   choice(c, "generator", generators);
   choice(c, "key", keys);
   choice(c, "mode", {"wait", "scroll"});
@@ -155,6 +157,9 @@ json validatePracticeConfig(const json &c) {
   integer(r, "max", 21, 108);
   if (r["min"].get<int>() > r["max"].get<int>())
     throw std::invalid_argument("Minimum range must not exceed maximum range.");
+  if ((c["hand"] == "left" && r["min"].get<int>() >= 60) ||
+      (c["hand"] == "right" && r["max"].get<int>() < 60))
+    throw std::invalid_argument("Selected hand has no notes in this range.");
   const auto &o = c["generatorOptions"];
   known(o, defaultPracticeConfig()["generatorOptions"]);
   integer(o, "notes", 1, 5);
@@ -194,6 +199,9 @@ std::vector<PracticeTarget> generatePractice(const json &raw, unsigned seed,
   const auto &o = c["generatorOptions"];
   int low = c["range"]["min"], high = c["range"]["max"], hands = o["hands"],
       smooth = c["smoothness"];
+  if (c["hand"] == "left") high = std::min(high, 59);
+  if (c["hand"] == "right") low = std::max(low, 60);
+  if (c["hand"] != "both") hands = 1;
   std::string g = c["staff"] == "chordSymbol"
                       ? "chordSymbol"
                       : c["generator"].get<std::string>();
@@ -393,6 +401,7 @@ json Practice::configure(const json &patch) {
   generatePractice(c, c["seed"], 64);
   config_ = c;
   running_ = false;
+  paused_ = false;
   index_ = hits_ = misses_ = 0;
   origin_ = stoppedFrame_ = 0;
   error_.clear();
@@ -408,16 +417,37 @@ void Practice::start(uint64_t frame) {
   results_.assign(targets_.size(), "target");
   index_ = hits_ = misses_ = 0;
   origin_ = stoppedFrame_ = frame;
+  scoringFrom_ = frame;
   running_ = true;
+  paused_ = false;
   error_.clear();
   attempt_.clear();
   ++revision_;
 }
 void Practice::stop(uint64_t frame) {
-  if (!running_)
+  if (!running_ && !paused_)
     return;
+  if (running_) stoppedFrame_ = frame;
   running_ = false;
+  paused_ = false;
+  attempt_.clear();
+  ++revision_;
+}
+void Practice::pause(uint64_t frame) {
+  if (!running_) return;
+  running_ = false;
+  paused_ = true;
   stoppedFrame_ = frame;
+  attempt_.clear();
+  ++revision_;
+}
+void Practice::resume(uint64_t frame) {
+  if (!paused_) return;
+  if (frame >= stoppedFrame_) origin_ += frame - stoppedFrame_;
+  stoppedFrame_ = frame;
+  paused_ = false;
+  running_ = true;
+  scoringFrom_ = frame;
   attempt_.clear();
   ++revision_;
 }
@@ -503,7 +533,7 @@ void Practice::input(const InputEvent &e) {
   if (pressed_.contains(owner))
     return;
   pressed_[owner] = e.note;
-  if (!running_ || e.frame < origin_ || index_ >= targets_.size())
+  if (!running_ || e.frame < scoringFrom_ || index_ >= targets_.size())
     return;
   if (config_["mode"] == "scroll") {
     tick(e.frame);
@@ -579,7 +609,9 @@ json Practice::snapshot(uint64_t frame) const {
       std::string staff =
           config_["staff"] == "bass" ? "bass"
           : config_["staff"] == "grand"
-              ? (j < split && targets_[i].pitches.size() > 1 ? "bass"
+              ? (config_["hand"] == "left" ? "bass"
+                 : config_["hand"] == "right" ? "treble"
+                 : j < split && targets_[i].pitches.size() > 1 ? "bass"
                  : p.midi < 60                               ? "bass"
                                                              : "treble")
               : "treble";
@@ -602,6 +634,7 @@ json Practice::snapshot(uint64_t frame) const {
   double elapsed = current >= origin_ ? double(current - origin_) / rate_ : 0;
   return {{"config", config_},
           {"running", running_},
+          {"paused", paused_},
           {"revision", revision_},
           {"originFrame", origin_},
           {"clockFrame", config_["mode"] == "wait" ? targetFrame(index_)

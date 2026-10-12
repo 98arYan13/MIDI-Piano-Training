@@ -22,6 +22,8 @@ Select Treble, Bass, joined Grand or chord symbols. Native seeded generators off
 
 ## Wait, Scroll & scoring
 
+The paper-white score groups targets into numbered four-beat measures. Notes move through the broad centered vertical marker. The orange play button starts an exercise, pauses it, or resumes from the same position and score; paused time is excluded from elapsed time. Restart on the marker returns to target one and clears score/time. Left and right hand buttons toggle the practiced hands, keeping at least one enabled: left uses notes below middle C (MIDI 60), right uses middle C and above. Selecting one hand switches to its clef; selecting both switches to Grand. Hand selection keeps your configured range and stops only the exercise; an incompatible range is rejected with an error. The separate one/two-hands generator option controls chord span when both hands are enabled.
+
 Wait needs the exact physically held target pitches with fresh attacks within 150 ms. Wrong attacks count misses and allow retry after release. Scroll uses native quarter-note timing with adjustable ± tolerance (default 150 ms). Its target tolerance is independent of the fixed 150 ms chord-assembly window. Sustain, playback and examples cannot answer. Held-before-start notes require new attacks. Hits, misses, accuracy and elapsed time are native-authoritative; stopping/settings edits affect only the exercise.
 
 ## Ear Training
@@ -33,6 +35,14 @@ Learn Intervals selects qualities and up/down directions, root/random root, tran
 Note Math selects C–B roots and diatonic distances 1–7, counting the root as one: third of C is E. Answer with letters or unmodified number shortcuts. Chord Identification selects keys/inversions and Treble/Bass/Grand, then asks for root, natural/flat/sharp and major/minor/diminished quality. Wrong answers permit retry, correct answers require Next. Reset clears session statistics. Answers are locked during Ear examples or pause, even across navigation.
 
 ## Play Along & library
+
+Wait targets and hints include the selected hand's notes from all enabled pitched tracks, including tracks marked only as Backing. You do not need to reassign the backing track to practice a left or right hand. Tracks with both Practice and Backing off remain excluded. Ordinary timing scores continue to use the tracks marked Practice.
+
+Turn on **Wait mode** to hold the score at each target until you press the correct note or chord for the selected left, right, or both hands. Waiting itself does not count as a miss. Turn Wait off to continue with normal timing. **Hint mode** independently highlights target keys on the piano below: teal for left hand, orange for right hand, and a split color when both hands share a key. Hints work with Wait on or off and do not play notes for you.
+
+Drag the score left to move forward, or right to move backward. The center marker stays fixed. Dragging pauses playback and leaves the song at the chosen position; press Play to continue. The orange position strip updates to match. Dragging stops at the beginning and end of the song.
+
+The player uses the same paper-white score, centered marker and orange play/pause control as Staff. Restart sits on the marker; the orange strip below the score seeks through the song. Numbered measures follow the imported MIDI tempo and meter maps. Hand buttons select the scored staff and dim the other staff: explicit bass/treble track assignments take priority, while split/grand tracks use middle C as the hand boundary. At least one hand stays selected. Hand selection does not alter Backing or Hear practice part, release live keys, or stop the global metronome. It is retained across song changes during the current native session.
 
 Choose one of ten built-in MIDI pieces (five starter arrangements and five original practice exercises), upload or drop .mid/.midi, rename, assign practice/backing tracks and staff, or download the original. Remove moves a song to recoverable trash; Restore returns it. Play/Pause/Stop/Restart/seek and speed/tempo are native-clock controls. Both practice and backing parts play by default; uncheck Hear practice part beside Play to mute the practice part. Use the toolbar menu button to hide/show the navigation sidebar. Continuous timing or Pause on miss uses fresh same-tick pitch groups, independent timing tolerance and 150 ms chord assembly. Set A/B ticks or Set here to loop; choose spacing and Off/Root/Triad/Root+5/Arp/Bossa Nova accompaniment. Rate scales pattern density; voicing spacing chooses close/open. Starter chord maps are explicit; imports infer chords at ≥70% weighted coverage and leave uncertain bars silent.
 

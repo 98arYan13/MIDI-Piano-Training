@@ -151,6 +151,32 @@
 .scoreline {
   color: #dcb77d;
 }
+.song-player { overflow: hidden; }
+.song-progress { height: 28px; }
+.song-progress::before { display: none; }
+.song-progress input[type="range"] {
+  appearance: none;
+  background: transparent;
+  display: block;
+  margin: 0;
+  height: 14px;
+  accent-color: white;
+  cursor: pointer;
+}
+.song-progress input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  background: #ffffff66;
+}
+.song-progress input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -7px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: white;
+}
+.song-progress input[type="range"]::-moz-range-track { height: 3px; background: #ffffff66; }
+.song-progress input[type="range"]::-moz-range-thumb { width: 17px; height: 17px; border: 0; border-radius: 50%; background: white; }
 @media (max-width: 800px) {
   .play-along {
     grid-template-columns: 1fr;
@@ -164,3 +190,5 @@
     max-height: 200px;
   }
 }
+.draggable-staff { cursor: grab; user-select: none; touch-action: pan-y; }
+.draggable-staff.dragging-staff { cursor: grabbing; }

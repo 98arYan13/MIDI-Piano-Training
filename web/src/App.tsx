@@ -711,7 +711,7 @@ function Shell() {
         </nav>
         <main>
           <Workspace route={route} />
-          <PianoKeyboard />
+          <PianoKeyboard showSongHints={route === "play"} />
         </main>
       </div>
       {(native.error || s?.error) && (

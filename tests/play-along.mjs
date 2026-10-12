@@ -147,8 +147,7 @@ try {
     );
   });
   browser = await chromium.launch({
-    executablePath:
-      browserPath(),
+    executablePath: browserPath(),
     headless: true,
   });
   const page = await browser.newPage({
@@ -159,7 +158,9 @@ try {
   await page.goto(url);
   await page.getByRole("link", { name: /Play Along/ }).click();
   const downloadEvent = page.waitForEvent("download");
-  await page.getByRole("link", { name: "Download MIDI: Twinkle Twinkle", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Download MIDI: Twinkle Twinkle", exact: true })
+    .click();
   const midiDownload = await downloadEvent;
   assert.equal(midiDownload.suggestedFilename(), "Twinkle Twinkle.mid");
   assert.deepEqual(await readFile(await midiDownload.path()), original);
@@ -171,7 +172,9 @@ try {
   await until(async () => (await state()).transport.state === "playing");
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await until(async () => (await state()).transport.state === "paused");
-  await page.getByText("Playback settings, loops & tracks", {exact:true}).click();
+  await page
+    .getByText("Playback settings, loops & tracks", { exact: true })
+    .click();
   await page.getByLabel("Auto accompaniment").selectOption("Arp");
   await until(
     async () => (await state()).transport.config.accompaniment === "Arp",
@@ -179,20 +182,54 @@ try {
   await page.getByRole("button", { name: "Restart", exact: true }).click();
   await page.getByRole("button", { name: "Stop", exact: true }).click();
   await page.getByRole("img", { name: /Song practice notation/ }).waitFor();
+  assert.equal(await page.locator(".song-workspace .paper-staff").count(), 1);
+  await page.getByRole("button", { name: "Left hand", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Right hand", exact: true }).waitFor();
+  assert(
+    (
+      await page
+        .locator(".song-workspace .staff-measure span")
+        .allTextContents()
+    ).includes("2"),
+  );
+  const metroBeforeHand = (await state()).metronome.running;
+  await page.getByRole("button", { name: "Left hand", exact: true }).click();
+  await until(async () => (await state()).transport.config.hand === "right");
+  await page.getByRole("button", { name: "Left hand", exact: true }).click();
+  await until(async () => (await state()).transport.config.hand === "both");
+  await page.getByRole("button", { name: "Right hand", exact: true }).click();
+  await until(async () => (await state()).transport.config.hand === "left");
+  await page.getByRole("button", { name: "Right hand", exact: true }).click();
+  await until(async () => (await state()).transport.config.hand === "both");
+  assert((await state()).heldNotes.some((n) => n.instance === 777 && n.held));
+  assert.equal((await state()).metronome.running, metroBeforeHand);
   await page
-    .getByLabel("Upload MIDI")
-    .setInputFiles({
-      name: "browser.mid",
-      mimeType: "audio/midi",
-      buffer: original,
-    });
-  await until(async () => (await api("")).body.length === 7);
+    .getByLabel("Song position", { exact: true })
+    .fill(String(Math.floor(song.durationTicks / 3)));
+  await until(
+    async () =>
+      Math.abs(
+        (await state()).transport.songTick - Math.floor(song.durationTicks / 3),
+      ) < 1,
+  );
+  await page.getByLabel("Upload MIDI").setInputFiles({
+    name: "browser.mid",
+    mimeType: "audio/midi",
+    buffer: original,
+  });
+  await until(async () => (await api("")).body.length === initial.length + 2);
+  await page.getByRole("button", { name: /BWV 846.*sec/ }).click();
+  await page.getByText("Playback settings, loops & tracks", { exact: true }).click();
+  await until(async () => (await state()).transport.title === "BWV 846 — short excerpt");
+  await page.locator('.song-workspace .staff-segment .vf-stavenote').first().waitFor();
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "web/test-results/play-along-mobile.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 1500, height: 1100 });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "web/test-results/play-along.png",
     fullPage: true,
