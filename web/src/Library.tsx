@@ -91,6 +91,13 @@ export function Library({
                 {s.recent > 0 ? "· recent" : ""}
               </small>
             </button>
+            <a
+              href={`/api/v1/songs/${encodeURIComponent(s.id)}/original`}
+              download={`${s.title.replace(/[<>:"/\\|?*]/g, "_")}.mid`}
+              aria-label={`Download MIDI: ${s.title}`}
+            >
+              Download MIDI
+            </a>
             <button
               title={`Move ${s.title} to trash`}
               aria-label={`Trash ${s.title}`}

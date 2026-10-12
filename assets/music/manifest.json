@@ -1,129 +1,94 @@
 [
   {
+    "file": "twinkle.mid",
     "chords": [
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 1920,
-        "root": 0,
-        "startTick": 0,
-        "explicit": true
-      },
-      {
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
-        "endTick": 3840,
-        "root": 0,
-        "startTick": 1920,
-        "explicit": true
+        "startTick": 0,
+        "explicit": true,
+        "root": 0
       },
       {
+        "endTick": 3840,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 5760,
         "pitches": [
           53,
           57,
           60
         ],
         "confidence": 1.0,
-        "endTick": 5760,
-        "root": 5,
         "startTick": 3840,
-        "explicit": true
+        "explicit": true,
+        "root": 5
       },
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 6720,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 5760,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       }
     ],
-    "id": "starter-twinkle",
     "title": "Twinkle Twinkle",
+    "id": "starter-twinkle",
     "provenance": {
+      "license": "CC0-1.0",
       "arrangement": "Sight Reading project, independently authored 2026-10-11",
       "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
-      "license": "CC0-1.0",
       "source": "Ah vous dirai-je maman, anonymous French melody first published 1761"
-    },
-    "file": "twinkle.mid"
+    }
   },
   {
+    "file": "mary.mid",
     "chords": [
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 1920,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 0,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 3840,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 1920,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
-        "pitches": [
-          55,
-          59,
-          62,
-          65
-        ],
-        "confidence": 1.0,
         "endTick": 5760,
-        "root": 7,
-        "startTick": 3840,
-        "explicit": true
-      },
-      {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
-        "endTick": 7680,
-        "root": 0,
-        "startTick": 5760,
-        "explicit": true
-      },
-      {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
-        "endTick": 9600,
-        "root": 0,
-        "startTick": 7680,
-        "explicit": true
-      },
-      {
         "pitches": [
           55,
           59,
@@ -131,99 +96,111 @@
           65
         ],
         "confidence": 1.0,
-        "endTick": 11520,
-        "root": 7,
-        "startTick": 9600,
-        "explicit": true
+        "startTick": 3840,
+        "explicit": true,
+        "root": 7
       },
       {
+        "endTick": 7680,
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 9600,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 7680,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 11520,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "startTick": 9600,
+        "explicit": true,
+        "root": 7
+      },
+      {
         "endTick": 12480,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 11520,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       }
     ],
-    "id": "starter-mary",
     "title": "Mary Had a Little Lamb",
+    "id": "starter-mary",
     "provenance": {
+      "license": "CC0-1.0",
       "arrangement": "Sight Reading project, independently authored 2026-10-11",
       "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
-      "license": "CC0-1.0",
       "source": "Traditional American nursery melody, nineteenth century"
-    },
-    "file": "mary.mid"
+    }
   },
   {
+    "file": "ode.mid",
     "chords": [
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 1920,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 0,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
-        "pitches": [
-          55,
-          59,
-          62,
-          65
-        ],
-        "confidence": 1.0,
         "endTick": 3840,
-        "root": 7,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
         "startTick": 1920,
-        "explicit": true
+        "explicit": true,
+        "root": 7
       },
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 5760,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 3840,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
-        "pitches": [
-          55,
-          59,
-          62,
-          65
-        ],
-        "confidence": 1.0,
         "endTick": 7680,
-        "root": 7,
-        "startTick": 5760,
-        "explicit": true
-      },
-      {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
-        "endTick": 9600,
-        "root": 0,
-        "startTick": 7680,
-        "explicit": true
-      },
-      {
         "pitches": [
           55,
           59,
@@ -231,73 +208,98 @@
           65
         ],
         "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 7
+      },
+      {
+        "endTick": 9600,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 7680,
+        "explicit": true,
+        "root": 0
+      },
+      {
         "endTick": 11520,
-        "root": 7,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
         "startTick": 9600,
-        "explicit": true
+        "explicit": true,
+        "root": 7
       },
       {
-        "pitches": [
-          48,
-          52,
-          55
-        ],
-        "confidence": 1.0,
         "endTick": 13440,
-        "root": 0,
-        "startTick": 11520,
-        "explicit": true
-      },
-      {
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
+        "startTick": 11520,
+        "explicit": true,
+        "root": 0
+      },
+      {
         "endTick": 14400,
-        "root": 0,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
         "startTick": 13440,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       }
     ],
-    "id": "starter-ode",
     "title": "Ode to Joy",
+    "id": "starter-ode",
     "provenance": {
+      "license": "CC0-1.0",
       "arrangement": "Sight Reading project, independently authored 2026-10-11",
       "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
-      "license": "CC0-1.0",
       "source": "Ludwig van Beethoven, Symphony No. 9 Op. 125, 1824, opening theme"
-    },
-    "file": "ode.mid"
+    }
   },
   {
+    "file": "dan.mid",
     "chords": [
       {
+        "endTick": 1920,
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
-        "endTick": 1920,
-        "root": 0,
         "startTick": 0,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
+        "endTick": 3840,
         "pitches": [
           53,
           57,
           60
         ],
         "confidence": 1.0,
-        "endTick": 3840,
-        "root": 5,
         "startTick": 1920,
-        "explicit": true
+        "explicit": true,
+        "root": 5
       },
       {
+        "endTick": 5760,
         "pitches": [
           55,
           59,
@@ -305,49 +307,49 @@
           65
         ],
         "confidence": 1.0,
-        "endTick": 5760,
-        "root": 7,
         "startTick": 3840,
-        "explicit": true
+        "explicit": true,
+        "root": 7
       },
       {
+        "endTick": 7680,
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
-        "endTick": 7680,
-        "root": 0,
         "startTick": 5760,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       }
     ],
-    "id": "starter-dan",
     "title": "Old Dan Tucker",
+    "id": "starter-dan",
     "provenance": {
+      "license": "CC0-1.0",
       "arrangement": "Sight Reading project, independently authored 2026-10-11",
       "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
-      "license": "CC0-1.0",
       "source": "American folk melody published 1843; melody only, no lyrics"
-    },
-    "file": "dan.mid"
+    }
   },
   {
+    "file": "bach.mid",
     "chords": [
       {
+        "endTick": 1920,
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
-        "endTick": 1920,
-        "root": 0,
         "startTick": 0,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       },
       {
+        "endTick": 3840,
         "pitches": [
           50,
           53,
@@ -355,12 +357,12 @@
           60
         ],
         "confidence": 1.0,
-        "endTick": 3840,
-        "root": 2,
         "startTick": 1920,
-        "explicit": true
+        "explicit": true,
+        "root": 2
       },
       {
+        "endTick": 5760,
         "pitches": [
           55,
           59,
@@ -368,32 +370,338 @@
           65
         ],
         "confidence": 1.0,
-        "endTick": 5760,
-        "root": 7,
         "startTick": 3840,
-        "explicit": true
+        "explicit": true,
+        "root": 7
       },
       {
+        "endTick": 7680,
         "pitches": [
           48,
           52,
           55
         ],
         "confidence": 1.0,
-        "endTick": 7680,
-        "root": 0,
         "startTick": 5760,
-        "explicit": true
+        "explicit": true,
+        "root": 0
       }
     ],
-    "id": "starter-bach",
     "title": "BWV 846 — short excerpt",
+    "id": "starter-bach",
     "provenance": {
+      "license": "CC0-1.0",
       "arrangement": "Sight Reading project, independently authored 2026-10-11",
       "method": "Melody entered from familiar public-domain musical themes; rhythm, voicing, backing and MIDI encoding authored locally. No reference-site code, MIDI or assets used.",
-      "license": "CC0-1.0",
       "source": "Johann Sebastian Bach, Well-Tempered Clavier Book I, Prelude in C BWV 846, 1722; first four harmonies, original simplified revoicing"
-    },
-    "file": "bach.mid"
+    }
+  },
+  {
+    "file": "major-scale.mid",
+    "chords": [
+      {
+        "endTick": 1920,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 0,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 3840,
+        "pitches": [
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 5
+      },
+      {
+        "endTick": 5760,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "startTick": 3840,
+        "explicit": true,
+        "root": 7
+      },
+      {
+        "endTick": 7680,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 0
+      }
+    ],
+    "title": "C Major Scale",
+    "id": "starter-major-scale",
+    "provenance": {
+      "license": "CC0-1.0",
+      "arrangement": "Sight Reading project, independently authored 2026-10-12",
+      "method": "Original educational note patterns, backing and MIDI encoding authored locally. No downloaded MIDI or reference-site assets used.",
+      "source": "Original C major scale practice exercise"
+    }
+  },
+  {
+    "file": "minor-scale.mid",
+    "chords": [
+      {
+        "endTick": 1920,
+        "pitches": [
+          57,
+          60,
+          64
+        ],
+        "confidence": 1.0,
+        "startTick": 0,
+        "explicit": true,
+        "root": 9
+      },
+      {
+        "endTick": 3840,
+        "pitches": [
+          50,
+          53,
+          57
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 2
+      },
+      {
+        "endTick": 5760,
+        "pitches": [
+          52,
+          55,
+          59
+        ],
+        "confidence": 1.0,
+        "startTick": 3840,
+        "explicit": true,
+        "root": 4
+      },
+      {
+        "endTick": 7680,
+        "pitches": [
+          57,
+          60,
+          64
+        ],
+        "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 9
+      }
+    ],
+    "title": "A Minor Scale",
+    "id": "starter-minor-scale",
+    "provenance": {
+      "license": "CC0-1.0",
+      "arrangement": "Sight Reading project, independently authored 2026-10-12",
+      "method": "Original educational note patterns, backing and MIDI encoding authored locally. No downloaded MIDI or reference-site assets used.",
+      "source": "Original A natural minor scale practice exercise"
+    }
+  },
+  {
+    "file": "arpeggios.mid",
+    "chords": [
+      {
+        "endTick": 1920,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 0,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 3840,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 5760,
+        "pitches": [
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "startTick": 3840,
+        "explicit": true,
+        "root": 5
+      },
+      {
+        "endTick": 7680,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 7
+      }
+    ],
+    "title": "C Major Arpeggios",
+    "id": "starter-arpeggios",
+    "provenance": {
+      "license": "CC0-1.0",
+      "arrangement": "Sight Reading project, independently authored 2026-10-12",
+      "method": "Original educational note patterns, backing and MIDI encoding authored locally. No downloaded MIDI or reference-site assets used.",
+      "source": "Original major arpeggio practice exercise"
+    }
+  },
+  {
+    "file": "intervals.mid",
+    "chords": [
+      {
+        "endTick": 1920,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 0,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 3840,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 5760,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 3840,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 7680,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 0
+      }
+    ],
+    "title": "Interval Steps",
+    "id": "starter-intervals",
+    "provenance": {
+      "license": "CC0-1.0",
+      "arrangement": "Sight Reading project, independently authored 2026-10-12",
+      "method": "Original educational note patterns, backing and MIDI encoding authored locally. No downloaded MIDI or reference-site assets used.",
+      "source": "Original ascending interval practice exercise"
+    }
+  },
+  {
+    "file": "five-finger.mid",
+    "chords": [
+      {
+        "endTick": 1920,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 0,
+        "explicit": true,
+        "root": 0
+      },
+      {
+        "endTick": 3840,
+        "pitches": [
+          53,
+          57,
+          60
+        ],
+        "confidence": 1.0,
+        "startTick": 1920,
+        "explicit": true,
+        "root": 5
+      },
+      {
+        "endTick": 5760,
+        "pitches": [
+          55,
+          59,
+          62,
+          65
+        ],
+        "confidence": 1.0,
+        "startTick": 3840,
+        "explicit": true,
+        "root": 7
+      },
+      {
+        "endTick": 7680,
+        "pitches": [
+          48,
+          52,
+          55
+        ],
+        "confidence": 1.0,
+        "startTick": 5760,
+        "explicit": true,
+        "root": 0
+      }
+    ],
+    "title": "Five Finger Patterns",
+    "id": "starter-five-finger",
+    "provenance": {
+      "license": "CC0-1.0",
+      "arrangement": "Sight Reading project, independently authored 2026-10-12",
+      "method": "Original educational note patterns, backing and MIDI encoding authored locally. No downloaded MIDI or reference-site assets used.",
+      "source": "Original five finger practice exercise"
+    }
   }
 ]

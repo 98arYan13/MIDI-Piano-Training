@@ -56,6 +56,18 @@
   background: #35453c;
   border-radius: 6px;
 }
+.song-list .song-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.song-list .song-row button:first-child {
+  grid-column: 1 / -1;
+}
+.song-row a {
+  color: #c3d9a6;
+  font-size: 12px;
+  padding: 8px;
+}
 .song-workspace {
   min-width: 0;
 }

@@ -67,7 +67,7 @@ try {
     }
   });
   const initial = (await api("")).body;
-  assert.equal(initial.length, 5);
+  assert.equal(initial.length, 10);
   assert.equal((await state()).transport.songId, "");
   const original = await readFile("assets/music/twinkle.mid");
   const form = new FormData();
@@ -91,7 +91,7 @@ try {
     (await api("/import", { method: "POST", body: bad })).status,
     400,
   );
-  assert.equal((await api("")).body.length, 6);
+  assert.equal((await api("")).body.length, initial.length + 1);
   const edited = await api(`/${song.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -157,6 +157,12 @@ try {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url);
+  await page.getByRole("link", { name: /Play Along/ }).click();
+  const downloadEvent = page.waitForEvent("download");
+  await page.getByRole("link", { name: "Download MIDI: Twinkle Twinkle", exact: true }).click();
+  const midiDownload = await downloadEvent;
+  assert.equal(midiDownload.suggestedFilename(), "Twinkle Twinkle.mid");
+  assert.deepEqual(await readFile(await midiDownload.path()), original);
   await page.getByRole("link", { name: /Play Along/ }).click();
   await page.getByText("Your MIDI library").waitFor();
   await page.getByRole("button", { name: /Twinkle Twinkle.*sec/ }).click();
