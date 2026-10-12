@@ -33,23 +33,32 @@ try{
  await page.goto(url+'/#play');const songs=await(await fetch(url+'/api/v1/songs')).json();assert(songs.length>=2);
  await command('transport.load',{id:songs[0].id});await command('transport.configure',{practiceEnabled:false,spacing:110});
  await until(async()=> (await page.locator('.song-workspace .staff-track').count())>0);
- // Mary has simultaneous quarter/whole D4 voices at the third measure.
+ // Mary keeps the accompaniment D4 on bass and the melody D4 on treble.
  await command('transport.load',{id:'starter-mary'});
  await until(async()=> (await page.getByLabel('Song title').inputValue())==='Mary Had a Little Lamb');
  await pause(350);
  const heads=await page.locator('.score-measure .vf-stavenote[data-start-tick="3840"] .vf-notehead > text:first-child').evaluateAll(es=>es.map(e=>({x:Number(e.getAttribute('x')),y:Number(e.getAttribute('y'))})));
- const samePitchVoices=heads.filter(n=>n.y===115);
- assert.equal(samePitchVoices.length,2,'both D4 durations remain visible');
- assert(Math.abs(samePitchVoices[0].x-samePitchVoices[1].x)>10,'simultaneous quarter/whole heads must not overlap');
+ const melodyD=heads.filter(n=>n.y===115);
+ assert.equal(melodyD.length,1,'only melody D4 appears on treble');
+ assert(heads.some(n=>n.y>=200),'backing D4 remains visible on bass');
  await command('transport.load',{id:songs[0].id});
  await command('transport.load',{id:'starter-ode'});
  await until(async()=> (await page.getByLabel('Song title').inputValue())==='Ode to Joy');
  await command('transport.seek',{tick:9600});
  await pause(350);
  const odeHeads=await page.locator('.score-measure .vf-stavenote[data-start-tick="9600"] .vf-notehead > text:first-child').evaluateAll(es=>es.map(e=>({x:Number(e.getAttribute('x')),y:Number(e.getAttribute('y'))})));
- const unisonF=odeHeads.filter(n=>n.y===105);
- assert.equal(unisonF.length,2,'Ode melody and top chord F4 remain visible');
- assert(Math.abs(unisonF[0].x-unisonF[1].x)>18,'Ode quarter F4 must clear the whole-note chord');
+ const melodyF=odeHeads.filter(n=>n.y===105);
+ assert.equal(melodyF.length,1,'Ode melody F4 remains on treble');
+ assert(odeHeads.some(n=>n.y>=190),'complete Ode backing chord remains on bass');
+ await command('transport.load',{id:songs[0].id});
+ // Bach's B3 belongs to the melody arpeggio, rather than a separate bass voice.
+ await command('transport.load',{id:'starter-bach'});
+ await until(async()=> (await page.getByLabel('Song title').inputValue()).startsWith('BWV 846'));
+ await command('transport.seek',{tick:3840});await pause(350);
+ const bachHeads=await page.locator('.score-measure .vf-stavenote[data-start-tick="3840"] .vf-notehead > text:first-child').evaluateAll(es=>es.map(e=>Number(e.getAttribute('y'))));
+ assert(bachHeads.includes(125),'B3 remains on treble below middle C');
+ assert.equal(bachHeads.filter(y=>y>170).length,4,'bass contains only the four sustained backing tones');
+ assert.equal(await page.locator('.score-measure[data-measure="3"] .vf-rest').count(),0,'continuous arpeggio creates no spurious bass rests');
  await command('transport.load',{id:songs[0].id});
  const verifyPosition=async name=>{
   await pause(350);const s=(await state()).transport;

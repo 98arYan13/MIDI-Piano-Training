@@ -176,6 +176,125 @@ try {
   const score = page.getByRole("img", { name: /Song practice notation/ });
   await score.scrollIntoViewIfNeeded();
   await page.screenshot({ path: "web/test-results/dense-score.png" });
+  // Original synthetic polyphony matching the reported held lower note / upper beam.
+  const events = [
+    [64, 0, 96],
+    [69, 96, 192],
+    [71, 192, 480],
+    [62, 480, 768],
+    [72, 576, 672],
+    [71, 672, 768],
+    [69, 768, 960],
+    [60, 768, 960],
+  ]
+    .flatMap(([pitch, start, end]) => [
+      [start, 144, pitch, 80],
+      [end, 128, pitch, 0],
+    ])
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const name = Buffer.from("Piano RH");
+  const polyBytes = [
+    0,
+    255,
+    3,
+    name.length,
+    ...name,
+    0,
+    255,
+    88,
+    4,
+    3,
+    3,
+    24,
+    8,
+  ];
+  let previousTick = 0;
+  for (const [tick, status, pitch, velocity] of events) {
+    polyBytes.push(...variable(tick - previousTick), status, pitch, velocity);
+    previousTick = tick;
+  }
+  polyBytes.push(...variable(1152 - previousTick), 255, 47, 0);
+  const polyForm = new FormData();
+  polyForm.append(
+    "file",
+    new Blob([
+      Buffer.concat([
+        chunk("MThd", Buffer.from([0, 1, 0, 1, 1, 128])),
+        chunk("MTrk", polyBytes),
+      ]),
+    ]),
+    "Held lower voice.mid",
+  );
+  const polySong = await (
+    await fetch(url + "/api/v1/songs/import", {
+      method: "POST",
+      headers: { Origin: url },
+      body: polyForm,
+    })
+  ).json();
+  await command("transport.load", { id: polySong.id });
+  await until(
+    async () =>
+      (await page.getByLabel("Song title").inputValue()) === "Held lower voice",
+  );
+  await command("transport.seek", { tick: 576 });
+  await until(
+    async () =>
+      (await page
+        .locator(
+          '.score-measure[data-measure="2"] .vf-stavenote[data-start-tick="576"] .vf-notehead text',
+        )
+        .evaluateAll(
+          (es) => es.filter((e) => Number(e.getAttribute("y")) < 170).length,
+        )) === 2,
+  );
+  const polyGeometry = await page
+    .locator(
+      '.score-measure[data-measure="2"] .vf-stavenote[data-start-tick="576"]',
+    )
+    .evaluateAll((es) =>
+      es
+        .filter((e) => e.querySelector(".vf-notehead"))
+        .map((e) => ({
+          head: Number(e.querySelector(".vf-notehead text").getAttribute("y")),
+          stem: e.querySelector(".vf-stem")?.getBBox().y ?? null,
+        })),
+    );
+  const higher = polyGeometry.find((n) => n.head < 100),
+    lower = polyGeometry.find((n) => n.head > 100 && n.head < 170);
+  assert(
+    higher.stem === null,
+    "upper melody uses a beam rather than an individual flag",
+  );
+  const beams = await page
+    .locator('.score-measure[data-measure="2"] .vf-beam')
+    .evaluateAll((es) =>
+      es.map((e) => ({
+        y: e.getBBox().y,
+        bottom: e.getBBox().y + e.getBBox().height,
+      })),
+    );
+  assert(
+    beams.some((b) => b.y < higher.head - 20 && b.bottom <= higher.head + 5),
+    "upper melody beam and stems stay above its noteheads",
+  );
+  assert(
+    beams.some((b) => b.bottom > lower.head + 20),
+    "held lower voice beam and stems descend away from the melody",
+  );
+  const ties = await page
+    .locator('.score-measure[data-measure="2"] .vf-stavetie')
+    .evaluateAll((es) =>
+      es.map((e) => ({
+        y: e.getBBox().y,
+        bottom: e.getBBox().y + e.getBBox().height,
+      })),
+    );
+  assert(
+    ties.some((t) => t.y >= lower.head - 6 && t.bottom > lower.head),
+    "lower-voice tie curves below the note, away from the upper melody",
+  );
+  await page.screenshot({ path: "web/test-results/polyphonic-score.png" });
   assert.deepEqual(errors, []);
   console.log(
     "PASS dense 3/8 duplicated piano: original events retained, 24 unique printed notes/bar, beam groups, accidental memory, aligned hands, readable spacing, late seek",

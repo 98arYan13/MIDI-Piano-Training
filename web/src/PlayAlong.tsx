@@ -7,7 +7,7 @@ import type { Song, SongTrack, TimelineNote, TransportConfig } from "./types";
 import "./playAlong.css";
 import { NumericInput } from "./NumericInput";
 import { PlayerControls, RestartButton } from "./PlayerControls";
-export function PlayAlong() {
+export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const native = useNative(),
     p = native.state?.transport;
   const dragPause = useRef<Promise<void>>(Promise.resolve());
@@ -150,6 +150,7 @@ export function PlayAlong() {
               >
                 Fullscreen
               </button>
+              <button className="focus-mode-trigger" onClick={onFocus}>Focus mode</button>
             </div>
             {p.waiting && (
               <p className="retry" role="status">

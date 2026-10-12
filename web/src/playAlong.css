@@ -6,6 +6,30 @@
   grid-template-columns: 250px minmax(0, 1fr);
   gap: 24px;
 }
+
+.focus-mode-bar { position:sticky; top:0; z-index:20; background:#101512; padding: 12px 20px; text-align: right; }
+.focus-mode-bar[hidden] { display: none; }
+.focus-mode .global-toolbar,
+.focus-mode .side-nav,
+.focus-mode .workspace-heading,
+.focus-mode .workspace-footer,
+.focus-mode .song-library,
+.focus-mode .song-workspace > :not(.song-player):not([role="alert"]),
+.focus-mode .piano-heading,
+.focus-mode .piano-tools,
+.focus-mode .piano-legend,
+.focus-mode .overload { display: none; }
+.focus-mode .app-body { padding-top: 0; min-height: 0; display: block; }
+.focus-mode main { padding: 0 20px 20px; }
+.focus-mode .workspace { max-width: none; }
+.focus-mode .workspace-stage { border: 0; border-radius: 0; box-shadow: none; }
+.focus-mode .play-along { display: block; padding: 0; }
+.focus-mode .play-along .song-workspace { display: block; }
+.focus-mode .piano-panel { max-width: none; padding: 16px 0; border: 0; background: transparent; }
+@media (max-width: 600px) {
+  .focus-mode main { padding: 0 8px 8px; }
+  .focus-mode-bar { padding: 8px; }
+}
 .workspace:has(.play-along) .workspace-stage {
   display: block;
   min-height: 0;

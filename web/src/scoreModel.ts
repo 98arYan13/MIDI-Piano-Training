@@ -123,9 +123,11 @@ export function buildScore(
     const clef =
       track?.staff === "treble" || track?.staff === "bass"
         ? track.staff
-        : /\b(lh|left)\b/i.test(track?.title ?? "")
+        : /\b(lh|left)\b/i.test(track?.title ?? "") ||
+            /^piano backing$/i.test(track?.title ?? "")
           ? "bass"
-          : /\b(rh|right)\b/i.test(track?.title ?? "")
+          : /\b(rh|right)\b/i.test(track?.title ?? "") ||
+              /^practice melody$/i.test(track?.title ?? "")
             ? "treble"
             : (n.staff ?? (n.midiNote < 60 ? "bass" : "treble"));
     const identity = `${start}:${end}:${clef}:${n.midiNote}`;
@@ -254,6 +256,20 @@ export function buildScore(
           measure.voices.push({ clef, tokens });
         }
       }
+      // Polyphonic stems follow register, never the order MIDI events created lanes.
+      const register = (v: ScoreVoice) => {
+        const pitches = v.tokens.flatMap((t) => t.pitches.map((p) => p.midi));
+        return pitches.length
+          ? pitches.reduce((a, b) => a + b, 0) / pitches.length
+          : 0;
+      };
+      measure.voices.sort((a, b) =>
+        a.clef === b.clef
+          ? register(b) - register(a)
+          : a.clef === "treble"
+            ? -1
+            : 1,
+      );
       // Accidental memory is shared between voices on a staff, but resets each bar.
       const memory = new Map<string, string>(),
         defaults = keyAlterations(sharps);

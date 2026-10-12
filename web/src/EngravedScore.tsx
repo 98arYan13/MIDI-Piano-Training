@@ -81,7 +81,19 @@ function makeNote(
           (p) =>
             `${p.spelling.letter}${p.spelling.accidental === "n" ? "" : (p.spelling.accidental ?? "")}/${p.spelling.octave}`,
         )
-      : [clef === "treble" ? "b/4" : "d/3"],
+      : [
+          clef === "treble"
+            ? stem === 1
+              ? "d/5"
+              : stem === -1
+                ? "g/4"
+                : "b/4"
+            : stem === 1
+              ? "f/3"
+              : stem === -1
+                ? "b/2"
+                : "d/3",
+        ],
     duration: token.duration + (token.pitches.length ? "" : "r"),
     dots: token.dots,
   });
@@ -284,12 +296,17 @@ export function EngravedScore({
           if (!token.pitches.length) return;
           const previous = row.tokens[i - 1],
             next = row.tokens[i + 1];
+          const polyphonic = rows.filter((r) => r.clef === row.clef).length > 1;
+          const tieDirection = polyphonic
+            ? -note.getStemDirection()
+            : note.getStemDirection();
           if (token.tiePrevious && (!previous || !previous.tieNext))
             new StaveTie({
               lastNote: note,
               firstIndexes: token.pitches.map((_, i) => i),
               lastIndexes: token.pitches.map((_, i) => i),
             })
+              .setDirection(tieDirection)
               .setContext(context)
               .draw();
           if (token.tieNext) {
@@ -300,6 +317,7 @@ export function EngravedScore({
               firstIndexes: token.pitches.map((_, i) => i),
               lastIndexes: token.pitches.map((_, i) => i),
             })
+              .setDirection(tieDirection)
               .setContext(context)
               .draw();
           }

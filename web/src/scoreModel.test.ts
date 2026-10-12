@@ -22,6 +22,80 @@ const note = (pitch: number, start: number, end: number, track = 1) => ({
   startFrame: 0,
   endFrame: 0,
 });
+it("keeps a named practice melody on treble when its arpeggio dips below middle C", () => {
+  const metadata = {
+    ...song,
+    tracks: [{ id: 1, title: "Practice melody", staff: "split" }],
+  };
+  const low = { ...note(59, 0, 192), staff: "bass" as const };
+  const score = buildScore([low, note(62, 192, 384)], metadata, 0, 576);
+  expect(
+    score[0].voices.find((v) => v.clef === "treble")!.tokens[0].pitches[0]
+      ?.midi,
+  ).toBe(59);
+  expect(
+    score[0].voices
+      .find((v) => v.clef === "bass")!
+      .tokens.every((t) => !t.pitches.length),
+  ).toBe(true);
+  const override = {
+    ...metadata,
+    tracks: [{ id: 1, title: "Practice melody", staff: "bass" }],
+  };
+  expect(
+    buildScore([low], override, 0, 576)[0].voices.find(
+      (v) => v.clef === "bass",
+    )!.tokens[0].pitches[0]?.midi,
+  ).toBe(59);
+});
+it("keeps piano backing chords together on bass, including their upper tones", () => {
+  const metadata = {
+    ...song,
+    tracks: [{ id: 2, title: "Piano backing", staff: "split" }],
+  };
+  const score = buildScore(
+    [55, 59, 62, 65].map((p) => note(p, 0, 576, 2)),
+    metadata,
+    0,
+    576,
+  );
+  expect(
+    score[0].voices.find((v) => v.clef === "treble")!.tokens[0].pitches,
+  ).toEqual([]);
+  expect(
+    score[0].voices
+      .find((v) => v.clef === "bass")!
+      .tokens[0].pitches.map((p) => p.midi),
+  ).toEqual([55, 59, 62, 65]);
+  const override = {
+    ...metadata,
+    tracks: [{ id: 2, title: "Piano backing", staff: "treble" }],
+  };
+  expect(
+    buildScore([note(65, 0, 576, 2)], override, 0, 576)[0].voices.find(
+      (v) => v.clef === "treble",
+    )!.tokens[0].pitches,
+  ).toHaveLength(1);
+});
+it("orders upper melody before a sustained lower voice at the reported bar boundary", () => {
+  const score = buildScore(
+    [
+      note(62, 3936, 4224),
+      note(72, 4032, 4128),
+      note(71, 4128, 4224),
+      note(69, 4224, 4416),
+      note(60, 4224, 4416),
+    ],
+    { ...song, durationTicks: 4608 },
+    4032,
+    4608,
+  );
+  const voices = score[0].voices.filter((v) => v.clef === "treble");
+  expect(voices).toHaveLength(2);
+  expect(voices[0].tokens[0].pitches.map((p) => p.midi)).toEqual([72]);
+  expect(voices[1].tokens[0].pitches.map((p) => p.midi)).toEqual([62]);
+  expect(voices[1].tokens[0].tiePrevious).toBe(true);
+});
 it("engraves performed duplicate notes once and restores sixteenth rhythm in 3/8", () => {
   const score = buildScore(
     [note(76, 16, 110), note(76, 18, 112, 3), note(75, 114, 204)],

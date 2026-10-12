@@ -451,7 +451,7 @@ function MetronomeDialog() {
     </>
   );
 }
-function Workspace({ route }: { route: string }) {
+function Workspace({ route, onFocus }: { route: string; onFocus: () => void }) {
   if (route === "guide") return <Guide />;
   const r = routes.find((r) => r[0] === route) ?? routes[0];
   return (
@@ -471,7 +471,7 @@ function Workspace({ route }: { route: string }) {
         ) : route === "flash" ? (
           <FlashCards />
         ) : route === "play" ? (
-          <PlayAlong />
+          <PlayAlong onFocus={onFocus} />
         ) : (
           <>
             <div className="staff-decoration" aria-hidden="true">
@@ -523,10 +523,38 @@ function Shell() {
     s = native.state;
   const [route, setRoute] = useState(location.hash.slice(1) || "staff");
   const [sidebarHidden, setSidebarHidden] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
+  const focusActive = focusMode && route === "play";
+  const returnButton = useRef<HTMLButtonElement>(null);
+  const previousScroll = useRef(0);
+  const enterFocus = () => {
+    previousScroll.current = window.scrollY;
+    setFocusMode(true);
+  };
+  const exitFocus = () => {
+    setFocusMode(false);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, previousScroll.current);
+      document.querySelector<HTMLButtonElement>('.focus-mode-trigger')?.focus({ preventScroll: true });
+    });
+  };
+  useEffect(() => {
+    if (!focusActive) return;
+    window.scrollTo(0, 0);
+    returnButton.current?.focus({ preventScroll: true });
+    const escape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") exitFocus();
+    };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [focusActive]);
   const [dialog, setDialog] = useState<"audio" | "metronome" | null>(null);
   const close = useRef(() => setDialog(null)).current;
   useEffect(() => {
-    const change = () => setRoute(location.hash.slice(1) || "staff");
+    const change = () => {
+      setRoute(location.hash.slice(1) || "staff");
+      setFocusMode(false);
+    };
     const shortcut = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
       if (
@@ -552,7 +580,10 @@ function Shell() {
   };
   const ready = !!native.connected && !!s?.audioReady && !!s?.pianoReady;
   return (
-    <>
+    <div className={focusActive ? "focus-mode" : "app-shell"}>
+      <div className="focus-mode-bar" hidden={!focusActive}>
+        <button ref={returnButton} onClick={exitFocus}>Return to Play Along</button>
+      </div>
       <header className="global-toolbar" ref={toolbar}>
         <button
           aria-label={sidebarHidden ? "Show sidebar" : "Hide sidebar"}
@@ -703,8 +734,8 @@ function Shell() {
           </div>
         </nav>
         <main>
-          <Workspace route={route} />
-          <PianoKeyboard showSongHints={route === "play"} />
+          <Workspace route={route} onFocus={enterFocus} />
+          <PianoKeyboard showSongHints={route === "play"} focusMode={focusActive} />
         </main>
       </div>
       {(native.error || s?.error) && (
@@ -735,7 +766,7 @@ function Shell() {
           {dialog === "audio" ? <AudioDialog /> : <MetronomeDialog />}
         </Dialog>
       )}
-    </>
+    </div>
   );
 }
 export default function App() {

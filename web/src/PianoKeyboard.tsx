@@ -9,7 +9,7 @@ import {
 } from "./pianoModel";
 import "./practice.css";
 
-export function PianoKeyboard({ showSongHints = false }: { showSongHints?: boolean }) {
+export function PianoKeyboard({ showSongHints = false, focusMode = false }: { showSongHints?: boolean; focusMode?: boolean }) {
   const native = useNative();
   const input = useMemo(
     () =>
@@ -91,7 +91,7 @@ export function PianoKeyboard({ showSongHints = false }: { showSongHints?: boole
     observer.observe(el);
     setWidth(el.clientWidth);
     return () => observer.disconnect();
-  }, [hidden]);
+  }, [hidden, focusMode]);
   const keys = pianoKeys(focused ? 88 : size).filter(
     (k) =>
       !focused ||
@@ -130,7 +130,7 @@ export function PianoKeyboard({ showSongHints = false }: { showSongHints?: boole
           {hidden ? "Show keyboard" : "Hide keyboard"}
         </button>
       </div>
-      {!hidden && (
+      {(!hidden || focusMode) && (
         <>
           <div className="piano-tools">
             <select
