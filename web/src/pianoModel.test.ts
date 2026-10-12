@@ -6,6 +6,18 @@ import {
   VirtualInput,
 } from "./pianoModel";
 describe("global virtual piano ownership", () => {
+  it("offers contiguous keyboard sizes containing middle C and white endpoints", () => {
+    for (const count of [25, 32, 37, 49, 61, 76, 88]) {
+      const keys = pianoKeys(count);
+      expect(keys).toHaveLength(count);
+      expect(keys.some((key) => key.midi === 60)).toBe(true);
+      expect(keys[0]?.black).toBe(false);
+      expect(keys.at(-1)?.black).toBe(false);
+      expect(
+        keys.every((key, index) => key.midi === keys[0]!.midi + index),
+      ).toBe(true);
+    }
+  });
   it("exposes all 88 piano keys with middle C=60 and monotonic geometry", () => {
     const keys = pianoKeys();
     expect(keys).toHaveLength(88);

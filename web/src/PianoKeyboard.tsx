@@ -3,6 +3,7 @@ import { useNative } from "./native";
 import {
   computerMap,
   keyboardWidth,
+  keyboardSizes,
   pianoKeys,
   VirtualInput,
 } from "./pianoModel";
@@ -19,6 +20,7 @@ export function PianoKeyboard() {
   );
   const [hidden, setHidden] = useState(false),
     [focused, setFocused] = useState(false),
+    [size, setSize] = useState(88),
     [labels, setLabels] = useState(true),
     [velocity, setVelocity] = useState(90),
     [octave, setOctave] = useState(4),
@@ -90,7 +92,7 @@ export function PianoKeyboard() {
     setWidth(el.clientWidth);
     return () => observer.disconnect();
   }, [hidden]);
-  const keys = pianoKeys().filter(
+  const keys = pianoKeys(focused ? 88 : size).filter(
     (k) =>
       !focused ||
       (k.midi >= Math.max(21, 12 * (octave + 1) - 12) &&
@@ -98,15 +100,21 @@ export function PianoKeyboard() {
   );
   const firstLeft = keys[0]?.left ?? 0,
     whites = keys.filter((k) => !k.black).length;
-  const span = focused ? Math.max(width, whites * 30) : keyboardWidth(width),
+  const span =
+      focused || size < 88
+        ? Math.max(width, whites * 30)
+        : keyboardWidth(width),
     unit = span / whites;
   const moveOctave = (delta: number) => {
     const next = Math.max(1, Math.min(7, octave + delta));
     setOctave(next);
     if (!focused && scroll.current) {
-      const key = pianoKeys().find((k) => k.midi === 12 * (next + 1));
+      const key = keys.find((k) => k.midi === 12 * (next + 1));
       scroll.current.scrollTo({
-        left: Math.max(0, (key?.left ?? 0) * unit - width / 2),
+        left: Math.max(
+          0,
+          ((key?.left ?? firstLeft) - firstLeft) * unit - width / 2,
+        ),
       });
     }
   };
@@ -125,9 +133,25 @@ export function PianoKeyboard() {
       {!hidden && (
         <>
           <div className="piano-tools">
-            <button aria-pressed={!focused} onClick={() => setFocused(false)}>
-              Full · 88 keys
-            </button>
+            <select
+              aria-label="Keyboard size"
+              value={focused ? "focused" : size}
+              onChange={(e) => {
+                setSize(Number(e.target.value));
+                setFocused(false);
+              }}
+            >
+              {focused && (
+                <option value="focused" disabled>
+                  Focused range
+                </option>
+              )}
+              {keyboardSizes.map((count) => (
+                <option key={count} value={count}>
+                  {count === 88 ? "Full · 88 keys" : `${count} keys`}
+                </option>
+              ))}
+            </select>
             <button aria-pressed={focused} onClick={() => setFocused(true)}>
               Focused range
             </button>
@@ -244,7 +268,7 @@ export function PianoKeyboard() {
             <span>
               {native.state?.heldNotes.some((n) => n.sustained)
                 ? "Native sustain active"
-                : "A0–C8 · C4 = MIDI 60"}
+                : `${keys[0]?.label}–${keys.at(-1)?.label} · C4 = MIDI 60`}
             </span>
             <span>Drag the horizontal scrollbar to explore all octaves</span>
           </div>

@@ -1,4 +1,12 @@
-export const pianoKeys = () => {
+export const keyboardSizes = [25, 32, 37, 49, 61, 76, 88];
+export const pianoKeys = (count = 88) => {
+  const start =
+    (
+      { 25: 48, 32: 48, 37: 48, 49: 36, 61: 36, 76: 28 } as Record<
+        number,
+        number
+      >
+    )[count] ?? 21;
   const names = [
     "C",
     "C♯",
@@ -14,8 +22,8 @@ export const pianoKeys = () => {
     "B",
   ];
   let white = 0;
-  return Array.from({ length: 88 }, (_, i) => {
-    const midi = i + 21,
+  return Array.from({ length: count }, (_, i) => {
+    const midi = i + start,
       black = [1, 3, 6, 8, 10].includes(midi % 12);
     const left = black ? white - 0.32 : white++;
     return {

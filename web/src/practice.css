@@ -27,6 +27,9 @@
   font-size: 12px;
   margin-bottom: 16px;
 }
+.piano-tools > select {
+  width: auto;
+}
 .piano-tools button[aria-pressed="true"] {
   background: #375748;
   color: #e3f1e4;

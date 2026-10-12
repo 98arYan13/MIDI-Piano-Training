@@ -39,8 +39,7 @@ try {
     }
   });
   browser = await chromium.launch({
-    executablePath:
-      browserPath(),
+    executablePath: browserPath(),
     headless: true,
   });
   const page = await browser.newPage({
@@ -50,6 +49,13 @@ try {
   await page.goto(url);
   await page.locator('[data-midi="60"]:enabled').waitFor();
   assert.equal(await page.locator(".piano-key").count(), 88);
+  for (const count of [25, 32, 37, 49, 61, 76, 88]) {
+    await page
+      .getByLabel("Keyboard size", { exact: true })
+      .selectOption(String(count));
+    assert.equal(await page.locator(".piano-key").count(), count);
+    assert.equal(await page.locator('[data-midi="60"]').count(), 1);
+  }
   assert.equal(typeof (await state()).overload, "number");
   assert.equal(typeof (await state()).voiceRefusals, "number");
   assert.equal(
@@ -162,9 +168,7 @@ try {
   assert.equal(await page.locator(".piano-key").count(), 37);
   await page.getByRole("button", { name: "Next octave", exact: true }).click();
   assert.equal(await page.locator('[data-midi="84"]').count(), 1);
-  await page
-    .getByRole("button", { name: "Full · 88 keys", exact: true })
-    .click();
+  await page.getByLabel("Keyboard size", { exact: true }).selectOption("88");
   await page
     .getByRole("button", { name: "Hide keyboard", exact: true })
     .click();
@@ -200,8 +204,12 @@ try {
   await page.getByRole("button", { name: "Toggle fullscreen" }).click();
   assert.equal(await page.evaluate(() => !!document.fullscreenElement), true);
   await page.evaluate(() => document.exitFullscreen());
-  await page.getByLabel("Practice mode", { exact: true }).selectOption("scroll");
-  await page.getByRole("button", { name: "Start exercise", exact: true }).click();
+  await page
+    .getByLabel("Practice mode", { exact: true })
+    .selectOption("scroll");
+  await page
+    .getByRole("button", { name: "Start exercise", exact: true })
+    .click();
   await wait(350);
   const first = await page
     .locator(".staff-track")
@@ -217,7 +225,9 @@ try {
     fullPage: true,
   });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.getByRole("button", { name: "Stop exercise", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Stop exercise", exact: true })
+    .click();
   await page.getByLabel("Staff view", { exact: true }).selectOption("grand");
   await page.screenshot({
     path: "web/test-results/keyboard-grand.png",

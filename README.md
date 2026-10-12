@@ -12,6 +12,25 @@ Persistent settings, imported originals, song assignments, recent items and reco
 
 See [the complete user guide](docs/USER-GUIDE.md) for every room, global controls, shortcuts, imports, loops, scoring, tuning and troubleshooting. `M` opens metronome settings outside typing fields. Audio/MIDI and fullscreen remain accessible above route settings. Panic explicitly clears all buses and clicks. Device rebuilds defer while live keys or sustain remain.
 
+## Run again after the initial build
+
+Once the native service and web frontend have been built, run these commands in PowerShell; no setup or rebuild is needed:
+
+```powershell
+cd "C:\Users\Amin\Documents\ChatGPT\Sight Reading"
+.\scripts\start.ps1
+```
+
+The launcher starts the native engine and opens http://127.0.0.1:8765 in your browser. If your checkout is elsewhere, use its folder in the `cd` command.
+
+To stop the engine from the same project folder:
+
+```powershell
+.\scripts\stop.ps1
+```
+
+You can also quit through the notification-area icon. Closing the browser leaves the engine running. For the packaged portable release, double-click `build\release\SightReading\Start.cmd`; use `Stop.cmd` in that folder to stop it.
+
 ## Reproducible developer setup
 
 Run from this checkout in PowerShell:
