@@ -24,6 +24,7 @@ export type ScoreToken = {
   tieNext: boolean;
   ids: string[];
   muted: boolean;
+  hiddenRest?: boolean;
 };
 export type ScoreVoice = { clef: "treble" | "bass"; tokens: ScoreToken[] };
 export type ScoreMeasure = {
@@ -145,9 +146,12 @@ export function buildScore(
   }
   const lanes: { clef: "treble" | "bass"; chords: Chord[]; end: number }[] = [];
   for (const chord of [...chords.values()].sort(
-    (a, b) => a.start - b.start || b.end - a.end,
+    (a, b) => a.start - b.start ||
+      Math.max(...b.notes.map(n => n.midiNote)) - Math.max(...a.notes.map(n => n.midiNote)),
   )) {
-    let lane = lanes.find((l) => l.clef === chord.clef && l.end <= chord.start);
+    const pitch = (c: Chord) => c.notes.reduce((sum, n) => sum + n.midiNote, 0) / c.notes.length;
+    let lane = lanes.filter((l) => l.clef === chord.clef && l.end <= chord.start)
+      .sort((a, b) => Math.abs(pitch(a.chords.at(-1)!) - pitch(chord)) - Math.abs(pitch(b.chords.at(-1)!) - pitch(chord)))[0];
     if (!lane) {
       lane = { clef: chord.clef, chords: [], end: 0 };
       lanes.push(lane);
@@ -270,6 +274,20 @@ export function buildScore(
             ? -1
             : 1,
       );
+      // Filler rests in a supplemental voice do not indicate silence while
+      // another voice on this staff covers the entire interval.
+      for (const voice of measure.voices) for (const token of voice.tokens) {
+        if (token.pitches.length) continue;
+        const sounding = measure.voices.filter(v => v !== voice && v.clef === voice.clef)
+          .flatMap(v => v.tokens.filter(t => t.pitches.length))
+          .sort((a, b) => a.startTick - b.startTick);
+        let covered = token.startTick;
+        for (const other of sounding) {
+          if (other.startTick > covered) break;
+          if (other.endTick > covered) covered = other.endTick;
+        }
+        token.hiddenRest = covered >= token.endTick;
+      }
       // Accidental memory is shared between voices on a staff, but resets each bar.
       const memory = new Map<string, string>(),
         defaults = keyAlterations(sharps);

@@ -22,6 +22,25 @@ const note = (pitch: number, start: number, end: number, track = 1) => ({
   startFrame: 0,
   endFrame: 0,
 });
+it("keeps a continuous 3/4 melody above a held inner voice without false pauses", () => {
+  const metadata = { ...song, ppq: 256, durationTicks: 2304,
+    meterMap: [{ tick: 0, numerator: 3, denominator: 4 }] };
+  const score = buildScore([
+    note(77, 0, 512), note(65, 512, 640), note(60, 512, 768),
+    note(65, 640, 768), note(77, 768, 1280),
+    note(74, 1280, 1408), note(62, 1280, 1536), note(70, 1408, 1536),
+  ], metadata, 0, 1536);
+  for (const bar of score) {
+    const melody = bar.voices.find(v => v.clef === "treble")!;
+    expect(melody.tokens.every(t => t.pitches.length)).toBe(true);
+    const inner = bar.voices.filter(v => v.clef === "treble")[1];
+    expect(inner.tokens.filter(t => !t.pitches.length).every(t => t.hiddenRest)).toBe(true);
+    const held = inner.tokens.find(t => t.pitches.length)!;
+    expect(held.duration).toBe("q");
+  }
+  const pause = buildScore([note(77, 0, 512)], metadata, 0, 768)[0];
+  expect(pause.voices.find(v => v.clef === "treble")!.tokens.at(-1)!.hiddenRest).toBe(false);
+});
 it("keeps a named practice melody on treble when its arpeggio dips below middle C", () => {
   const metadata = {
     ...song,

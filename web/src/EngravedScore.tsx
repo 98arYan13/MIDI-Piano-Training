@@ -271,6 +271,13 @@ export function EngravedScore({
         row.beams.forEach((b) => b.setContext(context).draw());
         row.tokens.forEach((token, i) => {
           const note = row.glyphs[i];
+          if (token.hiddenRest) {
+            const element = note.getSVGElement();
+            if (element) {
+              element.style.display = "none";
+              element.setAttribute("data-filler-rest", "true");
+            }
+          }
           note
             .getSVGElement()
             ?.setAttribute("data-start-tick", String(token.startTick));
