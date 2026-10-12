@@ -46,6 +46,14 @@ try {
     viewport: { width: 1440, height: 1000 },
   });
   page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => {
+    window.keyAttacks = [];
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      if (this.matches('.piano-key')) window.keyAttacks.push(this.dataset.midi);
+      return animate.apply(this, args);
+    };
+  });
   await page.goto(url);
   await page.locator('[data-midi="60"]:enabled').waitFor();
   assert.equal(await page.locator(".piano-key").count(), 88);
@@ -94,6 +102,17 @@ try {
   await until(async () =>
     (await state()).heldNotes.some((n) => n.instance === 999 && n.held),
   );
+  await wait(100);
+  const attacksBefore = await page.evaluate(() => window.keyAttacks.filter(n => n === '60').length);
+  other.send(JSON.stringify({ version: 1, id: 'repeat', type: 'virtual.noteOn',
+    params: { source: 'other-owner', channel: 0, note: 60, velocity: 90, instance: 1000 } }));
+  await until(async () => (await state()).heldNotes.some(n => n.instance === 1000 && n.held));
+  await wait(100);
+  assert.equal(await page.evaluate(() => window.keyAttacks.filter(n => n === '60').length),
+    attacksBefore + 1, 'A repeated attack must visibly retrigger an already highlighted key');
+  other.send(JSON.stringify({ version: 1, id: 'repeat-off', type: 'virtual.noteOff',
+    params: { source: 'other-owner', channel: 0, note: 60, instance: 1000 } }));
+  await until(async () => !(await state()).heldNotes.some(n => n.instance === 1000 && n.held));
   await page.keyboard.down("a");
   await page.keyboard.down("d");
   await page.keyboard.down("g");

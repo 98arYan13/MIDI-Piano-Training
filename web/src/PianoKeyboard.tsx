@@ -27,6 +27,27 @@ export function PianoKeyboard({ showSongHints = false, focusMode = false }: { sh
     [pedal, setPedal] = useState(false),
     [width, setWidth] = useState(1040);
   const scroll = useRef<HTMLDivElement>(null);
+  const lastAttack = useRef({ generation: 0, sequence: 0 });
+  useEffect(() => {
+    const generation = native.state?.generation ?? 0;
+    if (lastAttack.current.generation !== generation)
+      lastAttack.current = { generation, sequence: 0 };
+    for (const event of native.events) {
+      if (event.sequence <= lastAttack.current.sequence) continue;
+      lastAttack.current.sequence = event.sequence;
+      if (event.type !== "note" || event.event.kind !== 0 || event.event.bus === 3)
+        continue;
+      const key = scroll.current?.querySelector<HTMLElement>(
+        `[data-midi="${event.event.note}"]`,
+      );
+      if (!key) continue;
+      // Retrigger even when sustain or another owner keeps this pitch highlighted.
+      for (const animation of key.getAnimations()) animation.cancel();
+      key.animate([{ filter: "brightness(1.8)" }, { filter: "brightness(1)" }], {
+        duration: 100,
+      });
+    }
+  }, [native.events, native.state?.generation]);
   const settings = useRef({ velocity, octave });
   settings.current = { velocity, octave };
   useEffect(() => {
