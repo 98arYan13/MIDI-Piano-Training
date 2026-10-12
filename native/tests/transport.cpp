@@ -82,6 +82,25 @@ TEST_CASE("Transport native play seek cancel ownership and score use physical "
   REQUIRE(e.snapshot()["heldNotes"].size() == 1);
   REQUIRE(e.snapshot()["heldNotes"][0]["note"] == 72);
 }
+TEST_CASE("Default playback sounds practice melody and backing together", "[transport]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  t.command("transport.play", {}, 0);
+  t.tick(0);
+  std::vector<float> audio(e.sampleRate());
+  e.render(audio.data(), e.sampleRate() / 2);
+  t.tick(e.sampleRate() / 2);
+  e.render(audio.data(), 512);
+  bool melody = false, backing = false;
+  const auto held = e.snapshot()["heldNotes"];
+  for (const auto &note : held) {
+    melody |= note["note"] == 60;
+    backing |= note["note"] == 48;
+  }
+  REQUIRE(melody);
+  REQUIRE(backing);
+}
 TEST_CASE("Accompaniment weighted inference stays silent below seventy percent",
           "[transport]") {
   auto s = model();

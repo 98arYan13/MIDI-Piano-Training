@@ -9,6 +9,20 @@ const browser=await chromium.launch({executablePath:browserPath(),headless:true}
 try {
  const page=await browser.newPage({viewport:{width:1301,height:1039}});
  await page.goto(url+'/#play');
+ await page.getByRole('button',{name:/^Twinkle Twinkle.*sec/}).click();
+ assert.equal(await page.getByLabel('Hear practice part',{exact:true}).isChecked(),true);
+ const geometry=await page.evaluate(()=>{
+  const rect=selector=>document.querySelector(selector).getBoundingClientRect();
+  return {stage:rect('.workspace-stage').width,play:rect('.play-along').width,
+    song:rect('.song-workspace').width,staff:rect('.song-workspace > .scrolling-staff').width,
+    gap:rect('.piano-panel').top-rect('.workspace-stage').bottom};
+ });
+ assert.ok(Math.abs(geometry.stage-geometry.play)<3);
+ assert.ok(Math.abs(geometry.song-geometry.staff)<3);
+ assert.ok(geometry.gap<=14);
+ await page.getByRole('button',{name:'Hide sidebar',exact:true}).click();
+ assert.equal(await page.getByRole('navigation',{name:'Practice tabs'}).isVisible(),false);
+ await page.getByRole('button',{name:'Show sidebar',exact:true}).click();
  for(const entry of manifest){
   assert.ok(songs.some(song=>song.id===entry.id));
   const expected=await readFile('assets/music/'+entry.file);

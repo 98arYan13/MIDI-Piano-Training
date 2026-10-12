@@ -38,7 +38,7 @@ public:
 private:
   Engine &engine_;
   nlohmann::json song_, config_ = {{"speed", 1.0},
-                                   {"hearPractice", false},
+                                   {"hearPractice", true},
                                    {"practiceEnabled", true},
                                    {"mode", "continuous"},
                                    {"toleranceMs", 150},

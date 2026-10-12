@@ -1,7 +1,27 @@
 .play-along {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
   gap: 24px;
+}
+.workspace:has(.play-along) .workspace-stage {
+  display: block;
+  min-height: 0;
+}
+.workspace:has(.play-along) .workspace-footer {
+  display: none;
+}
+.workspace:has(.play-along) + .piano-panel {
+  margin-top: 12px;
+}
+.song-workspace > .scrolling-staff {
+  width: 100%;
+  min-width: 0;
+}
+.sidebar-hidden .side-nav {
+  display: none;
 }
 .song-library {
   border-right: 1px solid #39413c;

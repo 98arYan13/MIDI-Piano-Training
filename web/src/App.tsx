@@ -529,6 +529,7 @@ function Shell() {
   const native = useNative(),
     s = native.state;
   const [route, setRoute] = useState(location.hash.slice(1) || "staff");
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [dialog, setDialog] = useState<"audio" | "metronome" | null>(null);
   const close = useRef(() => setDialog(null)).current;
   useEffect(() => {
@@ -560,6 +561,14 @@ function Shell() {
   return (
     <>
       <header className="global-toolbar" ref={toolbar}>
+        <button
+          aria-label={sidebarHidden ? "Show sidebar" : "Hide sidebar"}
+          aria-expanded={!sidebarHidden}
+          aria-controls="practice-navigation"
+          onClick={() => setSidebarHidden(!sidebarHidden)}
+        >
+          ☰
+        </button>
         <a href="#staff" className="brand">
           <span className="brand-icon">♬</span>
           <span>
@@ -670,8 +679,13 @@ function Shell() {
           </button>
         </div>
       </header>
-      <div className="app-body">
-        <nav className="side-nav" aria-label="Practice tabs">
+      <div className={`app-body ${sidebarHidden ? "sidebar-hidden" : ""}`}>
+        <nav
+          id="practice-navigation"
+          hidden={sidebarHidden}
+          className="side-nav"
+          aria-label="Practice tabs"
+        >
           <span className="nav-label">EXPLORE</span>
           {routes.map(([id, title, index]) => (
             <a
