@@ -188,17 +188,20 @@ try {
   assert(
     (
       await page
-        .locator(".song-workspace .staff-measure span")
-        .allTextContents()
+        .locator(".song-workspace .score-measure")
+        .evaluateAll(es=>es.map(e=>e.dataset.measure))
     ).includes("2"),
   );
   const metroBeforeHand = (await state()).metronome.running;
   await page.getByRole("button", { name: "Left hand", exact: true }).click();
   await until(async () => (await state()).transport.config.hand === "right");
+  await until(async () => (await page.getByRole("button", {name:"Left hand",exact:true}).getAttribute("aria-pressed")) === "false");
   await page.getByRole("button", { name: "Left hand", exact: true }).click();
   await until(async () => (await state()).transport.config.hand === "both");
+  await until(async () => (await page.getByRole("button", {name:"Right hand",exact:true}).getAttribute("aria-pressed")) === "true");
   await page.getByRole("button", { name: "Right hand", exact: true }).click();
   await until(async () => (await state()).transport.config.hand === "left");
+  await until(async () => (await page.getByRole("button", {name:"Right hand",exact:true}).getAttribute("aria-pressed")) === "false");
   await page.getByRole("button", { name: "Right hand", exact: true }).click();
   await until(async () => (await state()).transport.config.hand === "both");
   assert((await state()).heldNotes.some((n) => n.instance === 777 && n.held));
@@ -221,7 +224,7 @@ try {
   await page.getByRole("button", { name: /BWV 846.*sec/ }).click();
   await page.getByText("Playback settings, loops & tracks", { exact: true }).click();
   await until(async () => (await state()).transport.title === "BWV 846 — short excerpt");
-  await page.locator('.song-workspace .staff-segment .vf-stavenote').first().waitFor();
+  await page.locator('.song-workspace .score-measure .vf-stavenote').first().waitFor();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({

@@ -33,7 +33,34 @@ try{
  await page.goto(url+'/#play');const songs=await(await fetch(url+'/api/v1/songs')).json();assert(songs.length>=2);
  await command('transport.load',{id:songs[0].id});await command('transport.configure',{practiceEnabled:false,spacing:110});
  await until(async()=> (await page.locator('.song-workspace .staff-track').count())>0);
- const verifyPosition=async name=>{await pause(350);const s=(await state()).transport;const view=await page.locator('.song-workspace .scrolling-staff').evaluate(e=>({width:e.clientWidth,transform:e.querySelector('.staff-track').style.transform,segments:[...e.querySelectorAll('.staff-segment')].map(s=>Number(s.style.left.replace('px','')))}));const actual=Number(view.transform.match(/translate3d\(([-\d.]+)px/)[1]),expected=(view.width/2)-s.songSeconds*s.config.spacing;proof.seek.push({name,native:s,view,actual,expected});check(name,()=>assert(Math.abs(actual-expected)<1,`actual ${actual}, expected ${expected}`));const first=Math.max(0,Math.floor((s.songSeconds*s.config.spacing-(view.width/2))/480)-1);check(name+' window',()=>assert(view.segments.includes(first*480)));};
+ // Mary has simultaneous quarter/whole D4 voices at the third measure.
+ await command('transport.load',{id:'starter-mary'});
+ await until(async()=> (await page.getByLabel('Song title').inputValue())==='Mary Had a Little Lamb');
+ await pause(350);
+ const heads=await page.locator('.score-measure .vf-stavenote[data-start-tick="3840"] .vf-notehead > text:first-child').evaluateAll(es=>es.map(e=>({x:Number(e.getAttribute('x')),y:Number(e.getAttribute('y'))})));
+ const samePitchVoices=heads.filter(n=>n.y===115);
+ assert.equal(samePitchVoices.length,2,'both D4 durations remain visible');
+ assert(Math.abs(samePitchVoices[0].x-samePitchVoices[1].x)>10,'simultaneous quarter/whole heads must not overlap');
+ await command('transport.load',{id:songs[0].id});
+ await command('transport.load',{id:'starter-ode'});
+ await until(async()=> (await page.getByLabel('Song title').inputValue())==='Ode to Joy');
+ await command('transport.seek',{tick:9600});
+ await pause(350);
+ const odeHeads=await page.locator('.score-measure .vf-stavenote[data-start-tick="9600"] .vf-notehead > text:first-child').evaluateAll(es=>es.map(e=>({x:Number(e.getAttribute('x')),y:Number(e.getAttribute('y'))})));
+ const unisonF=odeHeads.filter(n=>n.y===105);
+ assert.equal(unisonF.length,2,'Ode melody and top chord F4 remain visible');
+ assert(Math.abs(unisonF[0].x-unisonF[1].x)>18,'Ode quarter F4 must clear the whole-note chord');
+ await command('transport.load',{id:songs[0].id});
+ const verifyPosition=async name=>{
+  await pause(350);const s=(await state()).transport;
+  const view=await page.locator('.song-workspace .scrolling-staff').evaluate(e=>{
+   const bounds=e.getBoundingClientRect();
+   return {center:bounds.x+bounds.width/2,measures:[...e.querySelectorAll('.score-measure')].map(m=>({start:Number(m.dataset.startFrame),end:Number(m.dataset.endFrame),left:m.getBoundingClientRect().left,right:m.getBoundingClientRect().right}))};
+  });
+  const current=view.measures.find(m=>s.songSeconds*s.sampleRate>=m.start && s.songSeconds*s.sampleRate<m.end);
+  proof.seek.push({name,native:s,view});
+  check(name+' native measure at playhead',()=>{assert(current);assert(view.center>=current.left-1&&view.center<=current.right+1);});
+ };
  const loaded=await(await fetch(url+'/api/v1/songs/'+songs[0].id)).json();
  await command('transport.seek',{tick:loaded.durationTicks*.65});await verifyPosition('paused forward seek');
  await command('transport.seek',{tick:loaded.durationTicks*.1});await verifyPosition('paused backward seek');

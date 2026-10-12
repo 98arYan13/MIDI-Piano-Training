@@ -2,11 +2,12 @@ import { memo, useEffect, useRef, useState } from "react";
 import {
   Barline,
   Renderer,
+  ModifierContext,
   Stave,
   StaveConnector,
   TickContext,
 } from "vexflow/bravura";
-import { notationNote } from "./notationNote";
+import { formatNotationTick, notationNote } from "./notationNote";
 import {
   frameX,
   staffClefs,
@@ -92,17 +93,32 @@ const Segment = memo(
           const key = `${n.startFrame}:${clef}:${n.duration ?? "q"}:${n.highlight ?? ""}`;
           groups.set(key, [...(groups.get(key) ?? []), n]);
         }
-        for (const chord of groups.values()) {
+        const onsets = new Map<string, { modifiers: ModifierContext; tick: TickContext }>();
+        const rendered = Array.from(groups.values(), chord => {
           const first = chord[0],
             clef = noteClef(first, mode),
             stave = staves[mode === "grand" && clef === "bass" ? 1 : 0];
-          const note = notationNote(chord, clef);
+          const key = `${first.startFrame}:${clef}`;
+          let onset = onsets.get(key);
+          if (!onset) {
+            onset = { modifiers: new ModifierContext(), tick: new TickContext() };
+            onsets.set(key, onset);
+          }
+          const note = notationNote(chord, clef, onset.modifiers).setStave(stave);
+          onset.tick.addTickable(note);
+          return { chord, note, onset };
+        });
+        const positioned = new Set<TickContext>();
+        for (const { chord, note, onset } of rendered) {
+          const first = chord[0];
           const x =
             frameX(first.startFrame, sampleRate, spacing) -
             index * segmentWidth;
-          note.setStave(stave);
-          const tick = new TickContext().addTickable(note).preFormat().setX(x);
-          tick.setX(x - (note.getAbsoluteX() - x) - note.getGlyphWidth() / 2);
+          if (!positioned.has(onset.tick)) {
+            const tick = formatNotationTick(onset.tick).setX(x);
+            tick.setX(x - (note.getAbsoluteX() - x) + note.getXShift() - note.getGlyphWidth() / 2);
+            positioned.add(tick);
+          }
           const ink = paper
             ? {
                 target: "#202124",

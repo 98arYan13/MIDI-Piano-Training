@@ -209,9 +209,9 @@ export type Song = {
   trashed?: boolean;
   notes: NoteEvent[];
   controllers: unknown[];
-  tempoMap: unknown[];
-  meterMap: unknown[];
-  keyMap: unknown[];
+  tempoMap: import("./scoreModel").ScoreMetadata["tempoMap"];
+  meterMap: import("./scoreModel").ScoreMetadata["meterMap"];
+  keyMap: import("./scoreModel").ScoreMetadata["keyMap"];
 };
 export type TransportSnapshot = {
   waiting: boolean;

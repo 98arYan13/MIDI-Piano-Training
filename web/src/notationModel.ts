@@ -6,6 +6,9 @@ export type SpelledPitch = {
 };
 export type TimelineNote = {
   id: string;
+  startTick?: number;
+  endTick?: number;
+  trackId?: number;
   midiNote: number;
   spelling: SpelledPitch;
   startFrame: number;

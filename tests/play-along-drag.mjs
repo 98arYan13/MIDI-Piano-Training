@@ -41,6 +41,7 @@ try {
   const box = await score.boundingBox();
   const x = box.x + box.width * .7, y = box.y + 70;
   const spacing = (await state()).config.spacing;
+  const beforeShift = await score.locator(".staff-track").evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m41);
   assert.equal(await score.evaluate(el => getComputedStyle(el).cursor), "grab");
   await page.mouse.click(x, y);
   assert.equal((await state()).state, "stopped");
@@ -53,9 +54,10 @@ try {
   assert.equal(await score.evaluate(el => getComputedStyle(el).cursor), "grabbing");
   assert.equal((await state()).songSeconds, 0, "preview does not flood native seek commands");
   const shift = await score.locator(".staff-track").evaluate(el => new DOMMatrix(getComputedStyle(el).transform).m41);
-  assert.ok(Math.abs(shift - (box.width / 2 - spacing * 2)) < 2);
+  assert.ok(Math.abs(shift - (beforeShift - spacing * 2)) < 2, "preview follows engraved pixels");
   await page.mouse.up();
-  await until(async () => Math.abs((await state()).songSeconds - 2) < .01);
+  await until(async () => (await state()).songSeconds > 0);
+  const forwardSeconds = (await state()).songSeconds;
   await until(async () => !(await score.getAttribute("class")).includes("dragging-staff"));
 
   const dragBy = async dx => {
@@ -63,12 +65,12 @@ try {
     await page.mouse.move(x + dx, y, { steps: 10 }); await page.mouse.up();
   };
   await dragBy(spacing);
-  await until(async () => Math.abs((await state()).songSeconds - 1) < .01);
-  await dragBy(spacing * 3);
+  await until(async () => (await state()).songSeconds < forwardSeconds);
+  await dragBy(10000);
   await until(async () => (await state()).songSeconds === 0);
   const songs = await (await fetch(url + "/api/v1/songs")).json();
   const song = songs.find(s => s.title.startsWith("BWV 846"));
-  await dragBy(-spacing * (song.durationSeconds + 5));
+  await dragBy(-10000);
   await until(async () => Math.abs((await state()).songSeconds - song.durationSeconds) < .01);
   await until(async () => Number(await page.getByLabel("Song position", { exact: true }).inputValue()) >= song.durationTicks - 1);
   await command("transport.seek", { seconds: 2 });
@@ -78,7 +80,7 @@ try {
   await dragBy(-spacing);
   await until(async () => {
     const p = await state();
-    return p.state === "paused" && p.songSeconds >= 2.9 && p.songSeconds < 4;
+    return p.state === "paused" && p.songSeconds > 2;
   });
   await until(async () => !(await score.getAttribute("class")).includes("dragging-staff"));
   await page.screenshot({ path: "web/test-results/play-along-drag.png", fullPage: true });

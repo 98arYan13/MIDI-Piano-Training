@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNative } from "./native";
 import { Library } from "./Library";
 import { songApi } from "./songApi";
-import { ScrollingStaff } from "./ScrollingStaff";
+import { EngravedScore } from "./EngravedScore";
 import type { Song, SongTrack, TimelineNote, TransportConfig } from "./types";
 import "./playAlong.css";
 import { NumericInput } from "./NumericInput";
@@ -18,9 +18,6 @@ export function PlayAlong() {
   }, [p?.songSeconds, seekPreview]);
   const [song, setSong] = useState<Song | null>(null),
     [notes, setNotes] = useState<TimelineNote[]>([]),
-    [measures, setMeasures] = useState<
-      { number: number; startFrame: number }[]
-    >([]),
     [error, setError] = useState("");
   const run = async (type: string, params: Record<string, unknown> = {}) => {
     setError("");
@@ -32,10 +29,12 @@ export function PlayAlong() {
   };
   const choose = async (s: Song) => {
     setSeekPreview(null);
-    setSong(s);
     setNotes([]);
-    setMeasures([]);
     await run("transport.load", { id: s.id });
+    try {
+      // Library rows are summaries; engraving requires the complete meter/tempo/key maps.
+      setSong(await songApi<Song>(`/${s.id}`));
+    } catch (e) { setError((e as Error).message); }
   };
   useEffect(() => {
     if (p?.songId && p.songId !== song?.id)
@@ -44,6 +43,7 @@ export function PlayAlong() {
         .catch((e) => setError(e.message));
   }, [p?.songId, song?.id]);
   const bucket = song && p ? Math.floor(p.songTick / (song.ppq * 8)) : 0;
+  const [scoreWindow,setScoreWindow]=useState({from:0,to:0});
   useEffect(() => {
     if (!song) return;
     let current = true;
@@ -57,7 +57,7 @@ export function PlayAlong() {
       .then((s) => {
         if (current) {
           setNotes(s.notes);
-          setMeasures(s.measures ?? []);
+          setScoreWindow({from:Math.max(0,(bucket-2)*song.ppq*8),to:(bucket+6)*song.ppq*8});
           if (s.truncated)
             setError(
               "Dense notation window exceeded 4096 notes; the displayed window is truncated. Original playback remains intact.",
@@ -188,7 +188,7 @@ export function PlayAlong() {
                   />
                 </label>
                 <label>
-                  Spacing
+                  Score spacing
                   <input
                     aria-label="Song spacing"
                     type="range"
@@ -376,9 +376,11 @@ export function PlayAlong() {
                 }
               />
               <div className="practice-score">
-                <ScrollingStaff
+                <EngravedScore
                   key={song.id}
-                  mode="grand"
+                  song={song}
+                  fromTick={scoreWindow.from}
+                  toTick={scoreWindow.to}
                   notes={displayedNotes}
                   sampleRate={p.sampleRate}
                   clockFrame={() =>
@@ -391,7 +393,6 @@ export function PlayAlong() {
                   running={p.state === "playing"}
                   label="Song practice notation"
                   paper
-                  measures={measures}
                   scrub={{
                     durationFrames: song.durationSeconds * p.sampleRate,
                     start: () => { dragPause.current = run("transport.pause"); },
