@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include <future>
 #include <sightreading/FingeringJobs.hpp>
 #include <thread>
 using namespace sightreading;
@@ -150,4 +151,116 @@ TEST_CASE("Terminating non-reading worker unblocks a large write",
   process.terminate();
   writer.join();
   REQUIRE(rejected);
+}
+TEST_CASE("Expired final-frame acceptance preserves previous saved fingerings",
+          "[fingering][fingering-deadline]") {
+  for (auto boundary :
+       {std::pair{false, 31}, std::pair{false, 901}, std::pair{true, 901}}) {
+    const auto [beforeCommit, expiry] = boundary;
+    auto folder =
+        std::filesystem::temp_directory_path() /
+        std::filesystem::path(
+            "sr-final-deadline-" +
+            std::to_string(
+                std::chrono::steady_clock::now().time_since_epoch().count()));
+    {
+      Storage storage(folder);
+      storage.putSong(jobSong(), "");
+      storage.editFingering("job-song", {1}, 3);
+      auto saved = storage.song("job-song");
+      std::atomic<bool> finalRead{};
+      std::atomic<int> boundaryCalls{};
+      FingeringJobs jobs(
+          storage, root,
+          [&] {
+            int elapsed = 0;
+            if (finalRead) {
+              auto calls = ++boundaryCalls;
+              elapsed = (!beforeCommit || calls >= 2) ? expiry : 0;
+            }
+            return std::chrono::steady_clock::time_point{} +
+                   std::chrono::seconds(elapsed);
+          },
+          [&](const json &frame) {
+            if (frame.value("type", std::string{}) == "result")
+              finalRead = true;
+          });
+      jobs.start("job-song");
+      for (int i = 0; i < 1000 && jobs.snapshot()["state"] == "running"; ++i)
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      CHECK(finalRead);
+      CHECK(jobs.snapshot()["state"] == "failed");
+      CHECK(storage.song("job-song") == saved);
+    }
+    std::filesystem::remove_all(folder);
+  }
+}
+
+TEST_CASE("Ready final result and cancellation cover both decision lock orders",
+          "[fingering][fingering-race]") {
+  for (bool commitWins : {false, true}) {
+    auto folder =
+        std::filesystem::temp_directory_path() /
+        std::filesystem::path(
+            "sr-final-race-" +
+            std::to_string(
+                std::chrono::steady_clock::now().time_since_epoch().count()));
+    {
+      Storage storage(folder);
+      storage.putSong(jobSong(), "");
+      storage.editFingering("job-song", {1}, 3);
+      auto saved = storage.song("job-song");
+      std::promise<void> reached, release;
+      auto reachedFuture = reached.get_future();
+      auto released = release.get_future().share();
+      std::atomic<bool> finalRead{};
+      std::atomic<int> calls{};
+      FingeringJobs jobs(
+          storage, root,
+          [&] {
+            if (finalRead && ++calls == 2 && commitWins) {
+              reached.set_value();
+              released.wait_for(std::chrono::seconds(5));
+            }
+            return std::chrono::steady_clock::now();
+          },
+          [&](const json &frame) {
+            if (frame.value("type", std::string{}) == "result") {
+              finalRead = true;
+              if (!commitWins) {
+                reached.set_value();
+                released.wait_for(std::chrono::seconds(5));
+              }
+            }
+          });
+      auto job = jobs.start("job-song");
+      REQUIRE(reachedFuture.wait_for(std::chrono::seconds(10)) ==
+              std::future_status::ready);
+      if (!commitWins) {
+        jobs.cancel(job["jobId"].get<std::string>());
+        release.set_value();
+        REQUIRE(jobs.snapshot()["state"] == "cancelled");
+        REQUIRE(storage.song("job-song") == saved);
+      } else {
+        std::atomic<bool> conflict{};
+        std::promise<void> cancelling;
+        auto started = cancelling.get_future();
+        std::thread cancel([&] {
+          cancelling.set_value();
+          try {
+            jobs.cancel(job["jobId"].get<std::string>());
+          } catch (const FingeringError &e) {
+            conflict = e.status == 409;
+          }
+        });
+        started.wait();
+        release.set_value();
+        cancel.join();
+        REQUIRE(conflict);
+        REQUIRE(jobs.snapshot()["state"] == "completed");
+        REQUIRE(storage.song("job-song")["fingeringRevision"] == 2);
+      }
+    }
+    std::filesystem::remove_all(folder);
+  }
 }

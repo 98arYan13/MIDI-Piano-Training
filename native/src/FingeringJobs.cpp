@@ -5,8 +5,10 @@
 #include <sightreading/FingeringJobs.hpp>
 namespace sightreading {
 using json = nlohmann::json;
-FingeringJobs::FingeringJobs(Storage &s, std::filesystem::path p, Clock c)
-    : storage(s), root(std::filesystem::absolute(p)), clock(std::move(c)) {}
+FingeringJobs::FingeringJobs(Storage &s, std::filesystem::path p, Clock c,
+                             FrameObserver observer)
+    : storage(s), root(std::filesystem::absolute(p)), clock(std::move(c)),
+      frameObserver(std::move(observer)) {}
 FingeringJobs::~FingeringJobs() {
   std::lock_guard serial(lifecycle);
   {
@@ -111,6 +113,14 @@ void FingeringJobs::run(json request, std::shared_ptr<FingeringProcess> child) {
       auto frame = child->readFrame(std::chrono::milliseconds(100));
       if (!frame)
         continue;
+      if (frameObserver)
+        frameObserver(*frame);
+      // Parsing a large frame can cross either deadline. Do not revive a late
+      // heartbeat.
+      now = clock();
+      if (now - started >= std::chrono::minutes(15) ||
+          now - last >= std::chrono::seconds(30))
+        throw std::runtime_error("Fingering worker exceeded its time limit");
       if (!frame->is_object() || !frame->contains("version") ||
           !frame->at("version").is_number_integer() ||
           frame->at("version") != 1 ||
@@ -118,7 +128,7 @@ void FingeringJobs::run(json request, std::shared_ptr<FingeringProcess> child) {
               request["jobId"].get<std::string>())
         throw std::runtime_error(
             "Invalid fingering worker protocol or job identity");
-      last = clock();
+      last = now;
       auto type = frame->value("type", std::string{});
       if (type == "error") {
         auto code = frame->value("code", std::string{}),
@@ -160,6 +170,10 @@ void FingeringJobs::run(json request, std::shared_ptr<FingeringProcess> child) {
               "Worker model metadata does not match pinned checkpoints");
         // The same mutex serializes cancellation and the atomic storage
         // replacement.
+        now = clock();
+        if (now - started >= std::chrono::minutes(15) ||
+            now - last >= std::chrono::seconds(30))
+          throw std::runtime_error("Fingering worker exceeded its time limit");
         auto summary = storage.commitFingering(request["songId"],
                                                request["fingerprint"], *frame);
         state["state"] = "completed";

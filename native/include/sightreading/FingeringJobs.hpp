@@ -15,9 +15,11 @@ public:
 class FingeringJobs {
 public:
   using Clock = std::function<std::chrono::steady_clock::time_point()>;
+  using FrameObserver = std::function<void(const nlohmann::json &)>;
   FingeringJobs(
       Storage &, std::filesystem::path,
-      Clock clock = [] { return std::chrono::steady_clock::now(); });
+      Clock clock = [] { return std::chrono::steady_clock::now(); },
+      FrameObserver frameObserver = {});
   ~FingeringJobs();
   nlohmann::json start(const std::string &);
   nlohmann::json snapshot() const;
@@ -27,6 +29,7 @@ private:
   Storage &storage;
   std::filesystem::path root;
   Clock clock;
+  FrameObserver frameObserver;
   mutable std::mutex mutex;
   std::mutex lifecycle;
   nlohmann::json state = {{"state", "idle"},   {"jobId", nullptr},
