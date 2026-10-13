@@ -1,3 +1,4 @@
+import { showFingering } from "./fingeringDisplay";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Accidental,
@@ -5,6 +6,8 @@ import {
   Beam,
   Dot,
   Formatter,
+  FretHandFinger,
+  Modifier,
   Fraction,
   Renderer,
   Stave,
@@ -20,10 +23,28 @@ import {
   type ScoreMetadata,
   type ScoreToken,
 } from "./scoreModel";
-import { staffClefs, type StaffMode, type TimelineNote } from "./notationModel";
+import { staffClefs, spelledLabel, type FingeringMode, type StaffMode, type TimelineNote } from "./notationModel";
 import type { ScrollingStaffProps } from "./ScrollingStaff";
 import { separateNotationVoices } from "./notationNote";
 import { LoopMarkers, type LoopSelection } from "./LoopMarkers";
+// Keep VexFlow's text/font and modifier positioning; only reserve chord/stem clearance.
+class ScoreFinger extends FretHandFinger {
+  draw() {
+    const note = this.checkAttachedNote() as StaveNote;
+    const ys = note.getYs(), index = this.getIndex() ?? 0;
+    const stem = note.hasStem() ? note.getStemExtents() : { topY: Math.min(...ys), baseY: Math.max(...ys) };
+    const right = this.getPosition() === Modifier.Position.ABOVE;
+    const target = right
+      ? Math.min(...ys, stem.topY, stem.baseY) - 16 - index * 14
+      : Math.max(...ys, stem.topY, stem.baseY) + 22 + (ys.length - index - 1) * 14;
+    // FretHandFinger's baseline offsets are -7 above and +15 below the notehead.
+    this.setOffsetY(target - ys[index] - (right ? -7 : 15));
+    const context = this.checkContext();
+    context.openGroup("score-finger", this.getAttribute("id"));
+    super.draw();
+    context.closeGroup();
+  }
+}
 const keyNames = [
   "Cb",
   "Gb",
@@ -73,6 +94,7 @@ function makeNote(
   clef: "treble" | "bass",
   ppq: number,
   stem?: number,
+  fingeringMode: FingeringMode = "medium",
 ) {
   const note = new StaveNote({
     clef,
@@ -102,6 +124,9 @@ function makeNote(
   note.setDuration(new Fraction(token.endTick - token.startTick, ppq * 4));
   token.pitches.forEach((p, i) => {
     if (p.accidental) note.addModifier(new Accidental(p.accidental), i);
+    if (showFingering(p.fingering, fingeringMode, token.tiePrevious))
+      note.addModifier(new ScoreFinger(String(p.fingering!.finger))
+        .setPosition(p.fingering!.hand === "right" ? Modifier.Position.ABOVE : Modifier.Position.BELOW), i);
   });
   for (let i = 0; i < token.dots; i++)
     Dot.buildAndAttach([note], { all: true });
@@ -133,19 +158,26 @@ export function EngravedScore({
   label = "Song practice notation",
   scrub,
   selection,
+  fingeringMode = "medium",
+  editingFingering = false,
+  onFingeringNote,
 }: Omit<ScrollingStaffProps, "mode"> & {
   mode?: StaffMode;
   song: ScoreMetadata;
   fromTick: number;
   toTick: number;
   selection?: LoopSelection;
+  fingeringMode?: FingeringMode;
+  editingFingering?: boolean;
+  onFingeringNote?: (noteIds: string[]) => void;
 }) {
   const clefs = useMemo(() => staffClefs(mode), [mode]);
+  const hasFingerings = notes.some(n => n.fingering?.finger != null);
   const staffY = useMemo(
-    () => ({ treble: 30, bass: mode === "grand" ? 180 : 30 }),
-    [mode],
+    () => ({ treble: hasFingerings ? 95 : 30, bass: mode === "grand" ? (hasFingerings ? 310 : 180) : (hasFingerings ? 95 : 30) }),
+    [mode, hasFingerings],
   );
-  const height = mode === "grand" ? 350 : 220;
+  const height = mode === "grand" ? (hasFingerings ? 545 : 350) : (hasFingerings ? 350 : 220);
   const viewport = useRef<HTMLDivElement>(null),
     track = useRef<HTMLDivElement>(null),
     gutter = useRef<HTMLDivElement>(null);
@@ -215,6 +247,7 @@ export function EngravedScore({
             v.clef,
             song.ppq,
             siblings.length > 1 ? (voiceIndex === 0 ? 1 : -1) : undefined,
+            fingeringMode,
           ).setStave(staves[v.clef]),
         );
         const voice = new Voice({
@@ -305,6 +338,30 @@ export function EngravedScore({
             ),
           );
           if (!token.pitches.length) return;
+          token.pitches.forEach((pitch, index) => {
+            const visible = showFingering(pitch.fingering, fingeringMode, token.tiePrevious);
+            const elements = [note.noteHeads[index]?.getSVGElement(), ...note.getModifiers()
+              .filter(m => m instanceof FretHandFinger && m.getIndex() === index).map(m => m.getSVGElement())];
+            for (const element of elements) {
+              if (!element) continue;
+              element.setAttribute("data-note-ids", JSON.stringify(pitch.noteIds));
+              element.setAttribute("data-finger", visible ? String(pitch.fingering!.finger) : "");
+              element.setAttribute("data-fingering-hand", pitch.fingering?.hand ?? "");
+              element.setAttribute("aria-label", `${spelledLabel(pitch.spelling)}, ${pitch.fingering?.hand ?? row.clef} hand, ${visible ? `finger ${pitch.fingering!.finger}` : pitch.fingering?.reason ?? "no visible fingering"}`);
+              if (editingFingering) {
+                element.setAttribute("tabindex", "0");
+                element.setAttribute("role", "button");
+                element.classList.add("fingering-edit-note");
+                element.addEventListener("pointerdown", e => e.stopPropagation());
+                element.addEventListener("click", e => { e.stopPropagation(); onFingeringNote?.(pitch.noteIds); });
+                element.addEventListener("keydown", e => {
+                  if ((e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
+                    e.preventDefault(); e.stopPropagation(); onFingeringNote?.(pitch.noteIds);
+                  }
+                });
+              }
+            }
+          });
           const previous = row.tokens[i - 1],
             next = row.tokens[i + 1];
           const polyphonic = rows.filter((r) => r.clef === row.clef).length > 1;
@@ -349,7 +406,7 @@ export function EngravedScore({
         key: keyNames[Math.max(0, Math.min(14, measure.sharps + 7))],
         time: `${measure.numerator}/${measure.denominator}`,
       });
-      el.querySelector("svg")?.setAttribute("aria-hidden", "true");
+      el.querySelector("svg")?.setAttribute("aria-hidden", String(!editingFingering));
       left += width;
     }
     // At a shared barline the new measure's first note replaces the previous endpoint.
@@ -359,6 +416,9 @@ export function EngravedScore({
     sections.current = ranges;
   }, [
     measures,
+    fingeringMode,
+    editingFingering,
+    onFingeringNote,
     song,
     sampleRate,
     pixelsPerSecond,
@@ -445,7 +505,7 @@ export function EngravedScore({
       ref={viewport}
       style={{ height }}
       className={`scrolling-staff ${mode} paper-staff engraved-score${scrub ? " draggable-staff" : ""}${dragFrame !== null ? " dragging-staff" : ""}`}
-      role={selection ? "group" : "img"}
+      role={selection || editingFingering ? "group" : "img"}
       aria-label={`${label}, ${mode === "grand" ? "joined treble and bass staves" : `${mode} staff`}`}
       onPointerDown={(e) => {
         if (!scrub || e.button !== 0) return;

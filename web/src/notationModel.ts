@@ -1,3 +1,6 @@
+export type FingeringTip = "phraseStart" | "thumbCrossing" | "positionChange" | "majorPositionChange" | "difficultChord";
+export type FingeringMode = "full" | "medium" | "pro";
+export type NoteFingering = { finger: 1 | 2 | 3 | 4 | 5 | null; hand: "left" | "right"; source: "generated" | "manual"; tips: FingeringTip[]; reason?: string; automaticFinger?: 1 | 2 | 3 | 4 | 5 | null };
 export type StaffMode = "treble" | "bass" | "grand";
 export type SpelledPitch = {
   letter: "c" | "d" | "e" | "f" | "g" | "a" | "b";
@@ -5,6 +8,7 @@ export type SpelledPitch = {
   octave: number;
 };
 export type TimelineNote = {
+  fingering?: NoteFingering;
   id: string;
   startTick?: number;
   endTick?: number;

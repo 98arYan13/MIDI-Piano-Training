@@ -201,6 +201,7 @@ export type SnapshotMessage = {
   resync?: boolean;
 };
 export type NoteEvent = {
+  fingering?: import("./notationModel").NoteFingering;
   id: number;
   trackId: number;
   channel: number;

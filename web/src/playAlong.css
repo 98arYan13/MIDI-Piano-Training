@@ -253,3 +253,6 @@
 }
 .draggable-staff { cursor: grab; user-select: none; touch-action: pan-y; }
 .draggable-staff.dragging-staff { cursor: grabbing; }
+
+.fingering-edit-note { cursor: pointer; }
+.fingering-edit-note:focus { outline: 2px solid #28765d; outline-offset: 3px; }

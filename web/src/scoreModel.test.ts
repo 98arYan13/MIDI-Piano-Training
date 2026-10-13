@@ -223,3 +223,32 @@ it("uses key signatures for flat spelling and prints the cancelling natural", ()
     ["b", "n", "n"],
   ]);
 });
+
+it("preserves chord pitch identities and merges agreeing or conflicting unisons without changing music", () => {
+  const f = (finger: 1 | 2 | 3) => ({ finger, hand: "right" as const, source: "generated" as const, tips: ["phraseStart" as const] });
+  const plain = [note(67, 0, 768), note(60, 0, 768), { ...note(60, 0, 768), id: "duplicate" }];
+  const annotated = plain.map((n, i) => ({ ...n, fingering: f(i === 0 ? 3 : 1) }));
+  const result = buildScore(annotated, song, 0, 1152);
+  const pitches = result[0].voices[0].tokens[0].pitches;
+  expect(pitches.map(p => [p.midi, p.noteIds, p.fingering?.finger])).toEqual([[60, [plain[1].id, "duplicate"], 1], [67, [plain[0].id], 3]]);
+  const strip = (score: ReturnType<typeof buildScore>) => score.map(m => ({ ...m, voices: m.voices.map(v => ({ ...v, tokens: v.tokens.map(t => ({ ...t, pitches: t.pitches.map(({ noteIds, fingering, ...p }) => p) })) })) }));
+  expect(strip(result)).toEqual(strip(buildScore(plain, song, 0, 1152)));
+  annotated[2].fingering = f(2);
+  expect(buildScore(annotated, song, 0, 1152)[0].voices[0].tokens[0].pitches[0].fingering?.finger).toBeNull();
+  expect(buildScore(annotated, song, 576, 1152)[0].voices[0].tokens.find(t => t.pitches.length)?.tiePrevious).toBe(true);
+});
+
+it("keeps old, muted and named-hand notation identical with annotations across tied windows", () => {
+  const notes = [ { ...note(55, 0, 960), highlight: "muted" as const }, note(65, 0, 960, 2) ];
+  const decorated = notes.map(n => ({ ...n, fingering: { finger: 2 as const, hand: n.trackId === 1 ? "right" as const : "left" as const, source: "generated" as const, tips: [] } }));
+  const plain = buildScore(notes, song, 0, 1152), annotated = buildScore(decorated, song, 0, 1152);
+  for (let i = 0; i < plain.length; i++) for (let v = 0; v < plain[i].voices.length; v++) {
+    const oldVoice = plain[i].voices[v], newVoice = annotated[i].voices[v];
+    expect(newVoice.clef).toBe(oldVoice.clef);
+    expect(newVoice.tokens.map(t => ({ ...t, pitches: t.pitches.map(({ fingering, ...p }) => p) }))).toEqual(oldVoice.tokens);
+  }
+  expect(annotated[0].voices[0].tokens[0].muted).toBe(true);
+  const continuation = buildScore(decorated, song, 576, 1152)[0].voices[0].tokens[0];
+  expect(continuation.tiePrevious).toBe(true);
+  expect(continuation.pitches[0].noteIds).toEqual([notes[0].id]);
+});

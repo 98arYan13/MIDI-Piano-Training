@@ -1,3 +1,4 @@
+import { mergeFingering } from "./fingeringDisplay";
 import type { TimelineNote, SpelledPitch } from "./notationModel";
 export type ScoreMetadata = {
   preserveSpelling?: boolean;
@@ -9,6 +10,8 @@ export type ScoreMetadata = {
   tracks: { id: number; title: string; staff: string }[];
 };
 export type ScorePitch = {
+  noteIds: string[];
+  fingering?: TimelineNote["fingering"];
   midi: number;
   highlight?: TimelineNote["highlight"];
   spelling: SpelledPitch;
@@ -125,6 +128,7 @@ export function buildScore(
   const quantum = song.ppq / 8,
     snap = (tick: number) => Math.round(tick / quantum) * quantum;
   const tracks = new Map(song.tracks.map((t) => [t.id, t]));
+  const noteIds = new Map<string, string[]>();
   const chords = new Map<string, Chord>(),
     seen = new Map<string, TimelineNote>();
   for (const n of notes) {
@@ -145,11 +149,14 @@ export function buildScore(
     const identity = `${start}:${end}:${clef}:${n.midiNote}`;
     const existing = seen.get(identity);
     if (existing) {
+      noteIds.get(existing.id)!.push(String(n.id));
+      existing.fingering = mergeFingering(existing.fingering, n.fingering);
       if (n.highlight !== "muted") existing.highlight = n.highlight;
       continue;
     }
     const display = { ...n };
     seen.set(identity, display);
+    noteIds.set(display.id, [String(n.id)]);
     const key = `${start}:${end}:${clef}`,
       chord = chords.get(key) ?? { start, end, clef, notes: [] };
     chord.notes.push(display);
@@ -234,6 +241,8 @@ export function buildScore(
                       .sort((a, b) => a.midiNote - b.midiNote)
                       .map((n) => ({
                         midi: n.midiNote,
+                        noteIds: noteIds.get(n.id)!,
+                        fingering: n.fingering,
                         highlight: n.highlight,
                         spelling: song.preserveSpelling
                           ? n.spelling
