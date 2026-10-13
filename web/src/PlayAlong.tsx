@@ -448,16 +448,16 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                 <button onClick={() => { setSeekPreview(null); void run("transport.return"); }}>Return to Start</button>
                 <small>Drag Start / End on the score or overview. Drag the score to find another passage.</small>
               </div>
-              <div ref={overview} className="selection-overview" aria-label="Whole piece selection overview">
+              </>}
+              </section>
+              {!hidePassage && <div ref={overview} className="selection-overview" aria-label="Whole piece selection overview">
                 <LoopMarkers selection={selection!}
                   position={tick => tick / song.durationTicks * (overview.current?.clientWidth ?? 0)}
                   tickAt={x => {
                     const box = overview.current!.getBoundingClientRect();
                     return (x - box.left) / box.width * song.durationTicks;
                   }} />
-              </div>
-              </>}
-              </section>
+              </div>}
               </div>
               <PlayerControls
                 hand={p.config.hand ?? "both"}

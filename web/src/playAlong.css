@@ -7,18 +7,20 @@
   gap: 24px;
 }
 .selection-controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 8px 0; }
- .player-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px; align-items: start; }
-.player-tool-section { min-width: 0; border: 1px solid #d8dfda; border-radius: 6px; overflow: hidden; }
+.player-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; padding: 12px 16px; align-items: start; background: #f6f8f6; border-bottom: 1px solid #d8dfda; }
+.player-tool-section { min-width: 0; }
 .player-tool-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; background: #e8eee9; color: #26392f; font-size: .85rem; }
 .player-tool-heading label { display: flex; align-items: center; gap: 4px; font-size: .8rem; }
-.player-tool-body { padding: 8px 10px; }
-.player-tool-section .fingering-controls, .player-tool-section .selection-controls { display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin: 0; padding: 0; }
+.player-tool-body { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; }
+.player-tool-section .fingering-controls, .player-tool-section .selection-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; }
 .player-tool-section .selection-controls { padding: 8px 10px; }
-.player-tool-section .fingering-controls label { justify-content: space-between; white-space: nowrap; }
+.player-tool-section .fingering-controls label { gap: 8px; white-space: nowrap; }
 .player-tool-section button, .player-tool-section select { padding: 6px 8px; min-height: 30px; font-size: .8rem; }
-.player-tool-body > button { width: 100%; margin-top: 6px; }
+.player-tool-body > button { width: auto; margin: 0; }
 .player-tool-section small { font-size: .72rem; line-height: 1.4; }
-.player-tool-section .selection-overview { height: 52px; margin: 4px 20px 10px; }
+.player-tools-grid > .selection-overview { grid-column: 1 / -1; height: 52px; margin: 0 16px 4px; }
+.player-tool-section button, .player-tool-section select { width: auto; flex: 0 0 auto; }
+.song-player > .practice-score { margin-inline: clamp(12px, 1.5vw, 24px); }
 .player-tool-body[hidden] { display: none; }
 @media (max-width: 680px) { .player-tools-grid { grid-template-columns: 1fr; } }
 .selection-controls small { flex-basis: 100%; color: #59665e; }
@@ -273,3 +275,54 @@
 .fingering-controls label { display:flex; gap:.4rem; align-items:center; }
 .fingering-editor { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; flex-basis:100%; }
 .fingering-controls [role=alert] { flex-basis:100%; }
+
+/* Compact desktop practice: score and keys lead; setup stays below them. */
+@media (max-width: 1100px) {
+  .app-shell main:has(.play-along) { display: flex; flex-direction: column; padding: 10px 14px; gap: 8px; }
+  .app-shell main:has(.play-along) .workspace,
+  .app-shell main:has(.play-along) .workspace-stage,
+  .app-shell main:has(.play-along) .play-along,
+  .app-shell main:has(.play-along) .song-workspace { display: contents; }
+  .app-shell .play-along .song-player { order: -3; margin: 0; width: 100%; }
+  .app-shell main:has(.play-along) .piano-panel { order: -2; margin: 0; padding: 0; border: 0; border-radius: 0; width: 100%; max-width: none; background: transparent; }
+  .app-shell .play-along .scoreline { display: none; }
+  .app-shell .play-along .song-library { order: 3; border: 1px solid #39413c; border-radius: 8px; padding: 12px; }
+  .app-shell .play-along .song-settings { margin: 0; }
+  .app-shell .play-along .transport-buttons { margin: 0; }
+  .app-shell .play-along .song-status { margin: 0; }
+  .app-shell .play-along .song-status.inactive { display: none; }
+  .app-shell .play-along .song-workspace > label { margin: 0; }
+  .app-shell .play-along .song-workspace > [role="alert"] { order: -4; }
+  .app-shell main:has(.play-along) .piano-legend { display: none; }
+  .app-shell main:has(.play-along) .piano-heading { margin: 0 0 4px; }
+  .app-shell main:has(.play-along) .piano-keys { height: 114px; }
+  .app-shell main:has(.play-along) .piano-key.white { height: 110px; }
+  .app-shell main:has(.play-along) .piano-key.black { height: 70px; }
+}
+
+/* Desktop windows: use the available width without squeezing transport controls. */
+@media (min-width: 900px) {
+  .app-shell main { padding: clamp(12px, 2vh, 28px) clamp(16px, 2vw, 40px); }
+  .app-shell .side-nav { width: clamp(170px, 15vw, 215px); }
+  .app-shell .side-nav a { white-space: nowrap; padding-inline: 10px; gap: 8px; }
+  .song-library header { flex-wrap: wrap; gap: 4px 8px; }
+  .play-along { grid-template-columns: clamp(190px, 19vw, 250px) minmax(0, 1fr); gap: clamp(12px, 1.5vw, 24px); padding: clamp(12px, 1.5vw, 20px); }
+  .app-shell .play-along .song-workspace { display: block; }
+  .app-shell .play-along .transport-buttons { margin: 8px 0; gap: 8px; }
+  .app-shell .play-along .song-settings { margin: 8px 0; }
+  .song-library { padding-right: clamp(10px, 1.2vw, 20px); }
+  .app-shell .play-along .song-list { max-height: clamp(150px, 25vh, 360px); }
+  .workspace, .piano-panel { max-width: 1600px; margin-inline: auto; }
+  .global-toolbar { flex-wrap: wrap; }
+  .toolbar-controls { flex-wrap: wrap; }
+  .focus-mode main { padding: 0 clamp(12px, 2vw, 32px) 12px; }
+  .focus-mode .workspace, .focus-mode .piano-panel { max-width: none; }
+}
+@media (min-width: 900px) and (max-height: 900px) {
+  .focus-mode-bar { padding: 6px 12px; }
+  .focus-mode .piano-panel { margin-top: 8px; padding: 8px 0; }
+  .player-tools-grid { padding: 6px; gap: 6px; }
+  .piano-panel { padding: 10px 14px; }
+  .piano-heading { margin-bottom: 4px; }
+  .piano-tools { margin-bottom: 6px; gap: 8px; }
+}

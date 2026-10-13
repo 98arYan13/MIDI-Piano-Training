@@ -4,8 +4,19 @@ import {
   keyboardWidth,
   computerMap,
   VirtualInput,
+  fittingKeyboardSize,
 } from "./pianoModel";
 describe("global virtual piano ownership", () => {
+  it("fits the largest keyboard range with playable white-key widths", () => {
+    for (const width of [400, 600, 740, 900, 1280]) {
+      const count = fittingKeyboardSize(width);
+      const whites = pianoKeys(count).filter(key => !key.black).length;
+      expect(whites * 24).toBeLessThanOrEqual(width);
+      expect(pianoKeys(count).some(key => key.midi === 60)).toBe(true);
+      const larger = [25, 32, 37, 49, 61, 76, 88].find(size => size > count);
+      if (larger) expect(pianoKeys(larger).filter(key => !key.black).length * 24).toBeGreaterThan(width);
+    }
+  });
   it("offers contiguous keyboard sizes containing middle C and white endpoints", () => {
     for (const count of [25, 32, 37, 49, 61, 76, 88]) {
       const keys = pianoKeys(count);

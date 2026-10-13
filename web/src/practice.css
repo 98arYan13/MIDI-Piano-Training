@@ -16,8 +16,15 @@
   flex-wrap: wrap;
 }
 .piano-heading {
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 16px;
+}
+.piano-options { width: 100%; }
+.piano-options > summary { display: none; }
+@media (max-width: 1100px) {
+  .piano-options { position: relative; width: auto; order: -1; }
+  .piano-options > summary { display: list-item; cursor: pointer; padding: 9px 12px; border: 1px solid #394040; border-radius: 7px; background: #242929; }
+  .piano-options > .piano-tools { position: absolute; top: 100%; right: 0; z-index: 30; width: min(400px, calc(100vw - 48px)); margin: 4px 0; padding: 12px; background: #19221e; border: 1px solid #526151; border-radius: 8px; }
 }
 .piano-heading h2 {
   margin: 6px 0;

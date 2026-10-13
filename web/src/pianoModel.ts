@@ -35,6 +35,10 @@ export const pianoKeys = (count = 88) => {
   });
 };
 export const keyboardWidth = (width: number) => Math.max(1040, width);
+export const fittingKeyboardSize = (width: number) =>
+  [...keyboardSizes].reverse().find(count =>
+    pianoKeys(count).filter(key => !key.black).length * 24 <= width,
+  ) ?? 25;
 export const computerMap: Record<string, number> = {
   KeyA: 0,
   KeyW: 1,

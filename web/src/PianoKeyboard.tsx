@@ -4,6 +4,7 @@ import {
   computerMap,
   keyboardWidth,
   keyboardSizes,
+  fittingKeyboardSize,
   pianoKeys,
   VirtualInput,
 } from "./pianoModel";
@@ -12,6 +13,14 @@ import type { NativeState } from "./types";
 
 export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?: "play" | "staff" | "ear"; focusMode?: boolean }) {
   const native = useNative();
+  const [compact, setCompact] = useState(() => matchMedia("(max-width: 1100px)").matches);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  useEffect(() => {
+    const query = matchMedia("(max-width: 1100px)");
+    const change = () => setCompact(query.matches);
+    query.addEventListener("change", change);
+    return () => query.removeEventListener("change", change);
+  }, []);
   const hinted = hintContext === "play" ? native.state?.transport
     : hintContext === "staff" ? native.state?.practice
     : hintContext === "ear" ? native.state?.ear : undefined;
@@ -144,7 +153,9 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
     setWidth(el.clientWidth);
     return () => observer.disconnect();
   }, [hidden, focusMode]);
-  const keys = pianoKeys(focused ? 88 : size).filter(
+  const autoSize = compact && hintContext === "play" && !focused && size === 88;
+  const displaySize = autoSize ? fittingKeyboardSize(width) : size;
+  const keys = pianoKeys(focused ? 88 : displaySize).filter(
     (k) =>
       !focused ||
       (k.midi >= Math.max(21, 12 * (octave + 1) - 12) &&
@@ -153,7 +164,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
   const firstLeft = keys[0]?.left ?? 0,
     whites = keys.filter((k) => !k.black).length;
   const span =
-      focused || size < 88
+      autoSize ? width : focused || size < 88
         ? Math.max(width, whites * 30)
         : keyboardWidth(width),
     unit = span / whites;
@@ -174,16 +185,12 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
   return (
     <section className="piano-panel" aria-label="Global piano keyboard">
       <div className="piano-heading">
-        <div>
-          <span className="eyebrow">ALWAYS WITH YOU</span>
-          <h2>Piano keyboard</h2>
-        </div>
         <button onClick={() => configure({ hidden: !hidden })} aria-expanded={!hidden}>
           {hidden ? "Show keyboard" : "Hide keyboard"}
         </button>
-      </div>
-      {(!hidden || focusMode) && (
-        <>
+        <details className="piano-options" open={!compact || toolsOpen}
+          onToggle={e => { if (compact) setToolsOpen(e.currentTarget.open); }}>
+          <summary>Keyboard options</summary>
           <div className="piano-tools">
             <select
               aria-label="Keyboard size"
@@ -199,7 +206,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
               )}
               {keyboardSizes.map((count) => (
                 <option key={count} value={count}>
-                  {count === 88 ? "Full · 88 keys" : `${count} keys`}
+                  {count === 88 ? (compact && hintContext === "play" ? `Auto · ${displaySize} keys` : "Full · 88 keys") : `${count} keys`}
                 </option>
               ))}
             </select>
@@ -257,6 +264,10 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
               Sustain {pedal ? "down" : "up"}
             </button>
           </div>
+        </details>
+      </div>
+      {(!hidden || focusMode) && (
+        <>
           <div className="piano-scroll" ref={scroll}>
             <div
               className="piano-keys"

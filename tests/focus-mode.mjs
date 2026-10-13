@@ -23,6 +23,28 @@ try {
   await page.goto(url + '/#play');
   await page.getByRole('button', { name: /Mary Had a Little Lamb.*sec/ }).click();
   await page.locator('.score-measure .vf-stavenote').first().waitFor();
+  const savedSize = (await state()).preferences.keyboard.size;
+  for (const width of [787, 1024, 1100]) {
+    await page.setViewportSize({ width, height: 1039 });
+    await page.waitForTimeout(100);
+    const layout = await page.evaluate(() => {
+      const score = document.querySelector('.song-player').getBoundingClientRect();
+      const piano = document.querySelector('.piano-panel').getBoundingClientRect();
+      const library = document.querySelector('.song-library').getBoundingClientRect();
+      const keys = document.querySelector('.piano-keys');
+      return { gap: piano.top - score.bottom, libraryBelow: library.top >= piano.bottom,
+        overflow: document.documentElement.scrollWidth > innerWidth,
+        keyCount: keys.querySelectorAll('.piano-key').length,
+        statsHidden: getComputedStyle(document.querySelector('.scoreline')).display === 'none' };
+    });
+    assert(layout.gap >= 0 && layout.gap <= 12, `score/keys stay adjacent at ${width}`);
+    assert(layout.libraryBelow && layout.statsHidden && !layout.overflow);
+    assert(layout.keyCount < 88, 'automatic keyboard fits compact width');
+    assert.equal((await state()).preferences.keyboard.size, savedSize, 'resize preserves native preferences');
+  }
+  await page.getByText('Keyboard options', { exact: true }).click();
+  assert(await page.getByLabel('Keyboard size', { exact: true }).isVisible());
+  await page.setViewportSize({ width: 1530, height: 1039 });
   await command('transport.configure', { mode: 'wait', hints: true, hearPractice: false, hand: 'right', spacing: 140, speed: .8 });
   await command('metronome.start');
   await page.getByLabel('Keyboard size', { exact: true }).selectOption('49');
@@ -61,6 +83,16 @@ try {
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await until(async () => (await state()).transport.waiting);
   assert.equal(await page.locator('.key-hint').count(), 0);
+  for (const [width, height] of [[1024,768], [1258,1039], [1366,768], [1920,1080], [2560,1440]]) {
+    await page.setViewportSize({ width, height });
+    await page.waitForTimeout(100);
+    const layout = await page.evaluate(() => {
+      const piano = document.querySelector('.piano-panel').getBoundingClientRect();
+      return { overflow: document.documentElement.scrollWidth > innerWidth, pianoBottom: piano.bottom, height: innerHeight };
+    });
+    assert.equal(layout.overflow, false, `desktop focus overflow at ${width}x${height}`);
+    assert(layout.pianoBottom <= layout.height, `score and keyboard fit at ${width}x${height}`);
+  }
   await page.setViewportSize({ width: 390, height: 844 });
   assert(await page.getByRole('button', { name: 'Return to Play Along', exact: true }).isVisible());
   assert(await page.locator('.piano-scroll').isVisible());

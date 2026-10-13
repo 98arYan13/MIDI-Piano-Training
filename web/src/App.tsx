@@ -9,10 +9,10 @@ import { StaffPractice } from "./StaffPractice";
 import { PlayAlong } from "./PlayAlong";
 import "./style.css";
 const routes = [
-  ["staff", "Staff", "01"],
-  ["ear", "Ear Training", "02"],
-  ["flash", "Flash Cards", "03"],
-  ["play", "Play Along", "04"],
+  ["play", "Play Along", "01"],
+  ["staff", "Staff", "02"],
+  ["ear", "Ear Training", "03"],
+  ["flash", "Flash Cards", "04"],
   ["guide", "Guide", "05"],
 ] as const;
 // Local text drafts allow normal editing; only valid committed values reach C++.
@@ -455,14 +455,14 @@ function Workspace({ route, onFocus }: { route: string; onFocus: () => void }) {
   if (route === "guide") return <Guide />;
   const r = routes.find((r) => r[0] === route) ?? routes[0];
   return (
-    <section className="workspace">
-      <div className="workspace-heading">
+    <section className="workspace" aria-label={r[1]}>
+      {route !== "play" && <div className="workspace-heading">
         <div>
           <span className="eyebrow">PRACTICE ROOM / {r[2]}</span>
           <h1>{r[1]}</h1>
         </div>
         <span className="workspace-tag">LOCAL PIANO</span>
-      </div>
+      </div>}
       <div className="workspace-stage">
         {route === "staff" ? (
           <StaffPractice />
