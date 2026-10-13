@@ -129,7 +129,7 @@
   },
   {
     "path": "assets/music/LICENSE.md",
-    "sha256": "380E5BE7E28011A5A6E5AC89D8083F7F89BC6B82F89CA5332880D6C1E5F7A79B"
+    "sha256": "3764D84E420DDA02AB1990E4B135E577A60043FA0C72F869E40FEDD589A39967"
   },
   {
     "path": "assets/ear/README.md",
@@ -150,6 +150,10 @@
   {
     "path": "docs/licenses/threadpool-zlib.txt",
     "sha256": "8AFBC5160151ECC1FC27DCE6CB03E4AF8FB1033D59848107CE7561161242B0C7"
+  },
+  {
+    "path": "docs/licenses/FINGERING-NOTICES.txt",
+    "sha256": "BDAE2538E41DC2D64CBB259D17F5BF0EDC31FB1393B13BED3CD70DA0276E3E4A"
   },
   {
     "path": "docs/licenses/faust-attribution.txt",

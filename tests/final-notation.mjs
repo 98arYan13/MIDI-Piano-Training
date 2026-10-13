@@ -13,7 +13,7 @@ const until=async fn=>{for(let i=0;i<150;i++){try{if(await fn())return;}catch{}a
 const failures=[],proof={flash:[],seek:[]};
 const check=(name,fn)=>{try{fn();}catch(e){failures.push(name+': '+e.message);}};
 try{
- child=spawn('build/native/native/sightreading.exe',['--port','18785','--data-dir',data,'--no-tray'],{stdio:'pipe'});child.stdout.on('data',s=>log+=s);child.stderr.on('data',s=>log+=s);
+ child=spawn(process.env.SR_FINGERING_EXECUTABLE ?? 'build/native/native/sightreading.exe',['--port','18785','--data-dir',data,'--no-tray'],{stdio:'pipe'});child.stdout.on('data',s=>log+=s);child.stderr.on('data',s=>log+=s);
  await until(async()=> (await state()).pianoReady);
  browser=await chromium.launch({executablePath:browserPath(),headless:true});const page=await browser.newPage({viewport:{width:1265,height:713}});
  await page.goto(url+'/#flash');await page.getByRole('img',{name:'Chord identification notation'}).waitFor({timeout:500}).catch(()=>{});

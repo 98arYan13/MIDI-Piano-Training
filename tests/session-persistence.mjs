@@ -21,7 +21,7 @@ async function command(type, params = {}) {
   return reply.result;
 }
 async function start() {
-  child = spawn('build/native/native/sightreading.exe', ['--port', '18792', '--data-dir', data, '--no-tray'], { stdio: 'pipe' });
+  child = spawn(process.env.SR_FINGERING_EXECUTABLE ?? 'build/native/native/sightreading.exe', ['--port', '18792', '--data-dir', data, '--no-tray'], { stdio: 'pipe' });
   child.stderr.on('data', chunk => errors.push(chunk.toString()));
   for (let i = 0; i < 150; i++) {
     try { if ((await fetch(url + '/api/v1/status')).ok) return; } catch {}

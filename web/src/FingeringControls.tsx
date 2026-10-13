@@ -54,6 +54,7 @@ export function FingeringControls({
         }
         if (own && s.job.state === "failed")
           setError(s.job.error?.message ?? "Fingering generation failed.");
+        else setError("");
       } catch (e) {
         if (epoch.current === generation) setError((e as Error).message);
       }
@@ -121,6 +122,7 @@ export function FingeringControls({
         }
         if (s.job.songId === songId && s.job.state === "failed")
           setError(s.job.error?.message ?? "Fingering generation failed.");
+        else setError("");
       } catch (e) {
         if (epoch.current === generation) {
           setError((e as Error).message);

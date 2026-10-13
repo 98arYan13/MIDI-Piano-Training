@@ -7,7 +7,7 @@ import {chromium} from '../web/node_modules/playwright/index.mjs';
 import {browserPath} from './browser-path.mjs';
 const data = await mkdtemp(join(tmpdir(), 'sr-tutorials-'));
 const url = 'http://127.0.0.1:18784';
-const child = spawn('build/native/native/sightreading.exe', ['--port','18784','--data-dir',data], {stdio:'pipe'});
+const child = spawn(process.env.SR_FINGERING_EXECUTABLE ?? 'build/native/native/sightreading.exe', ['--port','18784','--data-dir',data], {stdio:'pipe'});
 let browser, output = '', sequence = 0;
 child.stderr.on('data', chunk => output += chunk);
 const command = async (type, params = {}) => {

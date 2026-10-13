@@ -167,6 +167,7 @@ try {
   ).body.notes;
   commands.length = 0;
   let pollFailed = false;
+  let recoveredPoll = false;
   await page.route(`**/api/v1/songs/${id}/fingering`, async (route) => {
     if (route.request().method() === "GET" && !pollFailed) {
       const response = await route.fetch();
@@ -183,6 +184,13 @@ try {
         return;
       }
       await route.fulfill({ response });
+    } else if (pollFailed && !recoveredPoll && route.request().method() === "GET") {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.revision = 0; // Recover without a revision-triggered remount.
+      body.job.state = "running";
+      recoveredPoll = true;
+      await route.fulfill({ response, body: JSON.stringify(body) });
     } else await route.continue();
   });
   await page
@@ -216,6 +224,8 @@ try {
     .getByRole("button", { name: "Regenerate fingerings", exact: true })
     .waitFor();
   assert(pollFailed);
+  assert(recoveredPoll);
+  await until(async () => (await page.getByRole("alert").count()) === 0);
   await page.unroute(`**/api/v1/songs/${id}/fingering`);
   const generated = (await api("songs/" + id)).body;
   generated.notes = (
@@ -547,6 +557,17 @@ try {
     .filter({ hasText: "setup-fingering.ps1" })
     .waitFor();
   await page.unroute("**/api/v1/songs/starter-five-finger/fingering/generate");
+  // Zero is a valid summary count, including a generated run with no eligible notes.
+  await page.route(stalePath, async route => {
+    const response = await route.fetch();
+    const body = await response.json();
+    body.summary = { ...body.summary, assigned: 0, unresolved: 0, unsupported: 0 };
+    await route.fulfill({ response, body: JSON.stringify(body) });
+  });
+  await page.getByRole("button", { name: /Fingering QA.*sec/i }).click();
+  await page.getByRole("button", { name: /Five Finger Patterns.*sec/ }).click();
+  await page.getByText("0 assigned · 0 unresolved · 0 unsupported", { exact: true }).waitFor();
+  await page.unroute(stalePath);
   await stopped();
   launch();
   await until(async () => {

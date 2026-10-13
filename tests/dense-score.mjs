@@ -8,7 +8,7 @@ import { browserPath } from "./browser-path.mjs";
 const data = await mkdtemp(join(tmpdir(), "sr-dense-score-")),
   url = "http://127.0.0.1:18787";
 const service = spawn(
-  "build/native/native/sightreading.exe",
+  process.env.SR_FINGERING_EXECUTABLE ?? "build/native/native/sightreading.exe",
   ["--port", "18787", "--data-dir", data, "--no-tray"],
   { stdio: "pipe" },
 );

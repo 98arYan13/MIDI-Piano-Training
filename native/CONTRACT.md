@@ -163,3 +163,5 @@ a final save already committed makes cancellation return 409. A worker owns
 restricted inherited pipes and a Windows kill-on-close job, uses protocol v1,
 256 MiB frame maximum, 4 KiB stderr retention, 30-second inactivity and 15-minute
 total deadlines. Completed/failed/cancelled state is bounded and not persisted.
+
+Portable inference resolves `fingering/worker.py` and `.tools/fingering/python/python.exe` relative to the native application root, never PATH. Pinned left/right weights live in `.tools/fingering/models`. The worker is CPU-only, uses isolated Python and releases its process after each terminal job. Wheels, archives, compilers, download caches and training materials are not needed at runtime. Release manifests hash the packaged source, runtime, notices and weights; checkpoints are additionally compared to the recorded upstream pins.

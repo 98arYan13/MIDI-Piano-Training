@@ -31,9 +31,9 @@ $paths=@(
  'web/node_modules/react/LICENSE','web/node_modules/react-dom/LICENSE','web/node_modules/scheduler/LICENSE','web/node_modules/vexflow/LICENSE',
  'assets/piano/LICENSE','assets/piano/ATTRIBUTION.md','assets/music/LICENSE.md','assets/ear/README.md',
  'docs/licenses/bravura-OFL.txt','docs/licenses/academico-OFL.txt','docs/licenses/httplib-MIT.txt','docs/licenses/threadpool-zlib.txt',
- 'docs/licenses/faust-attribution.txt','docs/licenses/faust-rbj-exception.txt','docs/licenses/faust-library-LGPL.txt','docs/licenses/faust-STK-4.3.txt')
+ 'docs/licenses/FINGERING-NOTICES.txt','docs/licenses/faust-attribution.txt','docs/licenses/faust-rbj-exception.txt','docs/licenses/faust-library-LGPL.txt','docs/licenses/faust-STK-4.3.txt')
 $notice="Sight Reading runtime third-party notices`r`nSource pins: native/dependencies.json, native/service-dependencies.json, native/toolchain.json, web/package-lock.json.`r`nStatic sampler dependencies are included conservatively; optional JACK/Qt/libsndfile/fmidi/cxxopts and build-only Catch2/npm tools are not distributed.`r`nSQLite 3.53.0 is in the public domain (https://sqlite.org/copyright.html). Windows/UCRT system DLLs are supplied by Windows, not this package.`r`n"
 $manifest=@()
-foreach($path in $paths){$file=Join-Path $root $path;if(!(Test-Path $file)){throw "Missing notice source $path"};$notice+="`r`n===== $path =====`r`n"+(Get-Content -Raw $file)+"`r`n";$manifest+=@{path=$path;sha256=(Get-FileHash $file).Hash}}
+foreach($path in $paths){$file=Join-Path $root $path;if(!(Test-Path $file)){throw "Missing notice source $path"};$notice+="`r`n===== $path =====`r`n"+(Get-Content -Raw $file)+"`r`n";$manifest+=[ordered]@{path=$path;sha256=(Get-FileHash $file).Hash}}
 [IO.File]::WriteAllText((Join-Path $out 'THIRD-PARTY-NOTICES.txt'),$notice)
 $manifest | ConvertTo-Json | Set-Content "$out/notice-sources.json"

@@ -1,4 +1,4 @@
-param([switch]$Offline, [switch]$PinnedMirror)
+param([switch]$Offline, [switch]$PinnedMirror, [switch]$ConfirmRedistributionRights)
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $manifestPath = Join-Path $projectRoot 'fingering/dependencies.json'
@@ -62,5 +62,14 @@ if ($Offline) {
 if ($LASTEXITCODE -ne 0) { throw 'Pinned ArGNN wheel download failed' }
 & (Join-Path $pythonRoot 'python.exe') -m pip install --no-index --find-links $wheelRoot --only-binary=:all: --require-hashes -r $requirements
 if ($LASTEXITCODE -ne 0) { throw 'Pinned ArGNN wheel installation failed' }
+if ($ConfirmRedistributionRights) {
+    & "$PSScriptRoot/setup-fingering-msvc.ps1" -Offline:$Offline -ConfirmRedistributionRights
+}
+foreach ($dll in $manifest.msvcRuntime.files.PSObject.Properties) {
+    $path = Join-Path $pythonRoot $dll.Name
+    if (-not (Test-Path $path) -or (Get-FileHash $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $dll.Value) {
+        throw 'Missing or invalid project-local MSVC runtime. Applicable Visual Studio redistribution rights must be confirmed with -ConfirmRedistributionRights; system DLLs are not portable evidence.'
+    }
+}
 & (Join-Path $pythonRoot 'python.exe') -c "import sys,warnings; warnings.filterwarnings('ignore',message='Failed to initialize NumPy:',category=UserWarning); import torch; assert sys.version_info[:3] == (3,11,9); assert torch.__version__ == '2.8.0+cpu'; print(sys.version); print(torch.__version__)"
 if ($LASTEXITCODE -ne 0) { throw 'Installed Python/Torch runtime failed validation' }

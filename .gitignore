@@ -14,3 +14,5 @@ assets/piano/Data/
 assets/piano/upstream.sfz
 assets/piano/downloads/
 assets/music/tutorials/
+
+fingering/__pycache__/
