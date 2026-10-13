@@ -104,6 +104,27 @@ class FingeringModelTests(unittest.TestCase):
         self.assertEqual(assigned["future-anchor"], 1)
         self.assertTrue(all(assigned[f"held-{i}"] not in (None, 1) for i in range(4)))
 
+    def test_future_same_pitch_manual_anchor_forces_held_digit(self):
+        notes = [note("held", 60, 0, 10000)]
+        notes += [note(f"short-{i}", 70, 10 + i * 10, 20 + i * 10)
+                  for i in range(300)]
+        notes.append(note("future-anchor", 60, 4000, 4100, manual=5))
+        result = generate(self.request(notes), lambda *_: None, models=self.models)
+        assigned = {a["id"]: a["finger"] for a in result["assignments"]}
+        self.assertEqual(assigned["held"], 5)
+        self.assertEqual(assigned["future-anchor"], 5)
+
+    def test_conflicting_future_same_pitch_anchors_leave_held_unresolved(self):
+        notes = [note("held", 60, 0, 10000),
+                 note("first-anchor", 60, 100, 200, manual=1),
+                 note("second-anchor", 60, 300, 400, manual=5)]
+        result = generate(self.request(notes), lambda *_: None, models=self.models)
+        assigned = {a["id"]: a for a in result["assignments"]}
+        self.assertIsNone(assigned["held"]["finger"])
+        self.assertTrue(assigned["held"].get("reason"))
+        self.assertEqual(assigned["first-anchor"]["finger"], 1)
+        self.assertEqual(assigned["second-anchor"]["finger"], 5)
+
     def test_missing_or_corrupt_checkpoint(self):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaisesRegex(RuntimeError, "checkpoint"):

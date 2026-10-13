@@ -236,10 +236,14 @@ def _valid_fingers(notes: list[dict], path: list[int | None], index: int,
                    reservations: list[tuple[int, int, int, int]]) -> list[int]:
     pitch = int(notes[index]["midiNote"])
     occupied: dict[int, int] = {}
+    reserved_same_pitch = set()
     start, end = int(notes[index]["startTick"]), int(notes[index]["endTick"])
     for reserved_pitch, reserved_start, reserved_end, finger in reservations:
-        if reserved_pitch != pitch and start < reserved_end and reserved_start < end:
-            occupied[finger] = reserved_pitch
+        if start < reserved_end and reserved_start < end:
+            if reserved_pitch == pitch:
+                reserved_same_pitch.add(finger)
+            else:
+                occupied[finger] = reserved_pitch
     for active_pitch, fingers in incoming.items():
         if active_pitch == pitch:
             continue
@@ -254,6 +258,7 @@ def _valid_fingers(notes: list[dict], path: list[int | None], index: int,
             if previous_pitch != pitch:
                 occupied[finger] = previous_pitch
     same_pitch = set(incoming.get(pitch, set()))
+    same_pitch.update(reserved_same_pitch)
     same_pitch.update(
         finger for previous_index, finger in enumerate(path)
         if finger is not None and int(notes[previous_index]["midiNote"]) == pitch
