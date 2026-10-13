@@ -7,7 +7,7 @@ import { chromium } from '../web/node_modules/playwright/index.mjs';
 import { browserPath } from './browser-path.mjs';
 const data = await mkdtemp(join(tmpdir(), 'sr-focus-'));
 const url = 'http://127.0.0.1:18788';
-const service = spawn('build/native/native/sightreading.exe', ['--port', '18788', '--data-dir', data], { stdio: 'pipe' });
+const service = spawn(process.env.SR_FINGERING_EXECUTABLE ?? 'build/native/native/sightreading.exe', ['--port', '18788', '--data-dir', data], { stdio: 'pipe' });
 let browser, id = 0;
 const state = async () => (await (await fetch(url + '/api/v1/status')).json());
 const until = async fn => { for (let i = 0; i < 150; i++) { if (await fn()) return; await new Promise(r => setTimeout(r,100)); } throw Error('Focus condition timeout'); };

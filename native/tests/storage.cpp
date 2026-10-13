@@ -1,7 +1,22 @@
 #include <catch2/catch_test_macros.hpp>
 #include <chrono>
 #include <sightreading/Storage.hpp>
+#include <sightreading/Preferences.hpp>
 using namespace sightreading;
+TEST_CASE("Fingering density preferences migrate validate and persist") {
+  auto old = defaultPreferences();
+  old.erase("fingeringTips");
+  REQUIRE(updatePreferences(old, nlohmann::json::object())["fingeringTips"] == "medium");
+  auto dir = std::filesystem::temp_directory_path() / ("sr-density-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+  for (auto mode : {"full", "medium", "pro"}) {
+    auto prefs = updatePreferences(old, {{"fingeringTips", mode}});
+    { Storage s(dir); s.save("preferences", prefs); }
+    { Storage s(dir); REQUIRE(s.load("preferences")["fingeringTips"] == mode); }
+  }
+  REQUIRE_THROWS_AS(updatePreferences(old, {{"fingeringTips", "none"}}), std::invalid_argument);
+  REQUIRE_THROWS_AS(updatePreferences(old, {{"fingeringTips", 1}}), std::invalid_argument);
+  std::filesystem::remove_all(dir);
+}
 TEST_CASE("SQLite settings survive restart with complete nested values") {
   auto dir =
       std::filesystem::temp_directory_path() /

@@ -8,7 +8,7 @@ import { browserPath } from "./browser-path.mjs";
 
 const data = await mkdtemp(join(tmpdir(), "sr-selection-"));
 const url = "http://127.0.0.1:18782";
-const service = spawn("build/native/native/sightreading.exe", ["--port", "18782", "--data-dir", data], { stdio: "pipe" });
+const service = spawn(process.env.SR_FINGERING_EXECUTABLE ?? "build/native/native/sightreading.exe", ["--port", "18782", "--data-dir", data], { stdio: "pipe" });
 let browser, output = "", id = 0;
 service.stderr.on("data", s => output += s);
 const state = async () => (await (await fetch(url + "/api/v1/status")).json());

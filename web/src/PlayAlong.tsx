@@ -9,6 +9,7 @@ import { NumericInput } from "./NumericInput";
 import { PlayerControls, RestartButton } from "./PlayerControls";
 import { LoopMarkers, type LoopSelection } from "./LoopMarkers";
 import { returnPosition } from "./clock";
+import { FingeringControls } from "./FingeringControls";
 export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const native = useNative(),
     p = native.state?.transport;
@@ -24,6 +25,8 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const [song, setSong] = useState<Song | null>(null),
     [notes, setNotes] = useState<TimelineNote[]>([]),
     [error, setError] = useState("");
+  const activeSong = useRef("");
+  const [selectedFingerNotes, setSelectedFingerNotes] = useState<string[] | null>(null);
   const run = async (type: string, params: Record<string, unknown> = {}) => {
     setError("");
     try {
@@ -33,20 +36,28 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
     }
   };
   const choose = async (s: Song) => {
+    activeSong.current=s.id;
+    setSelectedFingerNotes(null);
     setSeekPreview(null);
     setNotes([]);
     await run("transport.load", { id: s.id });
     try {
       // Library rows are summaries; engraving requires the complete meter/tempo/key maps.
-      setSong(await songApi<Song>(`/${s.id}`));
-    } catch (e) { setError((e as Error).message); }
+      const loaded=await songApi<Song>(`/${s.id}`);
+      if(activeSong.current===s.id)setSong(previous=>previous?.id===loaded.id && (previous.fingeringRevision ?? 0)>(loaded.fingeringRevision ?? 0) ? previous : loaded);
+    } catch (e) { if(activeSong.current===s.id)setError((e as Error).message); }
   };
   useEffect(() => {
-    if (p?.songId && p.songId !== song?.id)
+    let current=true;
+    if (p?.songId && p.songId !== song?.id) {
+      activeSong.current=p.songId;
+      setSelectedFingerNotes(null);
       void songApi<Song>(`/${p.songId}`)
-        .then(setSong)
-        .catch((e) => setError(e.message));
-  }, [p?.songId, song?.id]);
+        .then(s=>{if(current && activeSong.current===s.id)setSong(previous=>previous?.id===s.id && (previous.fingeringRevision ?? 0)>(s.fingeringRevision ?? 0) ? previous : s);})
+        .catch((e) => {if(current)setError(e.message);});
+    }
+    return()=>{current=false;};
+  }, [p?.songId]);
   const bucket = song && p ? Math.floor(p.songTick / (song.ppq * 8)) : 0;
   const [scoreWindow,setScoreWindow]=useState({from:0,to:0});
   useEffect(() => {
@@ -69,11 +80,20 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
             );
         }
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => {if(current)setError(e.message);});
     return () => {
       current = false;
     };
-  }, [song?.id, bucket, p?.revision]);
+  }, [song?.id, song?.fingeringRevision, bucket, p?.revision]);
+  const refreshFingerings = async (revision: number) => {
+    const id=song?.id;
+    if(!id)return;
+    try {
+      const updated=await songApi<Song>(`/${id}`);
+      if(activeSong.current===id && (updated.fingeringRevision ?? 0)>=revision)
+        setSong(previous=>previous?.id===id && (previous.fingeringRevision ?? 0)<=(updated.fingeringRevision ?? 0) ? updated : previous);
+    } catch(e){if(activeSong.current===id)setError((e as Error).message);}
+  };
   const config = (edit: Partial<TransportConfig>) =>
     void run("transport.configure", edit);
   const togglePassage = async (hide: boolean) => {
@@ -392,6 +412,12 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               </div>
             </details>
             <div className="practice-player song-player">
+              <FingeringControls key={song.id} songId={song.id} revision={song.fingeringRevision ?? 0}
+                mode={native.state?.preferences.fingeringTips ?? "medium"}
+                onModeChange={fingeringTips=>void run("preferences.configure",{fingeringTips})}
+                onSaved={revision=>void refreshFingerings(revision)} selectedNoteIds={selectedFingerNotes}
+                onCloseEditor={()=>setSelectedFingerNotes(null)} />
+              <button aria-pressed={selectedFingerNotes!==null} onClick={()=>setSelectedFingerNotes(selectedFingerNotes===null ? [] : null)}>Edit fingering</button>
               <div className="selection-visibility">
                 <label><input type="checkbox" aria-label="Hide passage controls"
                   checked={hidePassage} disabled={hidingPassage}
@@ -434,6 +460,9 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               <div className="practice-score">
                 <EngravedScore
                   key={song.id}
+                  fingeringMode={native.state?.preferences.fingeringTips ?? "medium"}
+                  editingFingering={selectedFingerNotes!==null}
+                  onFingeringNote={setSelectedFingerNotes}
                   song={song}
                   selection={hidePassage ? undefined : selection}
                   fromTick={scoreWindow.from}

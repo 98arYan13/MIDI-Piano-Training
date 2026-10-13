@@ -50,7 +50,7 @@ const stop = async () => {
 };
 const launch = () => {
   child = spawn(
-    "build/native/native/sightreading.exe",
+    process.env.SR_FINGERING_EXECUTABLE ?? "build/native/native/sightreading.exe",
     ["--port", String(port), "--data-dir", data],
     { stdio: "pipe" },
   );

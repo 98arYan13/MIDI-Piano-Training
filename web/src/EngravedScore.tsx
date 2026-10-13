@@ -347,7 +347,7 @@ export function EngravedScore({
               element.setAttribute("data-note-ids", JSON.stringify(pitch.noteIds));
               element.setAttribute("data-finger", visible ? String(pitch.fingering!.finger) : "");
               element.setAttribute("data-fingering-hand", pitch.fingering?.hand ?? "");
-              element.setAttribute("aria-label", `${spelledLabel(pitch.spelling)}, ${pitch.fingering?.hand ?? row.clef} hand, ${visible ? `finger ${pitch.fingering!.finger}` : pitch.fingering?.reason ?? "no visible fingering"}`);
+              element.setAttribute("aria-label", `${spelledLabel(pitch.spelling)}, ${pitch.fingering?.hand ?? (row.clef === "bass" ? "left" : "right")} hand, ${visible ? `finger ${pitch.fingering!.finger}` : pitch.fingering?.reason ?? "no visible fingering"}`);
               if (editingFingering) {
                 element.setAttribute("tabindex", "0");
                 element.setAttribute("role", "button");

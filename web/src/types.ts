@@ -94,6 +94,7 @@ export type NativeState = {
   };
 };
 export type AppPreferences = {
+  fingeringTips?: import("./notationModel").FingeringMode;
   route: "staff" | "ear" | "flash" | "play" | "guide";
   sidebarHidden: boolean;
   focusMode: boolean;
@@ -211,6 +212,8 @@ export type NoteEvent = {
   endTick: number;
 };
 export type Song = {
+  fingeringRevision?: number;
+  fingeringRun?: FingeringRun;
   tutorial?: {
     collection: string;
     level: "Beginner" | "Elementary" | "Intermediate";
@@ -235,6 +238,8 @@ export type Song = {
   meterMap: import("./scoreModel").ScoreMetadata["meterMap"];
   keyMap: import("./scoreModel").ScoreMetadata["keyMap"];
 };
+export type FingeringRun = { assigned: number; unresolved: number; unsupported: number; generatedAt: string; fingerprint: string; model: {name: string; revision: string; checkpointHashes: {left: string; right: string}} };
+export type JobSnapshot = {state: "idle" | "running" | "completed" | "cancelled" | "failed"; jobId: string; songId: string; stage: string; completed: number; total: number; error?: {code: string; message: string}; summary?: FingeringRun};
 export type HintKey = { midiNote: number; hand: "left" | "right" | "both" };
 export type TransportSnapshot = {
   waiting: boolean;

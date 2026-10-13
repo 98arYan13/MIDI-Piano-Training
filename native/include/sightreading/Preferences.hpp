@@ -5,13 +5,14 @@
 
 namespace sightreading {
 inline nlohmann::json defaultPreferences() {
-  return {{"route", "staff"}, {"sidebarHidden", false}, {"focusMode", false},
+  return {{"route", "staff"}, {"sidebarHidden", false}, {"focusMode", false}, {"fingeringTips", "medium"},
           {"keyboard", {{"hidden", false}, {"focused", false}, {"size", 88},
                         {"labels", true}, {"velocity", 90}, {"octave", 4}}}};
 }
 inline nlohmann::json updatePreferences(nlohmann::json current,
                                         const nlohmann::json &patch) {
   if (!patch.is_object()) throw std::invalid_argument("Preferences must be an object.");
+  if (!current.contains("fingeringTips")) current["fingeringTips"] = "medium";
   for (auto it = patch.begin(); it != patch.end(); ++it) {
     if (!current.contains(it.key())) throw std::invalid_argument("Unknown preference.");
     if (it.key() == "keyboard") {
@@ -23,6 +24,9 @@ inline nlohmann::json updatePreferences(nlohmann::json current,
     } else current[it.key()] = it.value();
   }
   const std::set<std::string> routes{"staff", "ear", "flash", "play", "guide"};
+  const std::set<std::string> densities{"full", "medium", "pro"};
+  if (!current["fingeringTips"].is_string() || !densities.contains(current["fingeringTips"].get<std::string>()))
+    throw std::invalid_argument("Fingering tips must be full, medium or pro.");
   if (!current["route"].is_string() || !routes.contains(current["route"].get<std::string>()))
     throw std::invalid_argument("Unknown practice tab.");
   for (auto key : {"sidebarHidden", "focusMode"})
