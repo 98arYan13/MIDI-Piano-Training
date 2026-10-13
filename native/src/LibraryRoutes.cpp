@@ -16,9 +16,89 @@ static void error(httplib::Response &res, const std::exception &e,
                 {{"code", status == 404 ? "song_not_found" : "invalid_song"},
                  {"message", e.what()}}}});
 }
-void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate) {
-  struct WindowCache { std::mutex mutex; std::string id; uint64_t revision{}; std::unique_ptr<SongWindow> window; };
-  // One current song bounds cache memory; storage revision invalidates every edit.
+void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate, FingeringJobs &jobs) {
+  auto fingeringError = [](httplib::Response &res, const std::exception &e) {
+    auto specific=dynamic_cast<const FingeringError*>(&e);
+    int status=specific?specific->status:400;
+    if(!specific && std::string(e.what()).find("Song not found")!=std::string::npos)status=404;
+    res.status=status;output(res,{{"error",{{"code",specific?specific->code:(status==404?"song_not_found":"invalid_fingering")},{"message",e.what()}}}});
+  };
+  http.Post(R"(/api/v1/songs/([^/]+)/fingering/generate)",
+            [&storage, &jobs, fingeringError](const auto &req, auto &res) {
+              try {
+                res.status = 202;
+                output(res, jobs.start(req.matches[1]));
+              } catch (const std::exception &e) {
+                fingeringError(res, e);
+              }
+            });
+  http.Get(R"(/api/v1/songs/([^/]+)/fingering)",
+           [&storage, &jobs, fingeringError](const auto &req, auto &res) {
+             try {
+               auto song = storage.song(req.matches[1]);
+               output(
+                   res,
+                   {{"job", jobs.snapshot()},
+                    {"revision", song.value("fingeringRevision", uint64_t(0))},
+                    {"summary", song.value("fingeringRun", json(nullptr))}});
+             } catch (const std::exception &e) {
+               fingeringError(res, e);
+             }
+           });
+  http.Post(R"(/api/v1/songs/([^/]+)/fingering/cancel)",
+            [&storage, &jobs, fingeringError](const auto &req, auto &res) {
+              try {
+                storage.song(req.matches[1]);
+                auto body = json::parse(req.body);
+                auto job = jobs.snapshot();
+                if (job["songId"] != std::string(req.matches[1]))
+                  throw FingeringError(409, "fingering_stale",
+                                       "Job belongs to another song");
+                jobs.cancel(body.at("jobId").template get<std::string>());
+                output(res, jobs.snapshot());
+              } catch (const std::exception &e) {
+                fingeringError(res, e);
+              }
+            });
+  http.Patch(R"(/api/v1/songs/([^/]+)/fingering)", [&storage, fingeringError](
+                                                       const auto &req,
+                                                       auto &res) {
+    try {
+      auto body = json::parse(req.body);
+      if (!body.is_object() || !body.contains("noteIds") ||
+          !body["noteIds"].is_array() || body["noteIds"].empty() ||
+          !body.contains("finger"))
+        throw std::invalid_argument(
+            "Select numeric note IDs and a finger or null");
+      std::vector<uint64_t> ids;
+      for (auto &id : body["noteIds"]) {
+        if (!id.is_number_integer() || id.template get<int64_t>() < 0)
+          throw std::invalid_argument("Note IDs must be nonnegative integers");
+        ids.push_back(id.template get<uint64_t>());
+      }
+      std::optional<int> finger;
+      if (!body["finger"].is_null()) {
+        if (!body["finger"].is_number_integer() ||
+            body["finger"].template get<int64_t>() < 1 ||
+            body["finger"].template get<int64_t>() > 5)
+          throw std::invalid_argument("Finger must be 1 to 5 or null");
+        finger = body["finger"].template get<int>();
+      }
+      auto song = storage.editFingering(req.matches[1], ids, finger);
+      output(res, {{"revision", song.value("fingeringRevision", uint64_t(0))},
+                   {"summary", song.value("fingeringRun", json(nullptr))}});
+    } catch (const std::exception &e) {
+      fingeringError(res, e);
+    }
+  });
+  struct WindowCache {
+    std::mutex mutex;
+    std::string id;
+    uint64_t revision{};
+    std::unique_ptr<SongWindow> window;
+  };
+  // One current song bounds cache memory; storage revision invalidates every
+  // edit.
   auto cache = std::make_shared<WindowCache>();
   http.Get("/api/v1/songs",
            [&](auto &, auto &res) { output(res, storage.songs()); });

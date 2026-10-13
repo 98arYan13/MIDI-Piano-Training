@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
     if (port < 1 || port > 65535)
       throw std::invalid_argument("Invalid port");
     Storage storage(dir);
+    FingeringJobs fingeringJobs(storage, std::filesystem::current_path());
     // Independent connection: a checkpoint's busy timeout cannot hold the
     // command/library connection mutex and double their own busy timeout.
     Storage sessionStorage(dir);
@@ -500,7 +501,7 @@ int main(int argc, char **argv) {
                        {"message", "Invalid settings JSON"}}}});
       }
     });
-    libraryRoutes(http,storage,engine.sampleRate());
+    libraryRoutes(http,storage,engine.sampleRate(),fingeringJobs);
     // One control-worker drains hooks; per-connection snapshots include bounded
     // event history.
     std::mutex eventMutex;

@@ -148,3 +148,18 @@ Practice and Ear snapshots expose `hintKeys: [{midiNote, hand: "left" | "right" 
 `settings.reset` restores native defaults for all settings and display preferences, preserving the local library and track assignments, selected song and position. Audio reconfiguration uses the existing live-note deferral; no Panic or metronome stop is issued. Exercise settings use the existing configure behavior.
 
 Native transport commands queue `{songId,songTick,config}` immediately. The control pump captures actual playback each second; a dedicated native writer with its own SQLite connection persists a bounded single pending checkpoint outside the playback/scoring pump. Shutdown flushes the final checkpoint before exit. Startup loads the saved song/config/position without starting playback; missing or trashed songs leave the transport empty. Changing song tempo also persists the linked metronome settings. `status.persistenceError` reports periodic checkpoint failures.
+
+Fingering endpoints under `/api/v1/songs/{id}/fingering`: POST `/generate`
+returns 202 and a single global JobSnapshot; GET returns `{job,revision,summary}`;
+POST `/cancel` takes `{jobId}` and returns its cancelled snapshot (409 if terminal
+or owned by another song); PATCH takes numeric integer `noteIds` and `finger`
+1–5 or null and returns `{revision,summary}`. Missing song is 404, missing local
+runtime/weights is 503, busy/stale job is 409, malformed input is 400. The
+native manager starts the pinned application-local isolated Python lazily;
+missing setup never prevents normal service startup. Progress, polling, edits,
+and cancellation issue no engine/transport commands. Cancel and atomic final
+save share one decision lock: a successful cancellation prevents replacement;
+a final save already committed makes cancellation return 409. A worker owns
+restricted inherited pipes and a Windows kill-on-close job, uses protocol v1,
+256 MiB frame maximum, 4 KiB stderr retention, 30-second inactivity and 15-minute
+total deadlines. Completed/failed/cancelled state is bounded and not persisted.
