@@ -2325,6 +2325,8 @@ https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution
 https://visualstudio.microsoft.com/license-terms/vs2022-cruntime/
 Windows/UCRT DLLs are provided by Windows and are not copied into this package.
 
+Default windows-prerequisite packages redistribute none of MSVCP140.dll, VCRUNTIME140.dll or VCRUNTIME140_1.dll (including files originally present in the Python archive). The Microsoft license/DLL extraction mode above applies only to the explicitly confirmed optional bundled mode; it was not used for this release.
+
 
 ===== docs/licenses/faust-attribution.txt =====
 Faust-generated sampler DSP

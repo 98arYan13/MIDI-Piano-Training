@@ -215,6 +215,26 @@ class FingeringModelTests(unittest.TestCase):
                           for f in frames if f["type"] == "progress"][-1],
                          ("decoding", 7, 10))
 
+    def test_missing_torch_dependency_is_actionable_setup_error(self):
+        incoming, outgoing = io.BytesIO(), io.BytesIO()
+        write_frame(incoming, self.request([note(1, 60, 0, 480)]))
+        incoming.seek(0)
+        real_import = __import__
+        def unavailable(name, *args, **kwargs):
+            if name == "fingering.model":
+                raise OSError("WinError 126: DLL cannot load")
+            return real_import(name, *args, **kwargs)
+        with patch("sys.stdin", types.SimpleNamespace(buffer=incoming)), \
+                patch("sys.stdout", types.SimpleNamespace(buffer=outgoing)), \
+                patch("sys.stderr", io.StringIO()), patch("builtins.__import__", side_effect=unavailable):
+            self.assertEqual(main(["--runtime-dir", str(ROOT / ".tools/fingering")]), 1)
+        outgoing.seek(0)
+        result = read_frame(outgoing)
+        self.assertEqual(result["type"], "error")
+        self.assertEqual(result["code"], "setup_missing")
+        self.assertIn("Microsoft Visual C++ v14 x64", result["message"])
+        self.assertIn("normal library and playback remain usable", result["message"])
+
     def test_constant_onsets_and_pitches_are_finite(self):
         notes = [note(i, 60, 100, 200) for i in range(8)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)

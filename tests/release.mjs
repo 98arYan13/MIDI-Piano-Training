@@ -25,6 +25,12 @@ function fingeringMidi(){
  });return Buffer.concat([Buffer.from('4d546864000000060001000201e0','hex'),...tracks]);
 }
 const report={runtimePath:release,cleanPath:join(process.env.SystemRoot,'System32'),hardwareMidi:false,audibleCapture:false};
+async function restartProof(fingerSong,fingerEvents,song){
+ await browser.close();browser=null;await stop();launch();await until(async()=> (await state()).pianoReady);
+ const retained=await(await fetch(url+'/api/v1/songs')).json();assert(retained.some(s=>s.id===song.id&&s.title==='Retained imported library'));report.libraryRetained=true;
+ const persisted=await(await fetch(url+`/api/v1/songs/${fingerSong.id}/events?fromTick=0&toTick=100000`)).json();assert.deepEqual(persisted.notes,fingerEvents.notes);report.fingering.restartRetained=true;await stop();
+ await mkdir('build',{recursive:true});await writeFile('build/release-proof.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+}
 async function measureFrames(page) {
  const frames=await page.evaluate(()=>new Promise(resolve=>{const d=[],start=performance.now();let last=start;function frame(t){d.push(t-last);last=t;if(t-start>=5000)resolve(d.slice(1));else requestAnimationFrame(frame);}requestAnimationFrame(frame);}));
  const sorted=[...frames].sort((a,b)=>a-b);
@@ -56,8 +62,9 @@ try{
  const cold=performance.now();await page.goto(url);await page.getByRole('img',{name:/Staff practice notation/}).waitFor();report.coldUiMs=performance.now()-cold;assert(report.coldUiMs<=2000,`Cold UI ${report.coldUiMs} ms`);
  for(const route of ['ear','flash','play','guide','staff']){await page.goto(url+'/#'+route);await page.getByRole('link',{name:route==='ear'?/Ear Training/:route==='flash'?/Flash Cards/:route==='play'?/Play Along/:route==='guide'?/Guide/:/Staff/}).waitFor();}
  await page.goto(url+'/#play');await page.getByRole('button',{name:/^Portable both hands/}).click();await page.getByLabel('Fingering tips').selectOption('full');await until(async()=>await page.locator('.vf-score-finger').count()>0);
- report.fingering.visibleLabels=await page.locator('.vf-score-finger').count();await page.screenshot({path:'web/test-results/release-fingering.png'});
- await command('practice.configure',{staff:'grand'});await command('practice.start');await pause(300);await page.getByRole('img',{name:/joined treble and bass/}).waitFor();report.staffKeyboardBottom=await page.locator('.piano-keys').evaluate(e=>e.getBoundingClientRect().bottom);await page.screenshot({path:'web/test-results/release-grand.png'}); console.log(JSON.stringify(await page.locator('main,.workspace-heading,.workspace-stage,.staff-practice,.piano-panel,.piano-keys').evaluateAll(es=>es.map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),padding:getComputedStyle(e).padding}))))); assert(report.staffKeyboardBottom<=713,'Grand + keyboard bottom '+report.staffKeyboardBottom);
+ for(const hand of ['left','right'])await until(async()=>await page.locator(".vf-score-finger[data-fingering-hand='"+hand+"']" ).count()>0);await pause(500);report.fingering.visibleLabels=await page.locator('.vf-score-finger').count();await page.locator('.engraved-score').screenshot({path:'web/test-results/release-fingering.png'});
+ if(process.env.SR_RELEASE_FINGERING_ONLY==='1'){report.scope='fingering-package';report.remoteRequests=remote.length;report.browserErrors=errors;assert.deepEqual(remote,[]);assert.deepEqual(errors,[]);await restartProof(fingerSong,fingerEvents,song);}else{
+ await page.goto(url+'/#staff');await command('practice.configure',{staff:'grand'});await command('practice.start');await pause(300);await page.getByRole('img',{name:/joined treble and bass/}).waitFor();report.staffKeyboardBottom=await page.locator('.piano-keys').evaluate(e=>e.getBoundingClientRect().bottom);await page.screenshot({path:'web/test-results/release-grand.png'}); console.log(JSON.stringify(await page.locator('main,.workspace-heading,.workspace-stage,.staff-practice,.piano-panel,.piano-keys').evaluateAll(es=>es.map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),padding:getComputedStyle(e).padding}))))); assert(report.staffKeyboardBottom<=713,'Grand + keyboard bottom '+report.staffKeyboardBottom);
  await page.screenshot({path:'web/test-results/release-grand.png'});
  await page.goto(url+'/#play');await page.getByRole('button',{name:/^Retained imported library/}).click();await command('transport.configure',{practiceEnabled:false,hearPractice:true});await command('transport.seek',{tick:470000});await command('transport.play');await page.getByRole('group',{name:/Song practice notation/}).waitFor();
  report.notationFrames=await measureFrames(page);assert(report.notationFrames.maxMs<250,'Sustained notation stall');
@@ -68,4 +75,5 @@ try{
  await browser.close();browser=null;await stop();launch();await until(async()=> (await state()).pianoReady);const retained=await(await fetch(url+'/api/v1/songs')).json();assert(retained.some(s=>s.id===song.id&&s.title==='Retained imported library'));report.libraryRetained=true;
  const persistedFingerEvents=await(await fetch(url+`/api/v1/songs/${fingerSong.id}/events?fromTick=0&toTick=100000`)).json();assert.deepEqual(persistedFingerEvents.notes,fingerEvents.notes);report.fingering.restartRetained=true;await stop();
  await mkdir('build',{recursive:true});await writeFile('build/release-proof.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
-}finally{await browser?.close();if(child?.exitCode===null){try{await stop();}catch{child.kill();}}await rm(data,{recursive:true,force:true});}
+}
+}catch(error){report.failure=error.message;await writeFile('build/release-proof.json',JSON.stringify(report,null,2));throw error;}finally{await browser?.close();if(child?.exitCode===null){try{await stop();}catch{child.kill();}}await rm(data,{recursive:true,force:true});}

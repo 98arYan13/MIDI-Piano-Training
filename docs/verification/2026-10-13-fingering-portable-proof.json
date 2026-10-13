@@ -1,0 +1,155 @@
+{
+  "runtimePath": "C:\\Users\\Amin\\Documents\\ChatGPT\\Sight Reading\\build\\release\\SightReading-fingering-prerequisite",
+  "cleanPath": "C:\\WINDOWS\\System32",
+  "hardwareMidi": false,
+  "audibleCapture": false,
+  "fingeringPackage": {
+    "requiredFiles": 21,
+    "msvcMode": "windows-prerequisite",
+    "requiredDlls": [
+      "msvcp140.dll",
+      "vcruntime140.dll",
+      "vcruntime140_1.dll"
+    ]
+  },
+  "fingeringPackageFaults": {
+    "corruptionRejected": true,
+    "missingFilesRejected": 6
+  },
+  "portableDocumentCount": 5,
+  "readyMs": 2020.0312000000004,
+  "output": {
+    "actualFrames": 128,
+    "actualSampleRate": 48000,
+    "backend": "WASAPI",
+    "exclusive": false,
+    "latencyMs": 22,
+    "name": "Speakers (Realtek USB Audio)",
+    "requestedFrames": 128,
+    "requestedSampleRate": 48000
+  },
+  "fingering": {
+    "generationMs": 1776.3907,
+    "summary": {
+      "assigned": 32,
+      "fingerprint": "d1ed0104d5e1f857367e78dbce7c6f39f8f0bdb8c3206bc987a3db4d07f250a0",
+      "generatedAt": "2026-10-13T13:28:29Z",
+      "model": {
+        "checkpointHashes": {
+          "left": "949033ef5f8c0a2223ec9c56ec2682be98c0ddb57cfed6c616962df01191d2cf",
+          "right": "6430b4bbf6670571c92036298c863b69288b11d982a6b0665f1b93a7cc99f441"
+        },
+        "name": "ArGNN",
+        "revision": "d0d2f433c926be5e89540cbafe38bf43820ad2d2"
+      },
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    "transportBefore": {
+      "accompanimentError": "",
+      "accuracy": 0,
+      "channelControllers": {},
+      "config": {
+        "a": 0,
+        "accompaniment": "Off",
+        "accompanimentSpacing": 1,
+        "b": 7680,
+        "hand": "both",
+        "hearPractice": true,
+        "hints": false,
+        "loop": false,
+        "mode": "continuous",
+        "practiceEnabled": true,
+        "rate": 1,
+        "spacing": 110,
+        "speed": 1,
+        "toleranceMs": 150
+      },
+      "error": "",
+      "followError": "",
+      "generation": 3,
+      "group": 1,
+      "hintKeys": [],
+      "hits": 0,
+      "misses": 0,
+      "pumpEntries": 0,
+      "retry": false,
+      "return": null,
+      "revision": 1,
+      "sampleRate": 48000,
+      "songId": "import-25803608662300",
+      "songSeconds": 0.5,
+      "songTick": 480,
+      "speed": 1,
+      "state": "paused",
+      "target": [
+        61
+      ],
+      "tempo": 120,
+      "title": "Portable both hands",
+      "waiting": false
+    },
+    "transportAfter": {
+      "accompanimentError": "",
+      "accuracy": 0,
+      "channelControllers": {},
+      "config": {
+        "a": 0,
+        "accompaniment": "Off",
+        "accompanimentSpacing": 1,
+        "b": 7680,
+        "hand": "both",
+        "hearPractice": true,
+        "hints": false,
+        "loop": false,
+        "mode": "continuous",
+        "practiceEnabled": true,
+        "rate": 1,
+        "spacing": 110,
+        "speed": 1,
+        "toleranceMs": 150
+      },
+      "error": "",
+      "followError": "",
+      "generation": 3,
+      "group": 1,
+      "hintKeys": [],
+      "hits": 0,
+      "misses": 0,
+      "pumpEntries": 0,
+      "retry": false,
+      "return": null,
+      "revision": 1,
+      "sampleRate": 48000,
+      "songId": "import-25803608662300",
+      "songSeconds": 0.5,
+      "songTick": 480,
+      "speed": 1,
+      "state": "paused",
+      "target": [
+        61
+      ],
+      "tempo": 120,
+      "title": "Portable both hands",
+      "waiting": false
+    },
+    "visibleLabels": 32,
+    "restartRetained": true
+  },
+  "firstWindowMs": 86.8706000000002,
+  "cachedWindowMedianMs": 2.1262000000006083,
+  "cachedWindowMaxMs": 5.293600000000879,
+  "hostBaselineFrames": {
+    "count": 292,
+    "durationMs": 4946.5,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 16.800000000000182,
+    "maxMs": 99.90000000000003,
+    "fps": 59.03163853229556
+  },
+  "coldUiMs": 324.91899999999987,
+  "scope": "fingering-package",
+  "remoteRequests": 0,
+  "browserErrors": [],
+  "libraryRetained": true
+}

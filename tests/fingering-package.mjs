@@ -1,28 +1,39 @@
 import assert from 'node:assert/strict';
-import {readFile,writeFile,rename} from 'node:fs/promises';
+import {readFile,writeFile,rename,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {join} from 'node:path';
+import {join,basename} from 'node:path';
 
 export async function checkFingeringPackage(root) {
  const pins=JSON.parse(await readFile(join(root,'fingering/dependencies.json'),'utf8'));
  const manifest=JSON.parse(await readFile(join(root,'release-manifest.json'),'utf8'));
  const files=new Map(manifest.files.map(f=>[f.path.replaceAll('\\','/'),f]));
- const required=['fingering/model.py','fingering/worker.py','fingering/requirements.lock','.tools/fingering/python/python.exe','.tools/fingering/python/python311.dll','.tools/fingering/python/python311.zip','.tools/fingering/python/Lib/site-packages/torch/lib/torch_cpu.dll','.tools/fingering/python/msvcp140.dll','docs/licenses/FINGERING-NOTICES.txt'];
+ const mode=JSON.parse(await readFile(join(root,'.tools/fingering/runtime-mode.json'),'utf8'));
+ assert(['bundled','windows-prerequisite'].includes(mode.msvcMode));
+ assert.deepEqual([...mode.requiredDlls].sort(),Object.keys(pins.msvcRuntime.files).sort());
+ const required=['fingering/model.py','fingering/worker.py','fingering/requirements.lock','.tools/fingering/runtime-mode.json','.tools/fingering/python/python.exe','.tools/fingering/python/python311.dll','.tools/fingering/python/python311.zip','.tools/fingering/python/Lib/site-packages/torch/lib/torch_cpu.dll','docs/licenses/FINGERING-NOTICES.txt'];
  for(const dependency of ['filelock/__init__.py','typing_extensions.py','sympy/__init__.py','networkx/__init__.py','jinja2/__init__.py','fsspec/__init__.py','markupsafe/__init__.py','mpmath/__init__.py'])required.push('.tools/fingering/python/Lib/site-packages/'+dependency);
  for(const hand of ['left','right']) required.push('.tools/fingering/models/'+pins.checkpoints[hand].file);
- required.push('fingering/dependencies.json','.tools/fingering/python/MSVC-LICENSE.rtf','.tools/fingering/python/Lib/site-packages/torch/_C.cp311-win_amd64.pyd');
- for(const dll of Object.keys(pins.msvcRuntime.files))required.push('.tools/fingering/python/'+dll);
+ required.push('fingering/dependencies.json','.tools/fingering/python/Lib/site-packages/torch/_C.cp311-win_amd64.pyd');
+ if(mode.msvcMode==='bundled'){
+  required.push('.tools/fingering/python/MSVC-LICENSE.rtf');
+  for(const dll of Object.keys(pins.msvcRuntime.files))required.push('.tools/fingering/python/'+dll);
+ }else{
+  for(const path of files.keys())assert(!Object.keys(pins.msvcRuntime.files).includes(path.split('/').at(-1).toLowerCase()),`Prerequisite mode must not redistribute MSVC DLL: ${path}`);
+  for(const path of await readdir(root,{recursive:true}))assert(!Object.keys(pins.msvcRuntime.files).includes(basename(path).toLowerCase()),`Unmanifested MSVC DLL present: ${path}`);
+ }
  for(const path of required) {
   const entry=files.get(path);assert(entry,`Missing fingering release manifest entry: ${path}`);
   const bytes=await readFile(join(root,path));
   assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256,`Fingering checksum mismatch: ${path}`);
  }
  for(const hand of ['left','right'])assert.equal(files.get('.tools/fingering/models/'+pins.checkpoints[hand].file).sha256,pins.checkpoints[hand].sha256);
- for(const [dll,hash] of Object.entries(pins.msvcRuntime.files))assert.equal(files.get('.tools/fingering/python/'+dll).sha256,hash);
- assert.equal(files.get('.tools/fingering/python/MSVC-LICENSE.rtf').sha256,pins.msvcRuntime.licenseSha256);
+ if(mode.msvcMode==='bundled'){
+  for(const [dll,hash] of Object.entries(pins.msvcRuntime.files))assert.equal(files.get('.tools/fingering/python/'+dll).sha256,hash);
+  assert.equal(files.get('.tools/fingering/python/MSVC-LICENSE.rtf').sha256,pins.msvcRuntime.licenseSha256);
+ }
  for(const path of files.keys())assert(!/\/(__pycache__|downloads|pip|torch\/include)\/|\.(pyc|lib)$/.test(path),`Build-only/cache file shipped: ${path}`);
  assert.match(await readFile(join(root,'docs/licenses/THIRD-PARTY-NOTICES.txt'),'utf8'),/Automatic Piano Fingering/);
- return {requiredFiles:required.length};
+ return {requiredFiles:required.length,msvcMode:mode.msvcMode,requiredDlls:mode.requiredDlls};
 }
 
 export async function checkFingeringPackageFailures(root) {

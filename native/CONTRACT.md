@@ -165,3 +165,5 @@ restricted inherited pipes and a Windows kill-on-close job, uses protocol v1,
 total deadlines. Completed/failed/cancelled state is bounded and not persisted.
 
 Portable inference resolves `fingering/worker.py` and `.tools/fingering/python/python.exe` relative to the native application root, never PATH. Pinned left/right weights live in `.tools/fingering/models`. The worker is CPU-only, uses isolated Python and releases its process after each terminal job. Wheels, archives, compilers, download caches and training materials are not needed at runtime. Release manifests hash the packaged source, runtime, notices and weights; checkpoints are additionally compared to the recorded upstream pins.
+
+Default release metadata msvcMode=windows-prerequisite names MSVCP140/VCRUNTIME140/VCRUNTIME140_1; all three are excluded from package files and resolved by Windows. The package is not certified for clean Windows. Lazy model import translates missing inference dependency imports into an actionable setup_missing frame; no native transport/audio fallback occurs.

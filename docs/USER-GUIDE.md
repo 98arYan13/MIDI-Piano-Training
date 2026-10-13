@@ -95,3 +95,7 @@ Full shows every available attack suggestion; Medium shows useful phrase starts,
 Cancel fingering generation stops only the inference job. You can keep playing, change songs, or navigate during generation. A completed result is saved to its original song. Missing or corrupt weights give a setup error while the rest of the library remains usable.
 
 Select a note on the score to open Manual fingering correction, then choose Finger 1–5. A merged unison selection edits all listed note identities. Use automatic restores its generated suggestion. Saved corrections constrain regeneration. Conflicting, unsupported or unresolved notes can have no suggestion. Treat numbers as practice guidance; the bounded research-model adaptation has not been statistically evaluated against published accuracy claims.
+
+A packaged installation requires the existing Microsoft Visual C++ v14 x64 runtime on Windows. The default release does not include its three DLLs. If Generate reports a missing local inference dependency, check that prerequisite and the local Python/Torch setup. Normal library and playback remain usable; the app does not install anything globally.
+
+If a required VCRUNTIME DLL is absent, Python may fail before it can send a setup message, and Generate may report a worker-pipe failure. Check the same Windows runtime prerequisite; the app does not install or copy system DLLs.

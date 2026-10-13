@@ -92,7 +92,15 @@ def main(argv=None):
         pulse = threading.Thread(target=heartbeat, daemon=True)
         pulse.start()
         try:
-            from fingering.model import generate, load_models
+            try:
+                from fingering.model import generate, load_models
+            except (ImportError, OSError) as error:
+                raise RuntimeError(
+                    "Missing or unavailable local inference dependency. This package requires "
+                    "an existing Microsoft Visual C++ v14 x64 runtime on Windows "
+                    "(MSVCP140, VCRUNTIME140 and VCRUNTIME140_1). Check that prerequisite "
+                    "and the project-local Python/Torch setup; normal library and playback remain usable."
+                ) from error
 
             emit({"version": 1, "jobId": request.get("jobId"), "type": "progress",
                   "stage": "loading", "completed": 0, "total": 1})
