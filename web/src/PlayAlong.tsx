@@ -15,6 +15,8 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const dragPause = useRef<Promise<void>>(Promise.resolve());
   const [seekPreview, setSeekPreview] = useState<number | null>(null);
   const overview = useRef<HTMLDivElement>(null);
+  const [hidePassage, setHidePassage] = useState(false);
+  const [hidingPassage, setHidingPassage] = useState(false);
   useEffect(() => {
     if (seekPreview !== null && p && Math.abs(p.songSeconds - seekPreview) < .001)
       setSeekPreview(null);
@@ -74,6 +76,16 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   }, [song?.id, bucket, p?.revision]);
   const config = (edit: Partial<TransportConfig>) =>
     void run("transport.configure", edit);
+  const togglePassage = async (hide: boolean) => {
+    if (!hide) { setHidePassage(false); return; }
+    setHidingPassage(true);
+    setError("");
+    try {
+      await native.command("transport.configure", { loop: false });
+      setHidePassage(true);
+    } catch (e) { setError((e as Error).message); }
+    finally { setHidingPassage(false); }
+  };
   const patch = async (edit: Record<string, unknown>) => {
     if (!song) return;
     try {
@@ -257,7 +269,7 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                   />
                 </label>
               </div>
-              <div className="song-options">
+              {!hidePassage && <div className="song-options">
                 <label>
                   <input
                     type="checkbox"
@@ -294,7 +306,7 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                 <button onClick={() => config({ b: Math.floor(p.songTick) })}>
                   Set B here
                 </button>
-              </div>
+              </div>}
               <div className="song-options">
                 <label>
                   Auto accompaniment
@@ -380,6 +392,13 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               </div>
             </details>
             <div className="practice-player song-player">
+              <div className="selection-visibility">
+                <label><input type="checkbox" aria-label="Hide passage controls"
+                  checked={hidePassage} disabled={hidingPassage}
+                  onChange={e => void togglePassage(e.target.checked)} />
+                  Hide passage controls</label>
+              </div>
+              {!hidePassage && <>
               <div className="selection-controls">
                 <label><input type="checkbox" aria-label="Repeat selected part"
                   checked={p.config.loop} onChange={e => config({ loop: e.target.checked })} />
@@ -398,6 +417,7 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                     return (x - box.left) / box.width * song.durationTicks;
                   }} />
               </div>
+              </>}
               <PlayerControls
                 hand={p.config.hand ?? "both"}
                 onHand={(hand) => config({ hand })}
@@ -415,7 +435,7 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                 <EngravedScore
                   key={song.id}
                   song={song}
-                  selection={selection}
+                  selection={hidePassage ? undefined : selection}
                   fromTick={scoreWindow.from}
                   toTick={scoreWindow.to}
                   notes={displayedNotes}

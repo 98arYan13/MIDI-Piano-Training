@@ -7,6 +7,7 @@
   gap: 24px;
 }
 .selection-controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 8px 0; }
+.selection-visibility { padding: 8px 12px; border-bottom: 1px solid #e2e6e3; }
 .selection-controls small { flex-basis: 100%; color: #59665e; }
 .selection-overview { position: relative; height: 52px; margin: 4px 22px 12px; background: #e8eee9; border-radius: 4px; }
 .loop-markers { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }

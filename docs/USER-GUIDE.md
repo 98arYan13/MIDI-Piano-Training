@@ -70,6 +70,8 @@ To repeat a passage, drag the green Start and brown End vertical lines on the sc
 
 ## Imports & controller limits
 
+Hide passage controls turns repeat off and hides the passage panel, overview, A/B settings, Start/End lines and shaded selection on the score. The boundaries are retained. Showing the controls again leaves repeat off until you enable it. Hiding the controls does not stop live keys or the metronome.
+
 When Repeat selected part reaches End, the score immediately animates back to Start over about two seconds, then playback resumes. There is no delay before movement begins. Playback and scoring pause during the return; live keys and global clicks continue. Return to Start uses the same animation from the current position, resuming only if playback was already running. Pause or Stop cancels an ongoing return. Restart remains the immediate restart control. The two-second duration is independent of song speed.
 
 SMF types 0/1 with PPQ are supported; type 2/SMPTE are rejected. Limits: 20 MB, one million events, 256 tracks, two hours, cumulative ticks ≤2,147,483,647. Originals retain tempo/meter/key maps, channels, velocities, overlapping notes and raw controllers. Pitched tracks audition as piano; drums are disabled by default. Audible playback mappings: CC64 sustain, CC7 volume, CC11 expression, CC10 pan and CC120/123 release; other controllers and pitch bend are preserved without an audition mapping. Seek/loop restores spanning notes and controller state only on playback. Dense windows cap at 4096 notes and report truncation; accompaniment/restoration capacity errors are explicit and retain live sound/clicks.
