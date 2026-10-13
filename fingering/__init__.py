@@ -1,0 +1,1 @@
+"""Local ArGNN inference worker."""

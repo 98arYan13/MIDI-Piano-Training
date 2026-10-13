@@ -1,0 +1,44 @@
+{
+  "runtime": {
+    "python": "3.11.9",
+    "architecture": "win_amd64",
+    "archive": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+    "sha256": "009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b"
+  },
+  "upstream": {
+    "repository": "https://github.com/PRamoneda/Automatic-Piano-Fingering",
+    "revision": "d0d2f433c926be5e89540cbafe38bf43820ad2d2",
+    "license": "MIT",
+    "files": ["nns/common.py", "nns/GGCN.py", "nns/seq2seq_model.py", "loader.py"]
+  },
+  "checkpoints": {
+    "left": {
+      "file": "left_ArGNN.pth",
+      "url": "https://github.com/PRamoneda/Automatic-Piano-Fingering/raw/d0d2f433c926be5e89540cbafe38bf43820ad2d2/models/left_ArGNN.pth",
+      "sha256": "949033ef5f8c0a2223ec9c56ec2682be98c0ddb57cfed6c616962df01191d2cf"
+    },
+    "right": {
+      "file": "right_ArGNN.pth",
+      "url": "https://github.com/PRamoneda/Automatic-Piano-Fingering/raw/d0d2f433c926be5e89540cbafe38bf43820ad2d2/models/right_ArGNN.pth",
+      "sha256": "6430b4bbf6670571c92036298c863b69288b11d982a6b0665f1b93a7cc99f441"
+    }
+  },
+  "wheels": {
+    "torch": {
+      "version": "2.8.0+cpu",
+      "filename": "torch-2.8.0+cpu-cp311-cp311-win_amd64.whl",
+      "url": "https://download.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp311-cp311-win_amd64.whl",
+      "size": 619392861,
+      "sha256": "7631ef49fbd38d382909525b83696dc12a55d68492ade4ace3883c62b9fc140f"
+    },
+    "pip": {"version": "26.2.1", "filename": "pip-26.2.1-py3-none-any.whl", "url": "https://files.pythonhosted.org/packages/f3/6e/1736e5b4ae2b778ef2f81c47d797de9f891d4d8acb047a24ca37a60294dd/pip-26.2.1-py3-none-any.whl", "sha256": "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"},
+    "filelock": {"version": "3.13.1", "filename": "filelock-3.13.1-py3-none-any.whl", "sha256": "57dbda9b35157b05fb3e58ee91448612eb674172fab98ee235ccb0b5bee19a1c"},
+    "typing_extensions": {"version": "4.13.0", "filename": "typing_extensions-4.13.0-py3-none-any.whl", "sha256": "c8dd92cc0d6425a97c18fbb9d1954e5ff92c1ca881a309c45f06ebc0b79058e5"},
+    "sympy": {"version": "1.14.0", "filename": "sympy-1.14.0-py3-none-any.whl", "sha256": "e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5"},
+    "networkx": {"version": "3.5", "filename": "networkx-3.5-py3-none-any.whl", "sha256": "0030d386a9a06dee3565298b4a734b68589749a544acbb6c412dc9e2489ec6ec"},
+    "jinja2": {"version": "3.1.6", "filename": "jinja2-3.1.6-py3-none-any.whl", "sha256": "85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67"},
+    "fsspec": {"version": "2026.6.0", "filename": "fsspec-2026.6.0-py3-none-any.whl", "sha256": "02e0b71817df9b2169dc30a16832045764def1191b43dcff5bb85bdee212d2a1"},
+    "MarkupSafe": {"version": "3.0.2", "filename": "MarkupSafe-3.0.2-cp311-cp311-win_amd64.whl", "sha256": "70a87b411535ccad5ef2f1df5136506a10775d267e197e4cf531ced10537bd6b"},
+    "mpmath": {"version": "1.3.0", "filename": "mpmath-1.3.0-py3-none-any.whl", "sha256": "a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c"}
+  }
+}
