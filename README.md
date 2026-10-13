@@ -42,14 +42,14 @@ node scripts/setup-tutorials.mjs
 npm.cmd --prefix web ci --cache .tools/npm-cache
 pwsh scripts/build-native.ps1 -Tests
 npm.cmd --prefix web run build
-# Only after establishing applicable redistribution rights (see below):
+# Default package uses the existing Windows Visual C++ x64 runtime prerequisite:
 pwsh scripts/package-release.ps1
 pwsh scripts/start.ps1
 ```
 
 Build tools are project-local LLVM-MinGW 20261006 (Clang 23), CMake 4.4.4 and Ninja 1.13.2. Node 22.16.0/npm 11.4.1 are build/test tools only. Exact source pins/checksums: `native/dependencies.json`, `native/toolchain.json`, `native/service-dependencies.json`, `web/package-lock.json`, and piano/music manifests. `setup-service.ps1 -Offline` verifies cached sources. Downloads, caches, dependencies, samples and builds are excluded from Git. No reference-project code/assets are used; its UNLICENSED source was not copied.
 
-Automatic Play Along fingering uses the attributed, pretrained ArGNN research checkpoints. Provision the project-local CPython 3.11.9 / CPU PyTorch 2.8.0 runtime and real left/right weights with `pwsh scripts/setup-fingering.ps1 -ConfirmRedistributionRights` only after establishing the applicable rights described in the conditional licensing paragraph below; after the first complete setup, `pwsh scripts/setup-fingering.ps1 -Offline` verifies the same cached archives and installs without network access. If the configured PyPI host is unavailable, `-PinnedMirror` selects the reviewed Tsinghua PyPI mirror; the same exact wheel hashes are still required. The runtime, wheels and weights stay under ignored `.tools/fingering/`. Exact revisions and SHA-256 pins are in `fingering/dependencies.json` and `fingering/requirements.lock`; see [third-party notices](docs/licenses/THIRD-PARTY-NOTICES.txt). Fingering remains unavailable with a clear setup error when either checkpoint is missing or corrupt; no substitute model is used.
+Automatic Play Along fingering uses the attributed, pretrained ArGNN research checkpoints. Provision the project-local CPython 3.11.9 / CPU PyTorch 2.8.0 runtime and real left/right weights with `pwsh scripts/setup-fingering.ps1` in the default existing-Windows-runtime prerequisite mode; after the first complete setup, `pwsh scripts/setup-fingering.ps1 -Offline` verifies the same cached archives and installs without network access. If the configured PyPI host is unavailable, `-PinnedMirror` selects the reviewed Tsinghua PyPI mirror; the same exact wheel hashes are still required. The runtime, wheels and weights stay under ignored `.tools/fingering/`. Exact revisions and SHA-256 pins are in `fingering/dependencies.json` and `fingering/requirements.lock`; see [third-party notices](docs/licenses/THIRD-PARTY-NOTICES.txt). Fingering remains unavailable with a clear setup error when either checkpoint is missing or corrupt; no substitute model is used.
 
 The package script requires a fresh destination beneath `build/`, bundles actual `libc++.dll`/`libunwind.dll` PE runtime imports and writes SHA-256/size provenance in `release-manifest.json`. Windows/UCRT system DLLs are supplied by Windows. `scripts/update-notices.ps1` collects checked-in upstream notices from pinned cached sources; no compiler or test-only dependencies ship.
 
