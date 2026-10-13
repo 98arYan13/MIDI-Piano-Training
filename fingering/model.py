@@ -152,7 +152,7 @@ def _left_transform(pitches: list[int]) -> list[int]:
 def _ordered_indices(notes: list[dict]) -> list[int]:
     return sorted(range(len(notes)), key=lambda index: (
         int(notes[index]["startTick"]), int(notes[index]["midiNote"]),
-        str(notes[index]["id"]),
+        notes[index]["id"],
     ))
 
 
@@ -354,9 +354,9 @@ def generate(request: dict, progress: Callable[[str, int, int], None],
         runtime = pathlib.Path(request.get("runtimeDir", ".tools/fingering"))
         models = load_models(runtime)
     source_notes = request["notes"]
-    if any(not isinstance(note, dict) or not isinstance(note.get("id"), str)
-           or not note["id"] for note in source_notes):
-        raise ValueError("every note needs a non-empty string id")
+    if any(not isinstance(note, dict) or type(note.get("id")) is not int
+           or not 0 <= note["id"] <= 2**64 - 1 for note in source_notes):
+        raise ValueError("every note needs an integer uint64 id")
     ids = [note["id"] for note in source_notes]
     if len(set(ids)) != len(ids):
         raise ValueError("note IDs must be unique")

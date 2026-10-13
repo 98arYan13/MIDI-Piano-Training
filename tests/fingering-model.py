@@ -2,6 +2,7 @@ import copy
 import io
 import json
 import pathlib
+import subprocess
 import sys
 import tempfile
 import time
@@ -31,11 +32,11 @@ class FingeringModelTests(unittest.TestCase):
                 "fingerprint": "test", "ppq": 480, "notes": notes}
 
     def test_digits_and_identity(self):
-        notes = [note("a", 60, 0, 120), note("b", 62, 120, 240, "left")]
+        notes = [note(1, 60, 0, 120), note(2, 62, 120, 240, "left")]
         before = copy.deepcopy(notes)
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertEqual(notes, before)
-        self.assertEqual([item["id"] for item in result["assignments"]], ["a", "b"])
+        self.assertEqual([item["id"] for item in result["assignments"]], [1, 2])
         self.assertTrue(all(a["finger"] is None or 1 <= a["finger"] <= 5
                             for a in result["assignments"]))
         self.assertEqual(result["model"]["name"], "ArGNN")
@@ -44,24 +45,51 @@ class FingeringModelTests(unittest.TestCase):
                          {hand: manifest["checkpoints"][hand]["sha256"]
                           for hand in ("left", "right")})
 
+    def test_worker_preserves_numeric_native_ids(self):
+        ids = [0, 2**53 + 1, 2**64 - 1]
+        request = self.request([note(identity, 60 + i, i * 120, (i + 1) * 120,
+                                     "left" if i == 1 else "right")
+                                for i, identity in enumerate(ids)])
+        incoming = io.BytesIO()
+        write_frame(incoming, request)
+        process = subprocess.run([sys.executable, "-I", str(ROOT / "fingering/worker.py"),
+                                  "--runtime-dir", str(ROOT / ".tools/fingering")],
+                                 input=incoming.getvalue(), capture_output=True, timeout=30)
+        self.assertEqual(process.returncode, 0, process.stderr.decode())
+        self.assertEqual(process.stderr, b"")
+        outgoing = io.BytesIO(process.stdout)
+        frames = []
+        while (frame := read_frame(outgoing)) is not None:
+            frames.append(frame)
+        self.assertEqual(frames[-1]["type"], "result")
+        self.assertEqual([a["id"] for a in frames[-1]["assignments"]], ids)
+        self.assertTrue(all(type(a["id"]) is int for a in frames[-1]["assignments"]))
+
+    def test_invalid_native_ids_rejected(self):
+        for identity in (True, False, -1, 2**64, 1.0, "1", "", None):
+            with self.subTest(identity=identity):
+                with self.assertRaisesRegex(ValueError, "uint64"):
+                    generate(self.request([note(identity, 60, 0, 120)]),
+                             lambda *_: None, models=self.models)
+
     def test_deterministic_both_hands(self):
-        notes = [note(str(i), 55 + i * 2, i * 120, (i + 1) * 120,
+        notes = [note(i, 55 + i * 2, i * 120, (i + 1) * 120,
                       "left" if i % 2 else "right") for i in range(6)]
         first = generate(self.request(notes), lambda *_: None, models=self.models)
         second = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertEqual(first["assignments"], second["assignments"])
 
     def test_chord_and_held_occupancy(self):
-        notes = [note("held", 60, 0, 300), note("chord", 64, 100, 200),
-                 note("third", 67, 100, 200)]
+        notes = [note(1, 60, 0, 300), note(2, 64, 100, 200),
+                 note(3, 67, 100, 200)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         assigned = {a["id"]: a["finger"] for a in result["assignments"]}
-        self.assertEqual(len({assigned[k] for k in ("held", "chord", "third")
+        self.assertEqual(len({assigned[k] for k in (1, 2, 3)
                               if assigned[k] is not None}),
-                         sum(assigned[k] is not None for k in ("held", "chord", "third")))
+                         sum(assigned[k] is not None for k in (1, 2, 3)))
 
     def test_anchor_and_window_boundary(self):
-        notes = [note(str(i), 45 + i % 24, i * 10,
+        notes = [note(i, 45 + i % 24, i * 10,
                       4000 if i == 0 else i * 10 + 15,
                       manual=3 if i == 0 else (2 if i == 260 else None))
                  for i in range(700)]
@@ -72,58 +100,58 @@ class FingeringModelTests(unittest.TestCase):
                             for i in range(1, len(windows))))
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertEqual(next(a["finger"] for a in result["assignments"]
-                              if a["id"] == "0"), 3)
+                              if a["id"] == 0), 3)
         self.assertEqual(next(a["finger"] for a in result["assignments"]
-                              if a["id"] == "260"), 2)
+                              if a["id"] == 260), 2)
         self.assertNotEqual(next(a["finger"] for a in result["assignments"]
-                                 if a["id"] == "0"),
+                                 if a["id"] == 0),
                             next(a["finger"] for a in result["assignments"]
-                                 if a["id"] == "260"))
+                                 if a["id"] == 260))
 
     def test_oversized_chord_unresolved(self):
-        notes = [note(str(i), 40 + i, 0, 100) for i in range(6)]
+        notes = [note(i, 40 + i, 0, 100) for i in range(6)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertTrue(all(a["finger"] is None and a.get("reason") == "oversizedChord"
                             for a in result["assignments"]))
 
     def test_large_unison_chord_does_not_drop_later_windows(self):
-        notes = [note(str(i), 60, i, i + 1) for i in range(256)]
-        notes += [note(f"unison-{i}", 62, 300, 400) for i in range(220)]
+        notes = [note(i, 60, i, i + 1) for i in range(256)]
+        notes += [note(256 + i, 62, 300, 400) for i in range(220)]
         windows = make_windows(notes)
         self.assertEqual(set(i for window in windows for i in window), set(range(len(notes))))
         self.assertTrue(all(len(window) <= 256 for window in windows))
 
     def test_future_manual_anchor_reserves_held_finger_across_windows(self):
-        notes = [note(f"held-{i}", pitch, 0, 10000)
+        notes = [note(i, pitch, 0, 10000)
                  for i, pitch in enumerate((60, 62, 64, 66))]
-        notes += [note(f"short-{i}", 70, 10 + i * 10, 20 + i * 10)
+        notes += [note(10 + i, 70, 10 + i * 10, 20 + i * 10)
                   for i in range(300)]
-        notes.append(note("future-anchor", 72, 4000, 4100, manual=1))
+        notes.append(note(1000, 72, 4000, 4100, manual=1))
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         assigned = {a["id"]: a["finger"] for a in result["assignments"]}
-        self.assertEqual(assigned["future-anchor"], 1)
-        self.assertTrue(all(assigned[f"held-{i}"] not in (None, 1) for i in range(4)))
+        self.assertEqual(assigned[1000], 1)
+        self.assertTrue(all(assigned[i] not in (None, 1) for i in range(4)))
 
     def test_future_same_pitch_manual_anchor_forces_held_digit(self):
-        notes = [note("held", 60, 0, 10000)]
-        notes += [note(f"short-{i}", 70, 10 + i * 10, 20 + i * 10)
+        notes = [note(1, 60, 0, 10000)]
+        notes += [note(10 + i, 70, 10 + i * 10, 20 + i * 10)
                   for i in range(300)]
-        notes.append(note("future-anchor", 60, 4000, 4100, manual=5))
+        notes.append(note(1000, 60, 4000, 4100, manual=5))
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         assigned = {a["id"]: a["finger"] for a in result["assignments"]}
-        self.assertEqual(assigned["held"], 5)
-        self.assertEqual(assigned["future-anchor"], 5)
+        self.assertEqual(assigned[1], 5)
+        self.assertEqual(assigned[1000], 5)
 
     def test_conflicting_future_same_pitch_anchors_leave_held_unresolved(self):
-        notes = [note("held", 60, 0, 10000),
-                 note("first-anchor", 60, 100, 200, manual=1),
-                 note("second-anchor", 60, 300, 400, manual=5)]
+        notes = [note(1, 60, 0, 10000),
+                 note(2, 60, 100, 200, manual=1),
+                 note(3, 60, 300, 400, manual=5)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         assigned = {a["id"]: a for a in result["assignments"]}
-        self.assertIsNone(assigned["held"]["finger"])
-        self.assertTrue(assigned["held"].get("reason"))
-        self.assertEqual(assigned["first-anchor"]["finger"], 1)
-        self.assertEqual(assigned["second-anchor"]["finger"], 5)
+        self.assertIsNone(assigned[1]["finger"])
+        self.assertTrue(assigned[1].get("reason"))
+        self.assertEqual(assigned[2]["finger"], 1)
+        self.assertEqual(assigned[3]["finger"], 5)
 
     def test_missing_or_corrupt_checkpoint(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -142,7 +170,7 @@ class FingeringModelTests(unittest.TestCase):
 
     def test_heartbeat_preserves_latest_progress(self):
         incoming, outgoing = io.BytesIO(), io.BytesIO()
-        write_frame(incoming, self.request([note("a", 60, 0, 120)]))
+        write_frame(incoming, self.request([note(1, 60, 0, 120)]))
         incoming.seek(0)
 
         def slow_generate(request, progress, models):
@@ -164,7 +192,7 @@ class FingeringModelTests(unittest.TestCase):
                          ("decoding", 7, 10))
 
     def test_constant_onsets_and_pitches_are_finite(self):
-        notes = [note(str(i), 60, 100, 200) for i in range(8)]
+        notes = [note(i, 60, 100, 200) for i in range(8)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertEqual(len(result["assignments"]), len(notes))
         self.assertEqual(len({a["finger"] for a in result["assignments"]}), 1)
