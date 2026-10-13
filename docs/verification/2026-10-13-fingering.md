@@ -59,3 +59,28 @@ The unrestricted `node tests/release.mjs` run reached and failed its preserved l
 Worker-focused verification after the dependency-import change: `.tools/fingering/python/python.exe -I tests/fingering-model.py`: all 17 tests passed in 12.467 seconds, including actual checkpoints, previous C8/full identity/manual-window/heartbeat regressions and a simulated DLL-import failure yielding actionable setup_missing. Physical removal of installed Windows runtimes was not attempted; the prerequisite is documented rather than installed or modified. Earlier full relevant suites remain as recorded above; they were not repeated for these packaging/documentation changes. Live PID13984/port8765 and the user's library were untouched.
 
 Error-path limit: the actionable setup_missing regression covers lazy Torch/model dependency imports. If Python itself cannot launch because VCRUNTIME is absent, the existing native job can report a generic worker-pipe failure. This was not changed into a universal startup503 claim; normal native library/playback stays usable. The Windows prerequisite is required in both cases.
+
+
+## Workflow rulings
+
+These execution decisions preserve their original reasons and costs from the SDD ledger.
+
+- Native managed worktree exists but its directory is sandbox read-only; use current clean feature checkout under the worktree skill sandbox fallback — permits normal source edits and preserves existing artifacts/library — cost if wrong: feature changes share the original checkout instead of an isolated directory.
+
+- Task2 builds only storage_tests/native_tests while the live service executable is in use — tests fully exercise Task2 data/storage and avoids interrupting the current app — cost if wrong: service link validation deferred until Task3 integration, not skipped.
+
+- Begin model-independent Task2 native data/storage work while verified CPU wheel download completes — both real checkpoints already strict-load with all23 keys and graph forward matches upstream exactly in diagnostics, and Task2 doesn't consume Python/runtime or reset the service — cost if wrong: concurrency in one checkout; enforce file ownership and serialize commits/review gates. Task3 integration cannot start until Task1 passes pinned-runtime tests and task review.
+
+- Permit one known Tsinghua PyPI mirror for exact official SHA-pinned wheel artifacts after official CDN failures — same versions and bytes verified against official PyPI metadata, no global pip config or TLS bypass — cost if wrong: mirror availability affects setup, official hashes protect artifact integrity.
+
+- Latest user-supplied AGENTS instructions take precedence over earlier plan model selection; all subsequent workers and reviewers use gpt-6.1-sol low with no nested agents — follows latest explicit instruction — cost if wrong: prior completed workers used the earlier authorized Luna configuration.
+
+- Perform broad source review and local app activation before the portable redistribution proof while its license fact is pending — all feature/source changes and relevant local tests are prepared, existing machine runtime supports local generation, no publishing or DLL bundling is permitted — cost if wrong: later portable proof may require another reviewed correction; Task6 and release remain incomplete until proof passes.
+
+- Park the residual replacement-character typo in verification line46 until the pending package-proof documentation update — nonblocking wording only, final singlefixwave cap honored — cost if wrong: A0-to-C8 label less readable in report, code/tests unaffected.
+
+- Finish a package that does not add/bundle the separately extracted Microsoft runtime DLLs, using the installed x64 Visual C++ runtime as a documented prerequisite — user's No/unsure removes the redistribution grant; existing local generation already uses that runtime — cost if wrong: this package is not fully self-contained and other Windows machines need the prerequisite; do not claim clean-Windows portability or install anything/globalchanges.
+
+- Complete exact-package verification in a focused fingering mode while retaining the default full-release test and its unrelated Staff keyboard viewport assertion — full run reached generation/rendering but failed Grand keyboardBottom1001.94>713, and original5d6/currentno-fingering grandheight350 match — cost if wrong: this certifies the affected fingering package only, not overall app release/layout; record the failing legacy full check rather than weaken it or expand into Staff UI changes.
+
+- Document the lower-level absent-VCRUNTIME startup diagnostic limitation rather than expand native loading/preflight infrastructure — package explicitly requires installedVCruntime and missingTorchimport is covered by actionable setup_missing — cost if wrong: a machine lacking VCRUNTIME may show a generic worker-pipe failure until the prerequisite is installed; native library remains usable, no missing-runtime success claimed.
