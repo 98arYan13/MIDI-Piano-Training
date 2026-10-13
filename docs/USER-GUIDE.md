@@ -70,6 +70,8 @@ To repeat a passage, drag the green Start and brown End vertical lines on the sc
 
 ## Imports & controller limits
 
+Fingerings and Passage controls appear in two compact columns above the score (stacked on narrow screens). Both start hidden; uncheck Hide in either header to show its settings. Hide fingerings hides generation, tips and editing controls and closes the editor; the chosen tips still appear on the score.
+
 Hide passage controls turns repeat off and hides the passage panel, overview, A/B settings, Start/End lines and shaded selection on the score. The boundaries are retained. Showing the controls again leaves repeat off until you enable it. Hiding the controls does not stop live keys or the metronome.
 
 When Repeat selected part reaches End, the score immediately animates back to Start over about two seconds, then playback resumes. There is no delay before movement begins. Playback and scoring pause during the return; live keys and global clicks continue. Return to Start uses the same animation from the current position, resuming only if playback was already running. Pause or Stop cancels an ongoing return. Restart remains the immediate restart control. The two-second duration is independent of song speed.

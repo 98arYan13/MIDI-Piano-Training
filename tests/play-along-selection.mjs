@@ -35,6 +35,14 @@ try {
   page.on("pageerror", e => errors.push(e.message));
   await page.goto(url + "/#play");
   await page.getByRole("button", { name: /Mary Had a Little Lamb.*sec/ }).click();
+  const fingerings = page.getByLabel("Hide fingerings", { exact: true });
+  assert.equal(await fingerings.isChecked(), true);
+  assert.equal(await page.getByLabel("Hide passage controls", { exact: true }).isChecked(), true);
+  await page.getByLabel("Hide passage controls", { exact: true }).click();
+  assert.equal(await page.getByLabel("Fingering tips", { exact: true }).isVisible(), false);
+  assert.equal(await page.getByLabel("Repeat selected part", { exact: true }).isVisible(), true);
+  await fingerings.click();
+  assert.equal(await page.getByLabel("Fingering tips", { exact: true }).isVisible(), true);
   const repeat = page.getByLabel("Repeat selected part", { exact: true });
   await repeat.waitFor({ timeout: 3000 });
   const p = (await state()).transport;
@@ -162,6 +170,7 @@ try {
   assert.equal((await state()).transport.config.loop,false,"showing controls does not re-enable repeat");
   await command("transport.pause");
   await command("transport.configure",{loop:true});
+  await until(() => repeat.isChecked());
   await repeat.click();
   await until(async () => !(await state()).transport.config.loop);
   await command("transport.restart");

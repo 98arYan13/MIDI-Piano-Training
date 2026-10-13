@@ -16,7 +16,8 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const dragPause = useRef<Promise<void>>(Promise.resolve());
   const [seekPreview, setSeekPreview] = useState<number | null>(null);
   const overview = useRef<HTMLDivElement>(null);
-  const [hidePassage, setHidePassage] = useState(false);
+  const [hideFingerings, setHideFingerings] = useState(true);
+  const [hidePassage, setHidePassage] = useState(true);
   const [hidingPassage, setHidingPassage] = useState(false);
   useEffect(() => {
     if (seekPreview !== null && p && Math.abs(p.songSeconds - seekPreview) < .001)
@@ -412,17 +413,29 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               </div>
             </details>
             <div className="practice-player song-player">
+              <div className="player-tools-grid">
+              <section className="player-tool-section" aria-label="Fingering controls">
+                <div className="player-tool-heading">
+                  <strong>Fingerings</strong>
+                  <label><input type="checkbox" checked={hideFingerings}
+                    onChange={e => { setHideFingerings(e.target.checked); if (e.target.checked) setSelectedFingerNotes(null); }} aria-label="Hide fingerings" />Hide</label>
+                </div>
+                <div className="player-tool-body" hidden={hideFingerings}>
               <FingeringControls key={song.id} songId={song.id} revision={song.fingeringRevision ?? 0}
                 mode={native.state?.preferences.fingeringTips ?? "medium"}
                 onModeChange={fingeringTips=>void run("preferences.configure",{fingeringTips})}
                 onSaved={revision=>void refreshFingerings(revision)} selectedNoteIds={selectedFingerNotes}
                 onCloseEditor={()=>setSelectedFingerNotes(null)} />
               <button aria-pressed={selectedFingerNotes!==null} onClick={()=>setSelectedFingerNotes(selectedFingerNotes===null ? [] : null)}>Edit fingering</button>
-              <div className="selection-visibility">
+                </div>
+              </section>
+              <section className="player-tool-section" aria-label="Passage controls">
+              <div className="player-tool-heading">
+                <strong>Passage controls</strong>
                 <label><input type="checkbox" aria-label="Hide passage controls"
                   checked={hidePassage} disabled={hidingPassage}
                   onChange={e => void togglePassage(e.target.checked)} />
-                  Hide passage controls</label>
+                  Hide</label>
               </div>
               {!hidePassage && <>
               <div className="selection-controls">
@@ -444,6 +457,8 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                   }} />
               </div>
               </>}
+              </section>
+              </div>
               <PlayerControls
                 hand={p.config.hand ?? "both"}
                 onHand={(hand) => config({ hand })}

@@ -154,6 +154,8 @@ try {
   assert.equal(imported.status, 201);
   await page.reload();
   await page.getByRole("button", { name: /Fingering QA.*sec/i }).click();
+  await page.getByLabel("Hide fingerings", { exact: true }).uncheck();
+  await page.getByLabel("Hide passage controls", { exact: true }).uncheck();
   await page
     .getByRole("button", { name: "Generate fingerings", exact: true })
     .waitFor({ timeout: 3000 });
@@ -565,6 +567,8 @@ try {
     await route.fulfill({ response, body: JSON.stringify(body) });
   });
   await page.getByRole("button", { name: /Fingering QA.*sec/i }).click();
+  await page.getByLabel("Hide fingerings", { exact: true }).uncheck();
+  await page.getByLabel("Hide passage controls", { exact: true }).uncheck();
   await page.getByRole("button", { name: /Five Finger Patterns.*sec/ }).click();
   await page.getByText("0 assigned · 0 unresolved · 0 unsupported", { exact: true }).waitFor();
   await page.unroute(stalePath);
