@@ -4,13 +4,16 @@ import json
 import pathlib
 import sys
 import tempfile
+import time
+import types
 import unittest
+from unittest.mock import patch
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from fingering.model import generate, load_models, make_windows  # noqa: E402
-from fingering.worker import read_frame  # noqa: E402
+from fingering.worker import main, read_frame, write_frame  # noqa: E402
 
 
 def note(identity, pitch, start, end, hand="right", manual=None):
@@ -90,6 +93,17 @@ class FingeringModelTests(unittest.TestCase):
         self.assertEqual(set(i for window in windows for i in window), set(range(len(notes))))
         self.assertTrue(all(len(window) <= 256 for window in windows))
 
+    def test_future_manual_anchor_reserves_held_finger_across_windows(self):
+        notes = [note(f"held-{i}", pitch, 0, 10000)
+                 for i, pitch in enumerate((60, 62, 64, 66))]
+        notes += [note(f"short-{i}", 70, 10 + i * 10, 20 + i * 10)
+                  for i in range(300)]
+        notes.append(note("future-anchor", 72, 4000, 4100, manual=1))
+        result = generate(self.request(notes), lambda *_: None, models=self.models)
+        assigned = {a["id"]: a["finger"] for a in result["assignments"]}
+        self.assertEqual(assigned["future-anchor"], 1)
+        self.assertTrue(all(assigned[f"held-{i}"] not in (None, 1) for i in range(4)))
+
     def test_missing_or_corrupt_checkpoint(self):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaisesRegex(RuntimeError, "checkpoint"):
@@ -105,10 +119,35 @@ class FingeringModelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "truncated"):
             read_frame(io.BytesIO(b"\x05\x00\x00\x00{}"))
 
+    def test_heartbeat_preserves_latest_progress(self):
+        incoming, outgoing = io.BytesIO(), io.BytesIO()
+        write_frame(incoming, self.request([note("a", 60, 0, 120)]))
+        incoming.seek(0)
+
+        def slow_generate(request, progress, models):
+            progress("decoding", 7, 10)
+            time.sleep(5.2)
+            return {"version": 1, "jobId": request["jobId"], "type": "result"}
+
+        with patch("sys.stdin", types.SimpleNamespace(buffer=incoming)), \
+                patch("sys.stdout", types.SimpleNamespace(buffer=outgoing)), \
+                patch("fingering.model.load_models", return_value=self.models), \
+                patch("fingering.model.generate", side_effect=slow_generate):
+            self.assertEqual(main(["--runtime-dir", str(ROOT / ".tools/fingering")]), 0)
+        outgoing.seek(0)
+        frames = []
+        while (frame := read_frame(outgoing)) is not None:
+            frames.append(frame)
+        self.assertEqual([(f["stage"], f["completed"], f["total"])
+                          for f in frames if f["type"] == "progress"][-1],
+                         ("decoding", 7, 10))
+
     def test_constant_onsets_and_pitches_are_finite(self):
         notes = [note(str(i), 60, 100, 200) for i in range(8)]
         result = generate(self.request(notes), lambda *_: None, models=self.models)
         self.assertEqual(len(result["assignments"]), len(notes))
+        self.assertEqual(len({a["finger"] for a in result["assignments"]}), 1)
+        self.assertIsNotNone(result["assignments"][0]["finger"])
 
 
 if __name__ == "__main__":

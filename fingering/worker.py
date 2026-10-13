@@ -61,9 +61,15 @@ def main(argv=None):
     sys.path.insert(0, str(trusted_root))
     lock = threading.Lock()
     request = None
+    latest_progress = None
 
     def emit(message):
+        nonlocal latest_progress
         with lock:
+            if message.get("type") == "progress":
+                latest_progress = dict(message)
+            elif message.get("type") in ("result", "error"):
+                latest_progress = None
             write_frame(sys.stdout.buffer, message)
 
     try:
@@ -79,9 +85,9 @@ def main(argv=None):
 
         def heartbeat():
             while not stopping.wait(5):
-                emit({"version": 1, "jobId": request.get("jobId"),
-                      "type": "progress", "stage": "inference",
-                      "completed": 0, "total": len(request.get("notes", []))})
+                with lock:
+                    if latest_progress is not None:
+                        write_frame(sys.stdout.buffer, latest_progress)
 
         pulse = threading.Thread(target=heartbeat, daemon=True)
         pulse.start()

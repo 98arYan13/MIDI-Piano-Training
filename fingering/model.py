@@ -232,9 +232,14 @@ def _active(notes: list[dict], assignments: dict[int, int], before_tick: int,
 
 
 def _valid_fingers(notes: list[dict], path: list[int | None], index: int,
-                   incoming: dict[int, set[int]], forced: int | None) -> list[int]:
+                   incoming: dict[int, set[int]], forced: int | None,
+                   reservations: list[tuple[int, int, int, int]]) -> list[int]:
     pitch = int(notes[index]["midiNote"])
     occupied: dict[int, int] = {}
+    start, end = int(notes[index]["startTick"]), int(notes[index]["endTick"])
+    for reserved_pitch, reserved_start, reserved_end, finger in reservations:
+        if reserved_pitch != pitch and start < reserved_end and reserved_start < end:
+            occupied[finger] = reserved_pitch
     for active_pitch, fingers in incoming.items():
         if active_pitch == pitch:
             continue
@@ -248,8 +253,6 @@ def _valid_fingers(notes: list[dict], path: list[int | None], index: int,
             previous_pitch = int(previous["midiNote"])
             if previous_pitch != pitch:
                 occupied[finger] = previous_pitch
-            else:
-                occupied[finger] = pitch
     same_pitch = set(incoming.get(pitch, set()))
     same_pitch.update(
         finger for previous_index, finger in enumerate(path)
@@ -260,13 +263,14 @@ def _valid_fingers(notes: list[dict], path: list[int | None], index: int,
         return []
     if same_pitch:
         required = next(iter(same_pitch))
-        return [required] if forced in (None, required) else []
+        return [required] if forced in (None, required) and required not in occupied else []
     candidates = [forced] if forced is not None else list(range(5))
     return [finger for finger in candidates if finger not in occupied]
 
 
 def _decode_window(model: ArGNN, notes: list[dict], indices: list[int], hand: str,
                    anchors: dict[int, int], incoming: list[tuple[int, int, int, int]],
+                   reservations: list[tuple[int, int, int, int]],
                    progress: Callable[[str, int, int], None], done: int,
                    total: int) -> dict[int, tuple[int | None, str | None]]:
     if not indices:
@@ -309,7 +313,7 @@ def _decode_window(model: ArGNN, notes: list[dict], indices: list[int], hand: st
                 for pitch, fingers in active.items():
                     in_use.setdefault(pitch, set()).update(fingers)
                 for finger in _valid_fingers(local_notes, beam["path"], position, in_use,
-                                             forced):
+                                             forced, reservations):
                     next_beams.append({
                         "score": beam["score"] + float(log_probs[finger]),
                         "h": hidden.clone(), "c": cell.clone(),
@@ -373,6 +377,9 @@ def generate(request: dict, progress: Callable[[str, int, int], None],
         hand_indexes = [i for i, note in enumerate(notes)
                         if note.get("hand") == hand and i not in assignments]
         hand_notes = [notes[i] for i in hand_indexes]
+        reservations = [(int(note["midiNote"]), int(note["startTick"]),
+                         int(note["endTick"]), note["manualFinger"] - 1)
+                        for note in hand_notes if note.get("manualFinger") is not None]
         windows = make_windows(hand_notes, ppq=int(request.get("ppq", 480)))
         mapped_windows = [[hand_indexes[position] for position in window] for window in windows]
         chord_groups: dict[int, list[int]] = {}
@@ -412,7 +419,7 @@ def generate(request: dict, progress: Callable[[str, int, int], None],
                                             int(notes[index]["startTick"]),
                                             int(notes[index]["endTick"]), finger - 1))
             result = _decode_window(models[hand], notes, filtered, hand, anchors,
-                                    external_active, progress, done, total)
+                                    external_active, reservations, progress, done, total)
             for index, (finger, reason) in result.items():
                 if index in anchors:
                     if finger is None:
