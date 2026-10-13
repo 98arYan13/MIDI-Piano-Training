@@ -2,6 +2,8 @@
 #include <filesystem>
 #include <memory>
 #include <mutex>
+#include <optional>
+#include <vector>
 #include <nlohmann/json.hpp>
 #include <sqlite3.h>
 
@@ -96,6 +98,10 @@ public:
   void putSong(const nlohmann::json &model,const std::string &original);
   void patchSong(const std::string &id,const nlohmann::json &patch);
   void trashSong(const std::string &id,bool trashed);
+  nlohmann::json commitFingering(const std::string &id,
+      const std::string &expectedFingerprint, const nlohmann::json &result);
+  nlohmann::json editFingering(const std::string &id,
+      const std::vector<uint64_t> &noteIds, std::optional<int> finger);
   std::string originalSong(const std::string &id);
   nlohmann::json songs() {
     std::lock_guard lock(mutex);
@@ -105,6 +111,7 @@ public:
     int code;
     while ((code = sqlite3_step(statement.get())) == SQLITE_ROW) {
       auto item=nlohmann::json::parse(reinterpret_cast<const char *>(sqlite3_column_text(statement.get(),2)));
+      if (!item.contains("fingeringRevision")) item["fingeringRevision"] = 0;
       item.erase("tempoMap");item.erase("meterMap");item.erase("keyMap");item.erase("notes");item.erase("controllers");item.erase("rawEvents");result.push_back(item);
     }
     if (code != SQLITE_DONE)
