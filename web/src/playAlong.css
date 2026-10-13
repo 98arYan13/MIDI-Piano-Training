@@ -99,6 +99,8 @@
 }
 .library-filters { display: grid; gap: 8px; margin-top: 14px; }
 .library-filters label { display: grid; gap: 4px; font-size: 13px; }
+.library-filters .favorites-filter { display: flex; align-items: center; gap: 8px; }
+.favorites-filter input { width: auto; accent-color: #c3d9a6; }
 .library-filters input, .library-filters select { width: 100%; min-width: 0; padding: 8px; border: 1px solid #59675e; border-radius: 6px; background: #19221e; color: #eceeea; }
 .lesson-badge { color: #c3d9a6 !important; font-size: 12px; }
 .lesson-guide { margin: 12px 0; padding: 14px 18px; border: 1px solid #59675e; border-radius: 8px; background: #19221e; }
@@ -145,11 +147,21 @@
 }
 .song-list .song-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
-.song-list .song-row button:first-child {
+.song-list .song-row .song-select {
   grid-column: 1 / -1;
 }
+.song-list .song-row .song-favorite {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 34px;
+  padding: 5px 8px;
+  color: #9aa69d;
+  background: transparent;
+  border: 1px solid #46534a;
+}
+.song-list .song-row .song-favorite.is-favorite { color: #f0c96e; }
 .song-row a {
   color: #c3d9a6;
   font-size: 12px;
