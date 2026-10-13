@@ -7,12 +7,29 @@ namespace sightreading {
 int Engine::Impl::callback(const void*,void* output,unsigned long frames,const PaStreamCallbackTimeInfo*,PaStreamCallbackFlags flags,void* context){auto& self=*static_cast<Impl*>(context);self.actualFrames=frames;if(flags&(paOutputUnderflow|paOutputOverflow))++self.dropouts;self.render(static_cast<float*>(output),unsigned(frames));return paContinue;}
 void Engine::Impl::closeAudio(){audioReady=false;if(stream){Pa_StopStream(stream);Pa_CloseStream(stream);stream=nullptr;}if(pianoReady.load(std::memory_order_acquire))for(auto& s:synths)s->enableFreeWheeling();}
 void Engine::Impl::openAudio(){
+    const int requested=settings["outputDevice"].get<int>();
+    std::string selectedName;
+    if(requested>=0){
+      if(requested==openedOutputDevice)selectedName=outputName;
+      else for(const auto& d:audioOutputs)if(d["id"]==requested){selectedName=d["name"];break;}
+      // Keep a newly requested identity even if it disappears during refresh.
+      if(!selectedName.empty()){outputName=selectedName;openedOutputDevice=requested;}
+    }
     closeAudio();
+    // WASAPI device information is cached by PortAudio. Refresh after output loss
+    // or a reopen; otherwise a disconnected/default endpoint stays stale.
+    if(paInitialized){Pa_Terminate();paInitialized=false;}
     if(!paInitialized){auto code=Pa_Initialize();if(code!=paNoError){error=Pa_GetErrorText(code);return;}paInitialized=true;}
     audioOutputs=json::array();for(int i=0;i<Pa_GetDeviceCount();++i){const auto* d=Pa_GetDeviceInfo(i);const auto* h=Pa_GetHostApiInfo(d->hostApi);if(d->maxOutputChannels>=2&&h->type==paWASAPI)audioOutputs.push_back({{"id",i},{"name",d->name},{"defaultSampleRate",d->defaultSampleRate}});}
-    int device=settings["outputDevice"].get<int>();if(device<0){int host=Pa_HostApiTypeIdToHostApiIndex(paWASAPI);if(host>=0)device=Pa_GetHostApiInfo(host)->defaultOutputDevice;}
+    int device=requested;
+    if(requested>=0&&!selectedName.empty()){
+      device=-1;for(const auto& d:audioOutputs)if(d["name"]==selectedName){device=d["id"];break;}
+      if(device<0){error="Selected WASAPI output is unavailable: "+selectedName;return;}
+      settings["outputDevice"]=device;
+    }else if(device<0){int host=Pa_HostApiTypeIdToHostApiIndex(paWASAPI);if(host>=0)device=Pa_GetHostApiInfo(host)->defaultOutputDevice;}
     if(device<0||device>=Pa_GetDeviceCount()){error="No WASAPI stereo output available";return;}
     const auto* d=Pa_GetDeviceInfo(device);const auto* h=Pa_GetHostApiInfo(d->hostApi);if(h->type!=paWASAPI||d->maxOutputChannels<2){error="Selected output must be a WASAPI stereo device";return;}
+    outputName=d->name;openedOutputDevice=requested<0?-1:device;
     // Always share the endpoint: exclusive playback silences movies/other apps.
     PaWasapiStreamInfo info{};info.size=sizeof(info);info.hostApiType=paWASAPI;info.version=1;info.flags=paWinWasapiAutoConvert;
     PaStreamParameters output{};output.device=device;output.channelCount=2;output.sampleFormat=paFloat32;output.suggestedLatency=d->defaultLowOutputLatency;output.hostApiSpecificStreamInfo=&info;
@@ -64,7 +81,24 @@ bool Engine::Impl::applyPending(bool now){
 void Engine::start(){
     auto& s=*impl_;std::lock_guard lock(s.control);if(s.running.exchange(true))return;s.pollMidi();
     s.openAudio();if(!s.pianoReady){s.pianoLoading=true;s.loader=std::thread([&s]{s.loadPiano();std::lock_guard guard(s.control);if(s.running&&!s.audioReady)s.openAudio();});}
-    s.worker=std::thread([&s]{while(s.running){std::this_thread::sleep_for(std::chrono::milliseconds(250));std::lock_guard guard(s.control);if(!s.running)break;s.pollMidi();s.applyPending(false);}});
+    s.worker=std::thread([&s]{
+      uint64_t previous=s.frame.load();unsigned stalled=0;
+      while(s.running){
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        std::lock_guard guard(s.control);if(!s.running)break;
+        s.pollMidi();s.applyPending(false);
+        const auto current=s.frame.load();
+        const bool active=s.stream&&Pa_IsStreamActive(s.stream)==1;
+        if(active&&current!=previous)stalled=0;
+        else if(++stalled>=4||(s.audioReady&&!active)){
+          // No panic/reset: keep synth voices, ownership, click state and sample
+          // clock intact. Playback resumes from that clock when output returns.
+          s.audioReady=false;s.error="Audio output stopped; reconnecting WASAPI.";
+          s.openAudio();stalled=0;
+        }
+        previous=s.frame.load();
+      }
+    });
 }
 void Engine::stop(){auto& s=*impl_;s.running=false;if(s.loader.joinable())s.loader.join();if(s.worker.joinable())s.worker.join();std::lock_guard lock(s.control);for(auto& [_,p]:s.ports){p->input->cancelCallback();p->input->closePort();}s.ports.clear();s.submit({EventType::Panic});s.closeAudio();s.panic();if(s.paInitialized){Pa_Terminate();s.paInitialized=false;}std::lock_guard outputLock(s.externalControl);s.midiOut.reset();}
 }

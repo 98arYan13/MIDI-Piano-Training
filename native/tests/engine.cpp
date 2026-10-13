@@ -8,6 +8,26 @@
 #include <portaudio.h>
 #include <sfizz/Synth.h>
 #include <sfizz/AudioSpan.h>
+#include "../src/EngineInternal.hpp"
+namespace sightreading {
+struct EngineTestAccess {
+ static void abortAudio(Engine& e) {
+  std::lock_guard lock(e.impl_->control);
+  REQUIRE(Pa_AbortStream(e.impl_->stream) == paNoError);
+ }
+ static void changeCachedOutputIndex(Engine& e) {
+  std::lock_guard lock(e.impl_->control);
+  e.impl_->settings["outputDevice"]=999;
+  e.impl_->openedOutputDevice=999;
+ }
+ static void selectVanishedOutput(Engine& e) {
+  std::lock_guard lock(e.impl_->control);
+  e.impl_->openedOutputDevice=-2;
+  for(auto& d:e.impl_->audioOutputs)
+   if(d["id"]==e.impl_->settings["outputDevice"])d["name"]="Disconnected test endpoint";
+ }
+};
+}
 using namespace sightreading;
 using nlohmann::json;
 static void fillFuture(Engine& e, Bus bus=Bus::Example, unsigned source=125) {
@@ -16,6 +36,48 @@ static void fillFuture(Engine& e, Bus bus=Bus::Example, unsigned source=125) {
 static EngineOptions fixture(){return {SR_ROOT "/native/tests/fixture.sfz",48000,128,false,true};}
 static json cmd(Engine& e,const char* type,json params={}){return e.command({{"version",1},{"id",1},{"type",type},{"params",params}});}
 static double audio(Engine& e,unsigned blocks=1){std::array<float,256> out{}; double sum=0; for(unsigned i=0;i<blocks;i++){e.render(out.data(),128); for(float f:out){REQUIRE(std::isfinite(f)); sum+=f*f;}}return sum;}
+TEST_CASE("Stopped WASAPI stream recovers without resetting live notes or clicks", "[audio-recovery]") {
+ Engine e(fixture()); e.start();
+ if(!e.snapshot()["audioReady"].get<bool>()) { WARN("No WASAPI output for recovery hardware test"); e.stop(); return; }
+ REQUIRE(cmd(e,"metronome.start")["ok"] == true);
+ REQUIRE(e.submit({EventType::On,Bus::Live,1,0,60,90,777}));
+ std::this_thread::sleep_for(std::chrono::milliseconds(80));
+ REQUIRE(e.snapshot()["heldNotes"].size() == 1);
+ EngineTestAccess::abortAudio(e);
+ const auto stopped = e.sampleFrame();
+ bool recovered = false;
+ for(unsigned i=0;i<40;++i) {
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  if(e.sampleFrame()>stopped+128) { recovered=true; break; }
+ }
+ REQUIRE(recovered);
+ const auto state=e.snapshot();
+ REQUIRE(state["audioReady"] == true);
+ REQUIRE(state["heldNotes"].size() == 1);
+ REQUIRE(state["heldNotes"][0]["instance"] == 777);
+ REQUIRE(state["metronome"]["running"] == true);
+ // An explicitly selected device retains its name when enumeration indices change.
+ auto selected=state["audioOutputs"][0];
+ for(const auto& d:state["audioOutputs"])if(d["name"]==state["output"]["name"])selected=d;
+ REQUIRE(e.submit({EventType::Off,Bus::Live,1,0,60,0,777}));
+ std::this_thread::sleep_for(std::chrono::milliseconds(80));
+ REQUIRE(cmd(e,"audio.settings",{{"outputDevice",selected["id"]}})["ok"] == true);
+ EngineTestAccess::changeCachedOutputIndex(e);
+ EngineTestAccess::abortAudio(e);
+ const auto beforeRemap=e.sampleFrame();
+ for(unsigned i=0;i<40&&e.sampleFrame()<=beforeRemap+128;++i)
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+ REQUIRE(e.sampleFrame()>beforeRemap+128);
+ REQUIRE(e.snapshot()["output"]["name"]==selected["name"]);
+ REQUIRE(e.snapshot()["settings"]["outputDevice"]==selected["id"]);
+ EngineTestAccess::selectVanishedOutput(e);
+ EngineTestAccess::abortAudio(e);
+ std::this_thread::sleep_for(std::chrono::milliseconds(1600));
+ REQUIRE(e.snapshot()["audioReady"]==false);
+ REQUIRE(e.snapshot()["error"].get<std::string>().find("Disconnected test endpoint")!=std::string::npos);
+ REQUIRE(cmd(e,"audio.settings",{{"outputDevice",-1}})["ok"] == true);
+ e.stop();
+}
 
 TEST_CASE("Maximum piano volume retains sample level with bounded output", "[piano-gain]") {
  for(auto bus:{Bus::Live,Bus::Playback,Bus::Example}) {

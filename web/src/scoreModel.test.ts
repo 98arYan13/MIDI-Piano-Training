@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { buildScore, scoreFrame, type ScoreMetadata } from "./scoreModel";
+import { buildScore, scoreFrame, scoreTick, type ScoreMetadata } from "./scoreModel";
 import { interpolateScore } from "./EngravedScore";
 const song: ScoreMetadata = {
   ppq: 384,
@@ -12,6 +12,15 @@ const song: ScoreMetadata = {
     { id: 2, title: "Piano LH", staff: "split" },
   ],
 };
+it("maps selection marker frames back to ticks across tempo changes", () => {
+  const metadata = { ...song, tempoMap: [
+    { tick: 0, microseconds: 500000 }, { tick: 768, microseconds: 1000000 },
+  ] };
+  for (const tick of [0, 384, 768, 960, 2304])
+    expect(scoreTick(metadata, scoreFrame(metadata, tick, 48000), 48000)).toBe(tick);
+  expect(scoreTick(metadata, -48000, 48000)).toBe(0);
+  expect(scoreTick(metadata, 1e9, 48000)).toBe(metadata.durationTicks);
+});
 const note = (pitch: number, start: number, end: number, track = 1) => ({
   id: `${pitch}:${start}:${track}`,
   midiNote: pitch,

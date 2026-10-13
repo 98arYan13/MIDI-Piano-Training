@@ -7,11 +7,14 @@ import type { Song, SongTrack, TimelineNote, TransportConfig } from "./types";
 import "./playAlong.css";
 import { NumericInput } from "./NumericInput";
 import { PlayerControls, RestartButton } from "./PlayerControls";
+import { LoopMarkers, type LoopSelection } from "./LoopMarkers";
+import { returnPosition } from "./clock";
 export function PlayAlong({ onFocus }: { onFocus: () => void }) {
   const native = useNative(),
     p = native.state?.transport;
   const dragPause = useRef<Promise<void>>(Promise.resolve());
   const [seekPreview, setSeekPreview] = useState<number | null>(null);
+  const overview = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (seekPreview !== null && p && Math.abs(p.songSeconds - seekPreview) < .001)
       setSeekPreview(null);
@@ -98,6 +101,11 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
       ),
     [notes, p?.config.hand],
   );
+  const selection: LoopSelection | undefined = song && p ? {
+    a: p.config.a, b: p.config.b, duration: song.durationTicks, enabled: p.config.loop,
+    start: () => run("transport.pause"),
+    change: (a, b) => run("transport.configure", { a, b }),
+  } : undefined;
   return (
     <div className="play-along">
       <Library selected={song?.id ?? ""} choose={(s) => void choose(s)} />
@@ -372,14 +380,32 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
               </div>
             </details>
             <div className="practice-player song-player">
+              <div className="selection-controls">
+                <label><input type="checkbox" aria-label="Repeat selected part"
+                  checked={p.config.loop} onChange={e => config({ loop: e.target.checked })} />
+                  Repeat selected part</label>
+                <button onClick={() => config({ a: Math.max(0, Math.min(p.config.b - 1, Math.floor(p.songTick))) })}>Set start here</button>
+                <button onClick={() => config({ b: Math.min(song.durationTicks, Math.max(p.config.a + 1, Math.floor(p.songTick))) })}>Set end here</button>
+                <button onClick={() => config({ loop: false, a: 0, b: song.durationTicks })}>Clear selection</button>
+                <button onClick={() => { setSeekPreview(null); void run("transport.return"); }}>Return to Start</button>
+                <small>Drag Start / End on the score or overview. Drag the score to find another passage.</small>
+              </div>
+              <div ref={overview} className="selection-overview" aria-label="Whole piece selection overview">
+                <LoopMarkers selection={selection!}
+                  position={tick => tick / song.durationTicks * (overview.current?.clientWidth ?? 0)}
+                  tickAt={x => {
+                    const box = overview.current!.getBoundingClientRect();
+                    return (x - box.left) / box.width * song.durationTicks;
+                  }} />
+              </div>
               <PlayerControls
                 hand={p.config.hand ?? "both"}
                 onHand={(hand) => config({ hand })}
-                playing={p.state === "playing" || p.waiting}
-                playLabel={p.state === "playing" || p.waiting ? "Pause" : "Play"}
+                playing={p.state === "playing" || p.waiting || p.state === "returning"}
+                playLabel={p.state === "playing" || p.waiting || p.state === "returning" ? "Pause" : "Play"}
                 onPlay={() =>
                   void run(
-                    p.state === "playing" || p.waiting
+                    p.state === "playing" || p.waiting || p.state === "returning"
                       ? "transport.pause"
                       : "transport.play",
                   )
@@ -389,18 +415,20 @@ export function PlayAlong({ onFocus }: { onFocus: () => void }) {
                 <EngravedScore
                   key={song.id}
                   song={song}
+                  selection={selection}
                   fromTick={scoreWindow.from}
                   toTick={scoreWindow.to}
                   notes={displayedNotes}
                   sampleRate={p.sampleRate}
                   clockFrame={() =>
+                    p.return ? returnPosition(p.return,native.frame())*p.sampleRate :
                     (seekPreview ?? p.songSeconds) * p.sampleRate +
                     (p.state === "playing"
                       ? Math.max(0, native.frame() - p.sampleFrame) * p.speed
                       : 0)
                   }
                   pixelsPerSecond={p.config.spacing}
-                  running={p.state === "playing"}
+                  running={p.state === "playing" || p.state === "returning"}
                   label="Song practice notation"
                   paper
                   scrub={{

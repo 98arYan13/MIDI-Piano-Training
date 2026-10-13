@@ -59,6 +59,17 @@ export function scoreFrame(song: ScoreMetadata, tick: number, rate: number) {
     (seconds + ((tick - previousTick) * microseconds) / 1e6 / song.ppq) * rate,
   );
 }
+export function scoreTick(song: ScoreMetadata, frame: number, rate: number) {
+  let seconds = Math.max(0, frame / rate), previousTick = 0, microseconds = 500000;
+  for (const tempo of song.tempoMap) {
+    const span = (tempo.tick - previousTick) * microseconds / 1e6 / song.ppq;
+    if (seconds < span) break;
+    seconds -= span;
+    previousTick = tempo.tick;
+    microseconds = tempo.microseconds;
+  }
+  return Math.min(song.durationTicks, Math.round(previousTick + seconds * 1e6 * song.ppq / microseconds));
+}
 export function keyAlterations(sharps: number) {
   const result = new Map<string, number>();
   const order = sharps < 0 ? "beadgcf" : "fcgdaeb";

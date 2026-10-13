@@ -70,6 +70,114 @@ TEST_CASE("Score dragging seeks seconds through the native tempo map", "[song-dr
   REQUIRE_THROWS(t.command("transport.seek", {{"seconds", 4}}, 0));
   REQUIRE(t.snapshot(0)["songTick"] == 1440);
 }
+TEST_CASE("Selected passage play and restart start at A and preserve options", "[transport][selection]") {
+  Engine e;
+  Transport t(e);
+  t.load(model());
+  t.command("transport.configure", {{"loop", true}, {"a", 480}, {"b", 960},
+    {"speed", .5}, {"hand", "right"}, {"hints", true}}, 0);
+  t.command("transport.play", {}, 0);
+  REQUIRE(t.snapshot(256)["songTick"] == 480);
+  t.command("transport.seek", {{"tick", 720}}, 256);
+  t.command("transport.restart", {}, 512);
+  auto p = t.snapshot(768);
+  REQUIRE(p["songTick"] == 480);
+  REQUIRE(p["config"]["speed"] == .5);
+  REQUIRE(p["config"]["hand"] == "right");
+  REQUIRE(p["config"]["hints"] == true);
+  auto edited = model();
+  edited["tracks"][0]["backing"] = true;
+  t.load(edited);
+  REQUIRE(t.snapshot(768)["config"]["a"] == 480);
+  REQUIRE(t.snapshot(768)["config"]["b"] == 960);
+  t.command("transport.stop", {}, 768);
+  t.command("transport.play", {}, 768);
+  REQUIRE(t.snapshot(1024)["songTick"] == 480);
+  t.command("transport.configure", {{"loop", false}}, 1024);
+  t.command("transport.restart", {}, 1024);
+  REQUIRE(t.snapshot(1280)["songTick"] == 0);
+}
+TEST_CASE("Passage returns animate immediately for two seconds before replay", "[return]") {
+ Engine e; Transport t(e); t.load(model());
+ t.command("transport.configure",{{"loop",true},{"a",480},{"b",960},{"hints",true}},0);
+ t.command("transport.play",{},0);
+ t.tick(24256);
+ auto end=t.snapshot(24256);
+ REQUIRE(end["state"]=="returning");
+ REQUIRE(end["songTick"]==960);
+ t.tick(48256);
+ REQUIRE(t.snapshot(48256)["songTick"].get<double>()<960);
+ REQUIRE(t.snapshot(48256)["songTick"].get<double>()>480);
+ t.input({EventType::On,Bus::Live,1,0,65,90,1,48256});
+ REQUIRE(t.snapshot(48256)["misses"]==end["misses"]);
+ REQUIRE(t.snapshot(48256)["target"].empty());
+ REQUIRE(t.snapshot(48256)["hintKeys"].empty());
+ t.tick(72256);
+ REQUIRE(t.snapshot(72256)["songTick"]==720);
+ t.tick(120256);
+ REQUIRE(t.snapshot(120256)["state"]=="playing");
+ REQUIRE(t.snapshot(120256)["songTick"]==480);
+ t.command("transport.pause",{},120256);
+ t.command("transport.seek",{{"tick",900}},120256);
+ t.command("transport.return",{},120256);
+ REQUIRE(t.snapshot(168256)["songTick"]==690);
+ t.tick(216256);
+ REQUIRE(t.snapshot(216256)["state"]=="paused");
+ REQUIRE(t.snapshot(216256)["songTick"]==480);
+ t.command("transport.return",{},216256);
+ t.command("transport.stop",{},220256);
+ t.tick(400000);
+ REQUIRE(t.snapshot(400000)["state"]=="stopped");
+ REQUIRE(t.snapshot(400000)["songTick"]==0);
+}
+TEST_CASE("Wait resumes at A after return and pauses safely mid-animation", "[return]") {
+ Engine e;Transport t(e);t.load(model());
+ t.command("transport.configure",{{"mode","wait"},{"loop",true},{"a",480},{"b",960}},0);
+ t.command("transport.play",{},0);t.tick(256);
+ REQUIRE(t.snapshot(256)["waiting"]==true);
+ t.input({EventType::On,Bus::Live,1,0,60,90,1,256});
+ t.tick(24512);
+ REQUIRE(t.snapshot(24512)["state"]=="returning");
+ t.tick(120512);t.tick(120768);
+ REQUIRE(t.snapshot(120768)["waiting"]==true);
+ REQUIRE(t.snapshot(120768)["songTick"]==480);
+ t.command("transport.return",{},120768);
+ t.command("transport.pause",{},144768);
+ REQUIRE(t.snapshot(144768)["state"]=="paused");
+ t.tick(240000);
+ REQUIRE(t.snapshot(240000)["state"]=="paused");
+}
+TEST_CASE("Passage scoring and hints exclude targets beyond B in every mode", "[selection]") {
+  for (auto mode : {"continuous", "pauseOnMiss", "wait"}) {
+    Engine e;
+    Transport t(e);
+    auto s = model();
+    auto next = s["notes"][0];
+    next["id"] = 3;
+    next["midiNote"] = 64;
+    next["startTick"] = 960;
+    next["endTick"] = 1440;
+    s["notes"].push_back(next);
+    t.load(s);
+    t.command("transport.configure", {{"loop", true}, {"a", 480}, {"b", 900},
+      {"mode", mode}, {"hints", true}}, 0);
+    t.command("transport.play", {}, 0);
+    t.tick(256);
+    t.input({EventType::On, Bus::Live, 1, 0, 60, 90, 1, 256});
+    t.input({EventType::Off, Bus::Live, 1, 0, 60, 0, 1, 257});
+    REQUIRE(t.snapshot(20656)["hits"] == 1);
+    // This attack is within normal tolerance of the excluded next note.
+    t.input({EventType::On, Bus::Live, 1, 0, 64, 90, 2, 20656});
+    t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 3, 20657});
+    auto p = t.snapshot(20657);
+    REQUIRE(p["hits"] == 1);
+    REQUIRE(p["misses"] == 0);
+    REQUIRE(p["retry"] == false);
+    REQUIRE(p["target"].empty());
+    REQUIRE(p["hintKeys"].empty());
+    REQUIRE(p["songTick"].get<double>() < 900);
+  }
+}
 TEST_CASE("Wait mode freezes at the selected hand and continues only after correct input", "[song-wait]") {
   for (auto hand : {"left", "right", "both"}) {
     Engine e;
@@ -352,7 +460,10 @@ TEST_CASE("Empty transport snapshot and loop position are safe before load and "
   t.tick(23000);
   REQUIRE(t.snapshot(23000)["songTick"].get<double>() > 900);
   t.tick(25000);
-  REQUIRE(t.snapshot(25000)["songTick"].get<double>() < 500);
+  REQUIRE(t.snapshot(25000)["state"] == "returning");
+  REQUIRE(t.snapshot(25000)["songTick"].get<double>() < 960);
+  t.tick(120256);
+  REQUIRE(t.snapshot(120256)["songTick"] == 480);
 }
 TEST_CASE("Wrong attack and incomplete deadline count one missed group; pause "
           "retry requires fresh chord",
@@ -393,6 +504,27 @@ TEST_CASE("Physical chord assembly is inclusive150ms independently of wider "
     t.input({EventType::On, Bus::Live, 1, 0, 64, 90, 2, 24256 + delta});
     REQUIRE(t.snapshot(24256 + delta)["hits"] == (delta == 7200 ? 1 : 0));
     REQUIRE(t.snapshot(24256 + delta)["misses"] == (delta == 7200 ? 0 : 1));
+  }
+}
+TEST_CASE("Play Along tempo edits update global clicks without toggling them", "[tempo-sync]") {
+  for (bool running : {false, true}) {
+    Engine e({"missing.sfz", 48000, 128, false, true});
+    Transport t(e);
+    t.load(model());
+    if (running)
+      REQUIRE(e.command({{"version", 1}, {"id", 1}, {"type", "metronome.start"}, {"params", json::object()}})["ok"] == true);
+    std::vector<float> out(96000 * 2);
+    e.render(out.data(), 128);
+    t.command("transport.tempo", {{"bpm", 90}}, e.sampleFrame());
+    e.render(out.data(), 96000);
+    REQUIRE(e.snapshot()["metronome"]["tempo"] == 90);
+    if (running) REQUIRE(e.snapshot()["metronome"]["activeTempo"] == 90);
+    REQUIRE(e.snapshot()["metronome"]["running"] == running);
+    t.command("transport.configure", {{"speed", .5}}, e.sampleFrame());
+    e.render(out.data(), 96000);
+    REQUIRE(e.snapshot()["metronome"]["tempo"] == 60);
+    if (running) REQUIRE(e.snapshot()["metronome"]["activeTempo"] == 60);
+    REQUIRE(e.snapshot()["metronome"]["running"] == running);
   }
 }
 TEST_CASE("Native tempo edits preserve position and unsupported Follow maps "
@@ -612,7 +744,10 @@ TEST_CASE("Frozen retry retains its one miss while pause resume and loop "
   t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 3, 256});
   t.tick(25000);
   t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 4, 25001});
-  REQUIRE(t.snapshot(25001)["misses"] == 2);
+  REQUIRE(t.snapshot(25001)["misses"] == 1);
+  t.tick(120256);
+  t.input({EventType::On, Bus::Live, 1, 0, 65, 90, 5, 120513});
+  REQUIRE(t.snapshot(120513)["misses"] == 2);
 }
 TEST_CASE(
     "Delayed source stereo curves affect held and release layers independently",
@@ -675,10 +810,17 @@ TEST_CASE(
   }
   t.load(s);
   t.command("transport.configure", {{"loop", true}, {"a", 480}, {"b", 960}}, 0);
-  t.command("transport.play", {}, 0);
+  REQUIRE(e.submit({EventType::On, Bus::Live, 1, 0, 106, 90, 777}));
+  std::vector<float> audio(256);
+  e.render(audio.data(), 128);
+  // Playback now enters directly at A, so restoration rejects on Play itself.
+  REQUIRE_THROWS(t.command("transport.play", {}, 0));
   t.tick(47000);
   REQUIRE(t.snapshot(47000)["state"] != "playing");
   REQUIRE_FALSE(t.snapshot(47000)["error"].get<std::string>().empty());
+  e.render(audio.data(), 128);
+  REQUIRE(e.snapshot()["heldNotes"].size() == 1);
+  REQUIRE(e.snapshot()["heldNotes"][0]["bus"] == "live");
 }
 TEST_CASE("Source recovery cancels newly spawned release-trigger layers", "[review-source]") {
  EngineOptions o;o.pianoPath=std::string(SR_ROOT)+"/native/tests/fixture-release.sfz";o.preloadSynchronously=true;Engine e(o);std::vector<float>a(9600);

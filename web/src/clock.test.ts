@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { acceptSnapshot, estimateFrame } from "./clock";
+import { acceptSnapshot, estimateFrame, returnPosition } from "./clock";
 import type { SnapshotMessage } from "./types";
 const snap = (generation: number, frame: number) =>
   ({
@@ -14,6 +14,14 @@ const snap = (generation: number, frame: number) =>
     },
   }) as SnapshotMessage;
 describe("native visual clock", () => {
+  it("returns immediately with smooth native-clock progress over two seconds", () => {
+    const animation = { from: 10, to: 2, startFrame: 48000, durationFrames: 96000 };
+    expect(returnPosition(animation, 48000)).toBe(10);
+    expect(returnPosition(animation, 72000)).toBeLessThan(10);
+    expect(returnPosition(animation, 96000)).toBe(6);
+    expect(returnPosition(animation, 144000)).toBe(2);
+    expect(returnPosition(animation, 200000)).toBe(2);
+  });
   it("accepts first state and rejects obsolete generation/frame", () => {
     expect(acceptSnapshot(null, snap(2, 100))).toBe(true);
     expect(acceptSnapshot(snap(2, 100), snap(1, 200))).toBe(false);

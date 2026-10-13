@@ -55,7 +55,7 @@ struct Engine::Impl {
     std::array<std::array<bool,16>,SourceCount> externalPedals{};
     json settings,pending=nullptr,devices=json::array(),outputs=json::array(),audioOutputs=json::array();
     std::string error;std::array<std::string,SourceCount> sourceNames{};unsigned nextSource{1};
-    PaStream* stream{};bool paInitialized{};double outputLatency{};unsigned actualRate{};std::string outputName;
+    PaStream* stream{};bool paInitialized{};double outputLatency{};unsigned actualRate{};std::string outputName;int openedOutputDevice{-2};
     unsigned externalPortOpens{};int openedExternal{-1};std::unique_ptr<RtMidiOut> midiOut;std::thread worker,loader;
     struct InputPort {Impl* engine{};unsigned source{},port{};std::string identity,name;std::unique_ptr<RtMidiIn> input;std::array<std::array<uint64_t,128>,16> instances{};uint64_t counter{};};
     std::map<std::string,std::unique_ptr<InputPort>> ports;std::map<std::string,bool> disabled;

@@ -72,13 +72,16 @@ private:
   std::map<std::tuple<unsigned, unsigned, uint64_t>, unsigned> held_;
   std::map<unsigned, uint64_t> attempt_;
   size_t cursor_{}, group_{};
-  uint64_t origin_{}, generation_{}, revision_{}, cycle_{};
+  uint64_t origin_{}, generation_{}, revision_{};
   uint64_t waitFrom_{};
-  uint64_t clockOrigin_{}, scoreCycle_{};
+  uint64_t clockOrigin_{};
   double clockStart_{}, lastScorePosition_{};
   std::map<std::pair<unsigned, uint64_t>, InputEvent> active_;
   double position_{}, cycleStart_{}, cycleEnd_{};
   bool playing_{}, retry_{};
+  bool returning_{}, returnPlay_{};
+  double returnFrom_{}, returnTo_{};
+  uint64_t returnStart_{};
   bool groupFailed_{};
   unsigned hits_{}, misses_{}, pumpEntries_{};
   std::string error_;
@@ -114,11 +117,12 @@ private:
   void follow(double seconds, uint64_t frame);
   void cancel();
   void resume(uint64_t frame);
+  void beginReturn(uint64_t frame, double from, bool play);
   bool restore(double seconds, uint64_t frame, unsigned budget = 2048);
   double position(uint64_t frame) const;
   double frameSeconds(uint64_t frame) const;
   void fail(uint64_t frame);
-  void selectScoreCycle(uint64_t frame);
   bool audible(unsigned track) const;
+  bool inSelection(const Group &group) const;
 };
 } // namespace sightreading

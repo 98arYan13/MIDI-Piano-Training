@@ -1,4 +1,5 @@
 #include <chrono>
+#include <condition_variable>
 #include <csignal>
 #include <httplib.h>
 #include <iostream>
@@ -6,6 +7,7 @@
 #include <sightreading/Practice.hpp>
 #include <sightreading/EarFlash.hpp>
 #include <sightreading/Storage.hpp>
+#include <sightreading/Preferences.hpp>
 #include <sightreading/Transport.hpp>
 #include <sightreading/LibraryRoutes.hpp>
 #include <sightreading/Tray.hpp>
@@ -80,6 +82,9 @@ int main(int argc, char **argv) {
     if (port < 1 || port > 65535)
       throw std::invalid_argument("Invalid port");
     Storage storage(dir);
+    // Independent connection: a checkpoint's busy timeout cannot hold the
+    // command/library connection mutex and double their own busy timeout.
+    Storage sessionStorage(dir);
     installStarters(storage,"assets/music");
     Hooks hooks;
     EngineOptions options;
@@ -92,6 +97,18 @@ int main(int argc, char **argv) {
     Practice practice(options.sampleRate);
     Transport transport(engine);
     EarFlash exercises(engine);
+    const auto defaultAudio = engine.snapshot()["settings"];
+    const auto defaultMetronome = engine.snapshot()["metronome"]["settings"];
+    const auto defaultTransport = transport.snapshot(0)["config"];
+    auto preferences = defaultPreferences();
+    auto savedPreferences = storage.load("preferences");
+    if (!savedPreferences.is_null()) preferences = updatePreferences(preferences, savedPreferences);
+    std::mutex sessionMutex;
+    uint64_t preferencesRevision{};
+    std::string persistenceError;
+    json pendingSession, lastSession;
+    std::condition_variable sessionChanged;
+    bool savingSession = true;
     std::mutex exercisesMutex;
     for(auto pair:{std::pair{"ear","ear.configure"},std::pair{"flash","flash.configure"}}){
       auto saved=storage.load(pair.first);
@@ -102,6 +119,26 @@ int main(int argc, char **argv) {
     auto savedPractice = storage.load("practice");
     if (!savedPractice.is_null())
       practice.configure(savedPractice);
+    auto savedSession = storage.load("session");
+    if (savedSession.is_object()) {
+      try {
+        const auto id = savedSession.value("songId", std::string{});
+        bool loaded = false;
+        if (!id.empty()) {
+          // A removed song is ordinary library state, not a startup failure.
+          try {
+            auto song = storage.song(id);
+            if (song["trashed"] != true) { transport.load(song); loaded = true; }
+          } catch (const std::invalid_argument &) {}
+        }
+        auto config = savedSession.at("config");
+        if (!loaded) { config["loop"] = false; config["a"] = 0; config["b"] = 0; }
+        transport.command("transport.configure", config, 0);
+        if (loaded) transport.command("transport.seek", {{"tick", savedSession.at("songTick")}}, 0);
+      } catch (const std::exception &) {
+        persistenceError = "The last song session could not be restored. Choose a song to continue.";
+      }
+    }
     engine.setInputHook(
         [](const InputEvent &e, uint64_t frame, void *c) noexcept {
           auto event = e;
@@ -117,6 +154,7 @@ int main(int argc, char **argv) {
     for (auto pair : {std::pair{"audio", "audio.settings"},
                       std::pair{"metronome", "metronome.config"}}) {
       auto saved = storage.load(pair.first);
+      if (saved.is_null() && std::string(pair.first) == "metronome") saved = defaultMetronome;
       if (!saved.is_null()) {
         auto reply = engine.command({{"version", 1},
                                      {"id", "restore"},
@@ -139,6 +177,39 @@ int main(int argc, char **argv) {
     std::mutex commands;
     std::mutex slotsMutex;
     std::array<bool, 32> slots{};
+    // Bounded single pending checkpoint; SQLite never blocks the playback pump.
+    auto saveSession = [&](uint64_t frame) {
+      const auto snapshot = transport.snapshot(frame);
+      json session = {{"songId", snapshot["songId"]}, {"songTick", snapshot["songTick"]},
+                      {"config", snapshot["config"]}};
+      std::lock_guard lock(sessionMutex);
+      if (session != lastSession) {
+        lastSession = session;
+        pendingSession = std::move(session);
+        sessionChanged.notify_one();
+      }
+    };
+    std::thread sessionWriter([&] {
+      for (;;) {
+        json session;
+        {
+          std::unique_lock lock(sessionMutex);
+          sessionChanged.wait(lock, [&] { return !pendingSession.is_null() || !savingSession; });
+          if (pendingSession.is_null() && !savingSession) break;
+          session = std::move(pendingSession);
+          pendingSession = nullptr;
+        }
+        try {
+          sessionStorage.save("session", session);
+          std::lock_guard lock(sessionMutex);
+          persistenceError.clear();
+        } catch (const std::exception &) {
+          std::lock_guard lock(sessionMutex);
+          lastSession = nullptr; // The next checkpoint retries, even if paused.
+          persistenceError = "Could not save the last song position. Check local storage.";
+        }
+      }
+    });
     auto state = [&]() {
       auto s = engine.snapshot();
       s["generation"] = generation;
@@ -149,6 +220,7 @@ int main(int argc, char **argv) {
       }
       {std::lock_guard lock(transportMutex);s["transport"]=transport.snapshot(engine.sampleFrame());s["transport"]["engineTimeNs"]=s["engineTimeNs"];}
       {std::lock_guard lock(exercisesMutex);s["ear"]=exercises.ear(engine.sampleFrame());s["flash"]=exercises.flash();}
+      {std::lock_guard lock(sessionMutex);s["preferences"]=preferences;s["preferencesRevision"]=preferencesRevision;s["persistenceError"]=persistenceError;}
       return s;
 
     };
@@ -163,6 +235,53 @@ int main(int argc, char **argv) {
                     {"result", state()},
                     {"error", nullptr}};
       json reply;
+      if (req.is_object() && req.contains("id") && req.value("version", json()) == 1 &&
+          (req.value("type", json()) == "preferences.configure" || req.value("type", json()) == "settings.reset")) {
+        try {
+          if (req["type"] == "preferences.configure") {
+            json next;
+            { std::lock_guard lock(sessionMutex);
+              next = updatePreferences(preferences, req.value("params", json::object())); }
+            storage.save("preferences", next);
+            { std::lock_guard lock(sessionMutex); preferences = next; ++preferencesRevision; }
+          } else {
+            auto applyEngine = [&](const char *type, const json &params) {
+              const auto result = engine.command({{"version", 1}, {"id", "reset"}, {"type", type}, {"params", params}});
+              if (result["ok"] != true) throw std::runtime_error(result["error"]["message"].get<std::string>());
+            };
+            applyEngine("audio.settings", defaultAudio);
+            storage.save("audio", defaultAudio);
+            const auto disabled = engine.snapshot()["disabledInputs"];
+            for (auto it = disabled.begin(); it != disabled.end(); ++it)
+              if (it.value() == true) applyEngine("devices.enable", {{"id", it.key()}, {"enabled", true}});
+            storage.save("disabled", engine.snapshot()["disabledInputs"]);
+            { std::lock_guard lock(practiceMutex); practice.configure(defaultPracticeConfig()); }
+            storage.save("practice", defaultPracticeConfig());
+            { std::lock_guard lock(exercisesMutex);
+              exercises.command("ear.configure", defaultEarConfig(), engine.sampleFrame());
+              exercises.command("flash.configure", defaultFlashConfig(), engine.sampleFrame()); }
+            storage.save("ear", defaultEarConfig()); storage.save("flash", defaultFlashConfig());
+            std::string songId;
+            { std::lock_guard lock(transportMutex); songId = transport.snapshot(engine.sampleFrame())["songId"].get<std::string>(); }
+            const auto duration = songId.empty() ? json(0) : storage.song(songId)["durationTicks"];
+            { std::lock_guard lock(transportMutex);
+              auto config = defaultTransport;
+              // Use this song's full range, even if the user narrowed loop B.
+              config["b"] = duration;
+              transport.command("transport.configure", config, engine.sampleFrame());
+              saveSession(engine.sampleFrame()); }
+            // Configure keeps the running clock alive and overrides transport tempo linking.
+            applyEngine("metronome.config", defaultMetronome);
+            storage.save("metronome", defaultMetronome);
+            storage.save("preferences", defaultPreferences());
+            { std::lock_guard lock(sessionMutex); preferences = defaultPreferences(); ++preferencesRevision; }
+          }
+          return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",state()},{"error",nullptr}};
+        } catch (const std::exception &e) {
+          return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},
+                      {"error",{{"code","settings_error"},{"message",e.what()}}}};
+        }
+      }
       if(req.is_object()&&req.contains("id")&&req.value("version",json())==1&&req.value("type",json()).is_string()&&(req["type"].get<std::string>().starts_with("ear.")||req["type"].get<std::string>().starts_with("flash."))){
         json result;
         auto type=req["type"].get<std::string>();
@@ -172,7 +291,28 @@ int main(int argc, char **argv) {
         return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};
       }
       if(req.is_object()&&req.contains("id")&&req.value("version",json())==1&&req.value("type",json()).is_string()&&req["type"].get<std::string>().starts_with("transport.")){
-        try{std::lock_guard lock(transportMutex);auto type=req["type"].get<std::string>();auto params=req.value("params",json::object());json result;if(type=="transport.load"){auto id=params.at("id").get<std::string>();auto song=storage.song(id);if(song["trashed"]==true)throw std::invalid_argument("Restore this song from trash first.");transport.load(song);storage.patchSong(id,{{"recent",uint64_t(std::chrono::system_clock::now().time_since_epoch().count())}});result=transport.snapshot(engine.sampleFrame());}else result=transport.command(type,params,engine.sampleFrame());return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};}catch(const std::exception &e){return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},{"error",{{"code","invalid_transport"},{"message",e.what()}}}};}
+        try {
+          const auto type = req["type"].get<std::string>();
+          const auto params = req.value("params",json::object());
+          json song, result;
+          if (type == "transport.load") {
+            const auto id = params.at("id").get<std::string>();
+            song = storage.song(id);
+            if (song["trashed"] == true) throw std::invalid_argument("Restore this song from trash first.");
+            storage.patchSong(id, {{"recent",uint64_t(std::chrono::system_clock::now().time_since_epoch().count())}});
+          }
+          {
+            std::lock_guard lock(transportMutex);
+            if (type == "transport.load") { transport.load(song); result = transport.snapshot(engine.sampleFrame()); }
+            else result = transport.command(type,params,engine.sampleFrame());
+            saveSession(engine.sampleFrame());
+          }
+          try {
+            if (type == "transport.tempo" || (type == "transport.configure" && params.contains("speed")))
+              storage.save("metronome", engine.snapshot()["metronome"]["settings"]);
+          } catch (const std::exception &e) { return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",result},{"error",{{"code","storage_error"},{"message",std::string("Playback change accepted but settings could not be saved: ")+e.what()}}}}; }
+          return json{{"version",1},{"id",req["id"]},{"ok",true},{"result",result},{"error",nullptr}};
+        } catch(const std::exception &e) { return json{{"version",1},{"id",req["id"]},{"ok",false},{"result",nullptr},{"error",{{"code","invalid_transport"},{"message",e.what()}}}}; }
       }
       if (req.is_object() && req.contains("id") &&
           req.value("version", json()) == 1 &&
@@ -370,6 +510,7 @@ int main(int argc, char **argv) {
     uint64_t practiceRevision = UINT64_MAX;
     uint64_t practiceDrops{};
     std::thread pump([&] {
+      auto checkpoint = std::chrono::steady_clock::now();
       while (pumping) {
         json additions = json::array();
         InputEvent e;
@@ -416,7 +557,14 @@ int main(int argc, char **argv) {
                                    {"running", p["running"]}}}});
           }
         }
-        {std::lock_guard lock(transportMutex);transport.tick(tickFrame);}
+        {std::lock_guard lock(transportMutex);transport.tick(tickFrame);
+          if (std::chrono::steady_clock::now() - checkpoint >= std::chrono::seconds(1)) {
+            checkpoint = std::chrono::steady_clock::now();
+            try { saveSession(tickFrame); }
+            catch (const std::exception &) { std::lock_guard sessionLock(sessionMutex);
+              persistenceError = "Could not save the last song position. Check local storage."; }
+          }
+        }
         {std::lock_guard lock(exercisesMutex);exercises.tick(tickFrame);}
         while (hooks.beats.pop(b))
 
@@ -556,6 +704,9 @@ int main(int argc, char **argv) {
     if (trayThread.joinable()) trayThread.join();
     pumping = false;
     pump.join();
+    { std::lock_guard lock(transportMutex); saveSession(engine.sampleFrame()); }
+    { std::lock_guard lock(sessionMutex); savingSession = false; sessionChanged.notify_one(); }
+    sessionWriter.join();
     engine.stop();
     return listened ? 0 : 1;
   } catch (const std::exception &e) {

@@ -181,7 +181,7 @@ try {
   );
   await page.getByRole("button", { name: "Restart", exact: true }).click();
   await page.getByRole("button", { name: "Stop", exact: true }).click();
-  await page.getByRole("img", { name: /Song practice notation/ }).waitFor();
+  await page.getByRole("group", { name: /Song practice notation/ }).waitFor();
   assert.equal(await page.locator(".song-workspace .paper-staff").count(), 1);
   await page.getByRole("button", { name: "Left hand", exact: true }).waitFor();
   await page.getByRole("button", { name: "Right hand", exact: true }).waitFor();

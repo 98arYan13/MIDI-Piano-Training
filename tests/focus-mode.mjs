@@ -47,10 +47,13 @@ try {
   await until(async () => (await state()).transport.hits > waiting.hits);
   await page.getByRole('button', { name: 'Pause', exact: true }).click();
   await page.getByRole('button', { name: 'Return to Play Along', exact: true }).click();
+  await page.getByRole('button', { name: 'Show keyboard', exact: true }).waitFor({ state: 'visible' });
   assert.equal(await page.getByRole('button', { name: 'Show keyboard', exact: true }).isVisible(), true);
   assert.deepEqual((await state()).transport.config, before.config);
   await page.getByRole('button', { name: 'Focus mode', exact: true }).click();
+  await page.getByRole('button', { name: 'Return to Play Along', exact: true }).waitFor({ state: 'visible' });
   await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Focus mode', exact: true }).waitFor({ state: 'visible' });
   assert.equal(await page.getByRole('button', { name: 'Focus mode', exact: true }).isVisible(), true);
   await page.getByLabel('Hint mode', { exact: true }).click();
   await until(async () => !(await state()).transport.config.hints);

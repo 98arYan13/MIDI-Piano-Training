@@ -42,6 +42,7 @@ public:
     void setBeatHook(Metronome::BeatHook hook,void* context);
     void followMetronome(double tempo,unsigned numerator,unsigned denominator,unsigned beat,uint64_t frame);
 private:
+    friend struct EngineTestAccess;
     struct Impl;
     std::unique_ptr<Impl> impl_;
 };

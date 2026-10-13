@@ -506,6 +506,25 @@ function Workspace({ route, onFocus }: { route: string; onFocus: () => void }) {
     </section>
   );
 }
+function AppSettings() {
+  const native = useNative();
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  return <>
+    <p className="helper">Your last tab, keyboard display, exercise settings, audio, metronome, and playback options are saved automatically on this computer. The last song opens at its saved position, paused.</p>
+    <p>Reset restores all settings and display preferences to their defaults. Your song library and current song position are kept. The metronome stays running; audio device changes wait for held live notes and sustain to be released.</p>
+    <button disabled={!native.connected || busy} onClick={async () => {
+      setBusy(true);
+      setMessage("");
+      try {
+        await native.command("settings.reset");
+        setMessage("Settings restored to defaults.");
+      } catch (e) { setMessage((e as Error).message); }
+      finally { setBusy(false); }
+    }}>Reset all settings to defaults</button>
+    {message && <p role="status">{message}</p>}
+  </>;
+}
 function Shell() {
   const toolbar = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -522,8 +541,28 @@ function Shell() {
   const native = useNative(),
     s = native.state;
   const [route, setRoute] = useState(location.hash.slice(1) || "staff");
-  const [sidebarHidden, setSidebarHidden] = useState(false);
-  const [focusMode, setFocusMode] = useState(false);
+  const sidebarHidden = s?.preferences.sidebarHidden ?? false;
+  const focusMode = s?.preferences.focusMode ?? false;
+  const setSidebarHidden = (sidebarHidden: boolean) => {
+    void native.command("preferences.configure", { sidebarHidden }).catch(() => {});
+  };
+  const setFocusMode = (focusMode: boolean) => {
+    void native.command("preferences.configure", { focusMode }).catch(() => {});
+  };
+  const initialRoute = useRef(location.hash.slice(1));
+  const restored = useRef(false);
+  useEffect(() => {
+    if (!s) return;
+    if (!restored.current) {
+      restored.current = true;
+      if (routes.some(([id]) => id === initialRoute.current) && initialRoute.current !== s.preferences.route) {
+        void native.command("preferences.configure", { route: initialRoute.current, focusMode: false }).catch(() => {});
+        return;
+      }
+    }
+    setRoute(s.preferences.route);
+    history.replaceState(null, "", `#${s.preferences.route}`);
+  }, [s?.preferences.route]);
   const focusActive = focusMode && route === "play";
   const returnButton = useRef<HTMLButtonElement>(null);
   const previousScroll = useRef(0);
@@ -548,12 +587,13 @@ function Shell() {
     window.addEventListener("keydown", escape);
     return () => window.removeEventListener("keydown", escape);
   }, [focusActive]);
-  const [dialog, setDialog] = useState<"audio" | "metronome" | null>(null);
+  const [dialog, setDialog] = useState<"audio" | "metronome" | "app" | null>(null);
   const close = useRef(() => setDialog(null)).current;
   useEffect(() => {
     const change = () => {
       setRoute(location.hash.slice(1) || "staff");
-      setFocusMode(false);
+      const route = routes.find(([id]) => id === location.hash.slice(1))?.[0] ?? "staff";
+      void native.command("preferences.configure", { route, focusMode: false }).catch(() => {});
     };
     const shortcut = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
@@ -671,7 +711,7 @@ function Shell() {
               }
             >
               {s?.metronome.running ? "■" : "▶"}{" "}
-              <strong>{s?.metronome.settings.tempo ?? 100}</strong>
+              <strong>{Math.round(s?.metronome.settings.tempo ?? 100)}</strong>
               <span>BPM</span>
             </button>
             <button
@@ -688,6 +728,7 @@ function Shell() {
           >
             Panic
           </button>
+          <button aria-label="App settings" onClick={() => setDialog("app")}>Settings</button>
           <button
             className="fullscreen"
             aria-label="Toggle fullscreen"
@@ -734,13 +775,13 @@ function Shell() {
           </div>
         </nav>
         <main>
-          <Workspace route={route} onFocus={enterFocus} />
+          {s ? <Workspace route={route} onFocus={enterFocus} /> : <p>Restoring your workspace…</p>}
           <PianoKeyboard hintContext={route === "play" || route === "staff" || route === "ear" ? route : undefined} focusMode={focusActive} />
         </main>
       </div>
-      {(native.error || s?.error) && (
+      {(native.error || s?.error || s?.persistenceError) && (
         <div className="error-banner" role="alert">
-          <span>{native.error || s?.error}</span>
+          <span>{native.error || s?.error || s?.persistenceError}</span>
           {native.error && (
             <button
               onClick={() => native.clearError()}
@@ -760,10 +801,10 @@ function Shell() {
       )}
       {dialog && (
         <Dialog
-          title={dialog === "audio" ? "Audio & MIDI" : "Metronome"}
+          title={dialog === "audio" ? "Audio & MIDI" : dialog === "metronome" ? "Metronome" : "App settings"}
           close={close}
         >
-          {dialog === "audio" ? <AudioDialog /> : <MetronomeDialog />}
+          {dialog === "audio" ? <AudioDialog /> : dialog === "metronome" ? <MetronomeDialog /> : <AppSettings />}
         </Dialog>
       )}
     </div>

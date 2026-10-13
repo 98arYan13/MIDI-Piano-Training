@@ -8,6 +8,7 @@ import {
   VirtualInput,
 } from "./pianoModel";
 import "./practice.css";
+import type { NativeState } from "./types";
 
 export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?: "play" | "staff" | "ear"; focusMode?: boolean }) {
   const native = useNative();
@@ -21,13 +22,40 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
       }, native.source),
     [native],
   );
-  const [hidden, setHidden] = useState(false),
-    [focused, setFocused] = useState(false),
-    [size, setSize] = useState(88),
-    [labels, setLabels] = useState(true),
-    [velocity, setVelocity] = useState(90),
-    [octave, setOctave] = useState(4),
-    [pedal, setPedal] = useState(false),
+  const savedKeyboard = native.state?.preferences.keyboard;
+  const [keyboard, setKeyboard] = useState(savedKeyboard ?? { hidden: false, focused: false, size: 88, labels: true, velocity: 90, octave: 4 });
+  const pendingChanges = useRef(0);
+  const appliedRevision = useRef(0);
+  const generation = useRef(native.state?.generation);
+  useEffect(() => {
+    if (generation.current !== native.state?.generation) {
+      generation.current = native.state?.generation;
+      appliedRevision.current = 0;
+    }
+    if (savedKeyboard && !pendingChanges.current && (native.state?.preferencesRevision ?? 0) >= appliedRevision.current)
+      setKeyboard(savedKeyboard);
+  }, [native.state?.generation, native.state?.preferencesRevision]);
+  const { hidden, focused, size, labels, velocity, octave } = keyboard;
+  const configure = (patch: Partial<typeof keyboard>) => {
+    setKeyboard(current => ({ ...current, ...patch }));
+    ++pendingChanges.current;
+    void (async () => {
+      let acknowledged: NativeState | undefined;
+      try {
+        acknowledged = await native.command("preferences.configure", { keyboard: patch }) as NativeState;
+        appliedRevision.current = Math.max(appliedRevision.current, acknowledged.preferencesRevision);
+      } catch { /* NativeClient exposes the save error. */ }
+      finally {
+        --pendingChanges.current;
+        if (!pendingChanges.current) {
+          const current = native.state;
+          const latest = acknowledged && acknowledged.preferencesRevision >= (current?.preferencesRevision ?? 0) ? acknowledged : current;
+          if (latest) setKeyboard(latest.preferences.keyboard);
+        }
+      }
+    })();
+  };
+  const [pedal, setPedal] = useState(false),
     [width, setWidth] = useState(1040);
   const scroll = useRef<HTMLDivElement>(null);
   const lastAttack = useRef({ generation: 0, sequence: 0 });
@@ -131,7 +159,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
     unit = span / whites;
   const moveOctave = (delta: number) => {
     const next = Math.max(1, Math.min(7, octave + delta));
-    setOctave(next);
+    configure({ octave: next });
     if (!focused && scroll.current) {
       const key = keys.find((k) => k.midi === 12 * (next + 1));
       scroll.current.scrollTo({
@@ -150,7 +178,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
           <span className="eyebrow">ALWAYS WITH YOU</span>
           <h2>Piano keyboard</h2>
         </div>
-        <button onClick={() => setHidden(!hidden)} aria-expanded={!hidden}>
+        <button onClick={() => configure({ hidden: !hidden })} aria-expanded={!hidden}>
           {hidden ? "Show keyboard" : "Hide keyboard"}
         </button>
       </div>
@@ -161,8 +189,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
               aria-label="Keyboard size"
               value={focused ? "focused" : size}
               onChange={(e) => {
-                setSize(Number(e.target.value));
-                setFocused(false);
+                configure({ size: Number(e.target.value), focused: false });
               }}
             >
               {focused && (
@@ -176,7 +203,7 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
                 </option>
               ))}
             </select>
-            <button aria-pressed={focused} onClick={() => setFocused(true)}>
+            <button aria-pressed={focused} onClick={() => configure({ focused: true })}>
               Focused range
             </button>
             <div className="octave-controls">
@@ -202,14 +229,14 @@ export function PianoKeyboard({ hintContext, focusMode = false }: { hintContext?
                     min="1"
                     max="127"
                     value={velocity}
-                    onChange={(e) => setVelocity(Number(e.target.value))}
+                    onChange={(e) => configure({ velocity: Number(e.target.value) })}
                   />
                 </label>
                 <label>
                   <input
                     type="checkbox"
                     checked={labels}
-                    onChange={(e) => setLabels(e.target.checked)}
+                    onChange={(e) => configure({ labels: e.target.checked })}
                   />
                   Note labels
                 </label>

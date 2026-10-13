@@ -69,6 +69,9 @@ void Storage::patchSong(const std::string &id, const json &patch) {
     throw std::invalid_argument("Song not found.");
   auto model = json::parse(
       reinterpret_cast<const char *>(sqlite3_column_text(q.get(), 0)));
+  // End the read snapshot before writing: a concurrent settings checkpoint
+  // otherwise makes SQLite reject the read-to-write upgrade (BUSY_SNAPSHOT).
+  q.reset();
   if (!patch.is_object())
     throw std::invalid_argument("Expected song edit object.");
   for (auto it = patch.begin(); it != patch.end(); ++it) {

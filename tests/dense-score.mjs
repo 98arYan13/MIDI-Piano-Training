@@ -173,7 +173,7 @@ try {
     async () =>
       (await page.locator('.score-measure[data-measure="8"]').count()) === 1,
   );
-  const score = page.getByRole("img", { name: /Song practice notation/ });
+  const score = page.getByRole("group", { name: /Song practice notation/ });
   await score.scrollIntoViewIfNeeded();
   await page.screenshot({ path: "web/test-results/dense-score.png" });
   // Original synthetic polyphony matching the reported held lower note / upper beam.

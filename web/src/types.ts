@@ -41,6 +41,9 @@ export type Device = {
   connected: boolean;
 };
 export type NativeState = {
+  preferences: AppPreferences;
+  preferencesRevision: number;
+  persistenceError: string;
   ear: EarSnapshot;
   flash: FlashSnapshot;
   practice: PracticeSnapshot;
@@ -89,6 +92,12 @@ export type NativeState = {
     bar: number;
     settings: MetronomeSettings;
   };
+};
+export type AppPreferences = {
+  route: "staff" | "ear" | "flash" | "play" | "guide";
+  sidebarHidden: boolean;
+  focusMode: boolean;
+  keyboard: { hidden: boolean; focused: boolean; size: number; labels: boolean; velocity: number; octave: number };
 };
 export type EarConfig = {
   hints: boolean;
@@ -248,7 +257,8 @@ export type TransportSnapshot = {
   sampleRate: number;
   engineTimeNs: number;
   songTick: number;
-  state: "stopped" | "playing" | "paused";
+  state: "stopped" | "playing" | "paused" | "returning";
+  return?: { from: number; to: number; startFrame: number; durationFrames: number; resume: boolean } | null;
   speed: number;
 };
 export type SongTrack = {

@@ -73,38 +73,50 @@ bool Transport::audible(unsigned t) const {
           (track["practice"].get<bool>() &&
            config_["hearPractice"].get<bool>()));
 }
+bool Transport::inSelection(const Group &group) const {
+  return config_["loop"] != true ||
+         (group.tick >= config_["a"].get<double>() && group.tick < config_["b"].get<double>());
+}
 double Transport::frameSeconds(uint64_t frame) const {
   return cycleStart_ + (double(frame) - double(origin_)) *
                            config_["speed"].get<double>() /
                            engine_.sampleRate();
 }
 double Transport::position(uint64_t frame) const {
+  if (returning_) {
+    const double t = std::clamp((double(frame)-double(returnStart_))/(engine_.sampleRate()*2.0),0.0,1.0);
+    return returnFrom_+(returnTo_-returnFrom_)*t*t*(3-2*t);
+  }
   if (!playing_)
     return position_;
   double p = clockStart_ + std::max(0.0, double(frame) - double(clockOrigin_)) *
                                config_["speed"].get<double>() /
                                engine_.sampleRate();
   if (config_["loop"].get<bool>() && p >= cycleEnd_) {
-    double span = cycleEnd_ - tickSeconds(song_, config_["a"]);
-    p = tickSeconds(song_, config_["a"]) + std::fmod(p - cycleEnd_, span);
+    p = cycleEnd_;
   }
   return std::clamp(p, 0.0, song_.value("durationSeconds", 0.0));
 }
 void Transport::cancel() {
   engine_.submit({EventType::StopBus, Bus::Playback});
   playing_ = false;
+  returning_ = returnPlay_ = false;
   ++generation_;
   attempt_.clear();
   active_.clear();
 }
 void Transport::load(json s) {
+  const bool samePiece = !song_.is_null() && song_["id"] == s["id"] &&
+                         song_["durationTicks"] == s["durationTicks"];
   cancel();
   song_ = std::move(s);
   window_ = std::make_unique<SongWindow>(song_);
   prepareSongTiming(song_);
   position_ = 0;
-  config_["a"] = 0;
-  config_["b"] = song_["durationTicks"];
+  if (!samePiece) {
+    config_["a"] = 0;
+    config_["b"] = song_["durationTicks"];
+  }
   retry_ = false;
   hits_ = misses_ = 0;
   groupFailed_ = false;
@@ -600,11 +612,11 @@ void Transport::resume(uint64_t frame) {
   cycleStart_ = position_;
   cycleEnd_ = config_["loop"] == true ? tickSeconds(song_, config_["b"])
                                       : song_["durationSeconds"].get<double>();
-  if (cycleStart_ >= cycleEnd_)
+  if (cycleStart_ >= cycleEnd_ ||
+      (config_["loop"] == true && cycleStart_ < tickSeconds(song_, config_["a"])))
     cycleStart_ = position_ =
         config_["loop"] == true ? tickSeconds(song_, config_["a"]) : 0;
   clockOrigin_ = origin_;
-  scoreCycle_ = 0;
   clockStart_ = cycleStart_;
   lastScorePosition_ = cycleStart_;
   nextAccompanimentTick_ = secondsTick(song_, cycleStart_);
@@ -629,11 +641,14 @@ void Transport::resume(uint64_t frame) {
 }
 json Transport::command(const std::string &type, const json &params,
                         uint64_t frame) {
-  if (song_.is_null())
+  if (song_.is_null() && type != "transport.configure")
     throw std::invalid_argument("Choose a song first.");
   if (type == "transport.play") {
-    if (!playing_)
+    if (returning_) returnPlay_ = true;
+    else if (!playing_)
       resume(frame);
+  } else if (type == "transport.return") {
+    beginReturn(frame,position(frame),playing_ || returnPlay_ || (retry_ && config_["mode"]=="wait"));
   } else if (type == "transport.pause") {
     position_ = position(frame);
     cancel();
@@ -647,7 +662,7 @@ json Transport::command(const std::string &type, const json &params,
     attempt_.clear();
   } else if (type == "transport.restart") {
     cancel();
-    position_ = 0;
+    position_ = config_["loop"] == true ? tickSeconds(song_, config_["a"]) : 0;
     retry_ = false;
     groupFailed_ = false;
     hits_ = misses_ = 0;
@@ -710,8 +725,8 @@ json Transport::command(const std::string &type, const json &params,
     number("spacing", 30, 300);
     number("rate", .25, 4);
     number("accompanimentSpacing", 1, 2);
-    number("a", 0, song_["durationTicks"]);
-    number("b", 0, song_["durationTicks"]);
+    number("a", 0, song_.is_null() ? 0 : song_["durationTicks"].get<double>());
+    number("b", 0, song_.is_null() ? 0 : song_["durationTicks"].get<double>());
     if (next["loop"] == true &&
         next["a"].get<double>() >= next["b"].get<double>())
       throw std::invalid_argument("Loop A must be before B.");
@@ -724,12 +739,30 @@ json Transport::command(const std::string &type, const json &params,
     if (!next["accompaniment"].is_string() ||
         !styles.contains(next["accompaniment"]))
       throw std::invalid_argument("Unknown accompaniment style.");
-    position_ = position(frame);
-    bool running = playing_ || (retry_ && config_["mode"] == "wait");
+    const double currentPosition = song_.is_null() ? 0 : position(frame);
+    if (params.contains("speed") && !song_.is_null()) {
+      const double tick = secondsTick(song_, currentPosition);
+      double micro = 500000;
+      for (auto &entry : song_["tempoMap"])
+        if (entry["tick"].get<double>() <= tick)
+          micro = entry["microseconds"];
+      const double bpm = 60000000.0 / micro * next["speed"].get<double>();
+      if (bpm >= 20 && bpm <= 300) {
+        const auto result = engine_.command({{"version", 1}, {"id", "transport-tempo"},
+                                            {"type", "metronome.config"},
+                                            {"params", {{"tempo", bpm}}}});
+        if (result["ok"] != true)
+          throw std::runtime_error("Metronome tempo update failed.");
+      }
+    }
+    position_ = currentPosition;
+    const bool wasReturning=returning_;
+    bool running = playing_ || returnPlay_ || (retry_ && config_["mode"] == "wait");
     cancel();
     config_ = next;
-    build();
-    if (running)
+    if (!song_.is_null()) build();
+    if(wasReturning)beginReturn(frame,currentPosition,running);
+    else if (running)
       resume(frame);
     ++revision_;
   } else
@@ -737,13 +770,21 @@ json Transport::command(const std::string &type, const json &params,
   return snapshot(frame);
 }
 void Transport::tick(uint64_t frame) {
+  if (returning_) {
+    if (double(frame)-double(returnStart_) < engine_.sampleRate()*2.0) return;
+    const bool play=returnPlay_;
+    position_=returnTo_; returning_=returnPlay_=false;
+    group_=std::lower_bound(groups_.begin(),groups_.end(),position_,
+      [](const auto& g,double p){return g.seconds<p;})-groups_.begin();
+    if(play)try{resume(frame);}catch(const std::exception&){return;}
+    return;
+  }
   if (!playing_)
     return;
   double speed = config_["speed"], rate = engine_.sampleRate(),
          lookahead = .05 * speed;
   double now = frameSeconds(frame), until = now + lookahead;
   if (config_["mode"] == "wait") {
-    selectScoreCycle(frame);
     if (group_ < groups_.size() && groups_[group_].seconds < cycleEnd_) {
       const double target = groups_[group_].seconds;
       if (position(frame) >= target) {
@@ -799,51 +840,13 @@ void Transport::tick(uint64_t frame) {
       }
       break;
     }
-    uint64_t boundary =
-        origin_ +
-        uint64_t(std::llround((cycleEnd_ - cycleStart_) * rate / speed));
-    // Clip every outstanding owner at B before restoring A; nothing is queued
-    // beyond B.
-    for (auto &[key, e] : active_) {
-      auto off = e;
-      off.type = EventType::Off;
-      off.frame = boundary;
-      if (++submitted > 2048 || !engine_.submit(off)) {
-        error_ = "Playback loop restoration queue capacity exceeded.";
-        engine_.submit({EventType::Disconnect, Bus::Playback, SongSource});
-        playing_ = false;
-        active_.clear();
-        return;
-      }
-    }
-    active_.clear();
-    for (unsigned channel = 0; channel < 16; channel++) {
-      if (++submitted > 2048 ||
-          !engine_.submit({EventType::Pedal, Bus::Playback, SongSource,
-                           uint8_t(channel), 0, 0, 0, boundary})) {
-        error_ = "Playback loop restoration queue capacity exceeded.";
-        engine_.submit({EventType::Disconnect, Bus::Playback, SongSource});
-        playing_ = false;
-        return;
-      }
-    }
-    cycleStart_ = tickSeconds(song_, config_["a"]);
-    origin_ = boundary;
-    nextAccompanimentTick_ = config_["a"];
-    if (!restore(cycleStart_, boundary, 2048 - submitted))
-      return;
-    // Restoration has its own bounded batch; defer further events to next pump.
-    cursor_ =
-        std::lower_bound(timeline_.begin(), timeline_.end(), cycleStart_,
-                         [](auto &e, double v) { return e.seconds < v; }) -
-        timeline_.begin();
-    ++cycle_;
-    until = frameSeconds(frame) + lookahead;
-    now = frameSeconds(frame);
-    break;
+    // Lookahead may reach B early; animate only when the native clock reaches it.
+    if(now < cycleEnd_)break;
+    const auto boundary=origin_+uint64_t(std::llround((cycleEnd_-cycleStart_)*rate/speed));
+    beginReturn(boundary,cycleEnd_,true);
+    return;
   }
   now = position(frame);
-  selectScoreCycle(frame);
   if (now < lastScorePosition_) {
     group_ = std::lower_bound(groups_.begin(), groups_.end(),
                               tickSeconds(song_, config_["a"]),
@@ -856,6 +859,7 @@ void Transport::tick(uint64_t frame) {
   if (config_["mode"] == "wait" || config_["practiceEnabled"] != true || group_ >= groups_.size())
     return;
   while (group_ < groups_.size() &&
+         inSelection(groups_[group_]) &&
          now > groups_[group_].seconds +
                    config_["toleranceMs"].get<double>() * .001 * speed) {
     fail(frame);
@@ -866,26 +870,12 @@ void Transport::tick(uint64_t frame) {
     attempt_.clear();
   }
 }
-void Transport::selectScoreCycle(uint64_t frame) {
-  if (!playing_ || config_["loop"] != true)
-    return;
-  double unwrapped =
-      clockStart_ + std::max(0.0, double(frame) - double(clockOrigin_)) *
-                        config_["speed"].get<double>() / engine_.sampleRate();
-  double a = tickSeconds(song_, config_["a"]), span = cycleEnd_ - a;
-  uint64_t current =
-      unwrapped < cycleEnd_
-          ? 0
-          : 1 + uint64_t(std::floor((unwrapped - cycleEnd_) / span));
-  if (current == scoreCycle_)
-    return;
-  scoreCycle_ = current;
-  group_ =
-      std::lower_bound(groups_.begin(), groups_.end(), a,
-                       [](const auto &g, double p) { return g.seconds < p; }) -
-      groups_.begin();
-  groupFailed_ = false;
-  attempt_.clear();
+void Transport::beginReturn(uint64_t frame,double from,bool play) {
+  cancel();
+  returnFrom_=from;
+  returnTo_=tickSeconds(song_,config_["a"]);
+  returnStart_=frame;returnPlay_=play;returning_=true;
+  position_=from;retry_=groupFailed_=false;
 }
 void Transport::fail(uint64_t frame) {
   if (!groupFailed_)
@@ -923,9 +913,9 @@ void Transport::input(const InputEvent &e) {
   if (e.type != EventType::On)
     return;
   held_[key] = e.note;
-  selectScoreCycle(e.frame);
+  if(returning_)return;
   if ((config_["practiceEnabled"] != true && config_["mode"] != "wait") || (!playing_ && !retry_) ||
-      group_ >= groups_.size())
+      group_ >= groups_.size() || !inSelection(groups_[group_]))
     return;
   if (config_["mode"] == "wait" && (!retry_ || e.frame < waitFrom_))
     return;
@@ -1009,7 +999,7 @@ json Transport::snapshot(uint64_t frame) const {
                                       [](const auto &g, double p) { return g.seconds < p; });
     if (next != hintGroups_.end()) hintGroup = &*next;
   }
-  if (config_["hints"] == true && hintGroup)
+  if (!returning_ && config_["hints"] == true && hintGroup && inSelection(*hintGroup))
     for (auto &[pitch, hand] : hintGroup->hands)
       hintKeys.push_back({{"midiNote", pitch}, {"hand", hand == 1 ? "left" : hand == 2 ? "right" : "both"}});
   return {{"songId",
@@ -1023,10 +1013,14 @@ json Transport::snapshot(uint64_t frame) const {
           {"sampleRate", engine_.sampleRate()},
           {"songTick", song_.is_null() ? 0 : secondsTick(song_, pos)},
           {"songSeconds", pos},
-          {"state", playing_                    ? "playing"
+          {"state", returning_                  ? "returning"
+                    : playing_                    ? "playing"
                     : position_ == 0 && !retry_ ? "stopped"
                                                 : "paused"},
           {"speed", config_["speed"]},
+          {"return", returning_ ? json{{"from",returnFrom_},{"to",returnTo_},
+            {"startFrame",returnStart_},{"durationFrames",engine_.sampleRate()*2},
+            {"resume",returnPlay_}} : json(nullptr)},
           {"config", config_},
           {"retry", retry_},
           {"waiting", retry_ && config_["mode"] == "wait"},
@@ -1035,7 +1029,7 @@ json Transport::snapshot(uint64_t frame) const {
           {"misses", misses_},
           {"accuracy", hits_ + misses_ ? 100.0 * hits_ / (hits_ + misses_) : 0},
           {"group", group_},
-          {"target", group_ < groups_.size() ? json(groups_[group_].pitches)
+          {"target", !returning_ && group_ < groups_.size() && inSelection(groups_[group_]) ? json(groups_[group_].pitches)
                                              : json::array()},
           {"error", error_},
           {"accompanimentError", accompanimentError_},

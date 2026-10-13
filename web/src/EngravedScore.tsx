@@ -16,12 +16,14 @@ import {
 import {
   buildScore,
   scoreFrame,
+  scoreTick,
   type ScoreMetadata,
   type ScoreToken,
 } from "./scoreModel";
 import { staffClefs, type StaffMode, type TimelineNote } from "./notationModel";
 import type { ScrollingStaffProps } from "./ScrollingStaff";
 import { separateNotationVoices } from "./notationNote";
+import { LoopMarkers, type LoopSelection } from "./LoopMarkers";
 const keyNames = [
   "Cb",
   "Gb",
@@ -130,11 +132,13 @@ export function EngravedScore({
   running = true,
   label = "Song practice notation",
   scrub,
+  selection,
 }: Omit<ScrollingStaffProps, "mode"> & {
   mode?: StaffMode;
   song: ScoreMetadata;
   fromTick: number;
   toTick: number;
+  selection?: LoopSelection;
 }) {
   const clefs = useMemo(() => staffClefs(mode), [mode]);
   const staffY = useMemo(
@@ -441,7 +445,7 @@ export function EngravedScore({
       ref={viewport}
       style={{ height }}
       className={`scrolling-staff ${mode} paper-staff engraved-score${scrub ? " draggable-staff" : ""}${dragFrame !== null ? " dragging-staff" : ""}`}
-      role="img"
+      role={selection ? "group" : "img"}
       aria-label={`${label}, ${mode === "grand" ? "joined treble and bass staves" : `${mode} staff`}`}
       onPointerDown={(e) => {
         if (!scrub || e.button !== 0) return;
@@ -508,6 +512,20 @@ export function EngravedScore({
       <div className="staff-track" ref={track} />
       <div className="score-gutter" ref={gutter} />
       <div className="staff-playhead" />
+      {selection && <LoopMarkers selection={selection} label="Score selection"
+        position={tick => {
+          const frame = scoreFrame(song, tick, sampleRate);
+          const points = mapping.current;
+          if (!points.length || frame < points[0].frame) return -1;
+          if (frame > points.at(-1)!.frame) return (viewport.current?.clientWidth ?? 0) + 1;
+          const shift = track.current ? new DOMMatrixReadOnly(getComputedStyle(track.current).transform).m41 : 0;
+          return interpolateScore(points, frame) + shift;
+        }}
+        tickAt={clientX => {
+          const shift = track.current ? new DOMMatrixReadOnly(getComputedStyle(track.current).transform).m41 : 0;
+          const x = clientX - (viewport.current?.getBoundingClientRect().left ?? 0) - shift;
+          return scoreTick(song, interpolateScore(mapping.current, x, true), sampleRate);
+        }} />}
     </div>
   );
 }

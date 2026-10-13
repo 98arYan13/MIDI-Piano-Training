@@ -6,6 +6,23 @@
   grid-template-columns: 250px minmax(0, 1fr);
   gap: 24px;
 }
+.selection-controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 8px 0; }
+.selection-controls small { flex-basis: 100%; color: #59665e; }
+.selection-overview { position: relative; height: 52px; margin: 4px 22px 12px; background: #e8eee9; border-radius: 4px; }
+.loop-markers { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.selection-overview .loop-markers { overflow: visible; }
+.loop-shade { position: absolute; top: 0; bottom: 0; background: rgba(51, 124, 94, .08); }
+.loop-markers.enabled .loop-shade { background: rgba(51, 124, 94, .17); }
+.loop-marker { position: absolute; top: 0; bottom: 0; width: 24px; padding: 0; transform: translateX(-50%); border: 0; border-radius: 0; background: transparent; color: #1b634b; pointer-events: auto; cursor: ew-resize; touch-action: none; }
+.loop-marker::after { content: ""; position: absolute; top: 26px; bottom: 0; left: 11px; width: 2px; background: currentColor; }
+.loop-marker span { position: absolute; top: 0; left: 12px; padding: 3px 6px; background: #1b634b; color: white; border-radius: 3px; font-size: 12px; white-space: nowrap; }
+.loop-marker.loop-b { color: #925032; }
+.loop-marker.loop-b span { left: auto; right: 12px; background: #925032; }
+.selection-overview .loop-b span { top: 26px; }
+.selection-overview .loop-b::after { top: 0; bottom: 26px; }
+.loop-marker:hover, .loop-marker:focus-visible { background: rgba(51, 124, 94, .12); }
+.loop-marker[hidden] { display: none; }
+.song-player .practice-restart { z-index: 6; }
 
 .focus-mode-bar { position:sticky; top:0; z-index:20; background:#101512; padding: 12px 20px; text-align: right; }
 .focus-mode-bar[hidden] { display: none; }

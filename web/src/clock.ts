@@ -1,4 +1,8 @@
 import type { SnapshotMessage } from "./types";
+export function returnPosition(animation: { from: number; to: number; startFrame: number; durationFrames: number }, frame: number) {
+  const t = Math.max(0, Math.min(1, (frame-animation.startFrame)/animation.durationFrames));
+  return animation.from+(animation.to-animation.from)*t*t*(3-2*t);
+}
 // A native process owns its epoch. Reconnects receive a complete snapshot.
 export function acceptSnapshot(
   current: SnapshotMessage | null,

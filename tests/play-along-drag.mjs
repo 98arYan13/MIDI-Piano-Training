@@ -35,7 +35,7 @@ try {
   page.on("pageerror", e => errors.push(e.message));
   await page.goto(url + "/#play");
   await page.getByRole("button", { name: /BWV 846.*sec/ }).click();
-  const score = page.getByRole("img", { name: /Song practice notation/ });
+  const score = page.getByRole("group", { name: /Song practice notation/ });
   await score.locator(".vf-stavenote").first().waitFor();
   await score.scrollIntoViewIfNeeded();
   const box = await score.boundingBox();
