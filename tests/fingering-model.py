@@ -65,6 +65,30 @@ class FingeringModelTests(unittest.TestCase):
         self.assertEqual([a["id"] for a in frames[-1]["assignments"]], ids)
         self.assertTrue(all(type(a["id"]) is int for a in frames[-1]["assignments"]))
 
+    def test_c8_and_manual_anchors_with_actual_models(self):
+        for hand in ("right", "left"):
+            with self.subTest(hand=hand):
+                result = generate(self.request([note(1, 108, 0, 120, hand),
+                                                note(2, 108, 240, 360, hand, 3)]),
+                                  lambda *_: None, models=self.models)
+                if hand == "right":
+                    self.assertIn(result["assignments"][0]["finger"], range(1, 6))
+                else:
+                    self.assertEqual(result["assignments"][0]["reason"],
+                                     "transformedPitchOutOfRange")
+                self.assertEqual(result["assignments"][1]["finger"], 3)
+        # Deliberately unsupported reflection must retain authoritative anchors.
+        result = generate(self.request([note(1, 21, 0, 120, "left", 2),
+                                        note(2, 108, 240, 360, "left", 3)]),
+                          lambda *_: None, models=self.models)
+        self.assertEqual([a["finger"] for a in result["assignments"]], [2, 3])
+        chord = [note(i, 60 + i, 0, 120, manual=4 if i == 0 else None)
+                 for i in range(6)]
+        result = generate(self.request(chord), lambda *_: None, models=self.models)
+        self.assertEqual(result["assignments"][0]["finger"], 4)
+        self.assertTrue(all(a["reason"] == "oversizedChord"
+                            for a in result["assignments"][1:]))
+
     def test_invalid_native_ids_rejected(self):
         for identity in (True, False, -1, 2**64, 1.0, "1", "", None):
             with self.subTest(identity=identity):

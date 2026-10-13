@@ -284,9 +284,13 @@ def _decode_window(model: ArGNN, notes: list[dict], indices: list[int], hand: st
     if hand == "left":
         pitches = _left_transform(pitches)
     # The left-hand augmentation in upstream drops sequences outside the
-    # playable keyboard after reflection; keep the same 21..107 support.
-    if any(not 21 <= pitch < 108 for pitch in pitches):
-        return {index: (None, "transformedPitchOutOfRange") for index in indices}
+    # playable keyboard after reflection; keep this transformed-input limit
+    # separate from ordinary inclusive A0..C8 eligibility.
+    upper_pitch = 107 if hand == "left" else 108
+    if any(not 21 <= pitch <= upper_pitch for pitch in pitches):
+        return {index: (int(notes[index]["manualFinger"]), "manualAnchor")
+                if notes[index].get("manualFinger") is not None
+                else (None, "transformedPitchOutOfRange") for index in indices}
     # Upstream normalizes onset/duration for other embeddings; this ArGNN uses
     # only emb_pitch, while graph edges encode onset relationships directly.
     note_tensor = torch.tensor(pitches, dtype=torch.float32).reshape(1, -1, 1) / 127.0
@@ -373,7 +377,7 @@ def generate(request: dict, progress: Callable[[str, int, int], None],
         if hand not in ("left", "right"):
             assignments[index] = (None, "unsupportedHand")
             unsupported += 1
-        elif not 21 <= pitch <= 107:
+        elif not 21 <= pitch <= 108:
             assignments[index] = (None, "unsupportedPitch")
             unsupported += 1
         elif start < 0 or end < start:
@@ -439,6 +443,8 @@ def generate(request: dict, progress: Callable[[str, int, int], None],
     output = []
     for index, note in enumerate(notes):
         finger, reason = assignments.get(index, (None, "noValidCandidate"))
+        if note.get("manualFinger") is not None:
+            finger, reason = int(note["manualFinger"]), "manualAnchor"
         item = {"id": note["id"], "hand": note.get("hand"), "finger": finger}
         if finger is None:
             item["reason"] = reason or "noValidCandidate"

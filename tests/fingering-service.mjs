@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { DatabaseSync } from "node:sqlite";
 import { spawn } from "node:child_process";
 import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -11,7 +12,7 @@ let child,
 const musicalTransport = ({ engineTimeNs, sampleFrame, ...transport }) =>
   transport;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-async function api(path, method = "GET", body) {
+async function api(path, method = "GET", body, raw = false) {
   const r = await fetch(base + "/api/v1/" + path, {
     method,
     headers: {
@@ -25,7 +26,7 @@ async function api(path, method = "GET", body) {
         ? undefined
         : body instanceof FormData
           ? body
-          : JSON.stringify(body),
+          : raw ? body : JSON.stringify(body),
   });
   return { status: r.status, body: await r.json() };
 }
@@ -178,11 +179,37 @@ try {
   );
   assert.equal((await api(`songs/${id}/fingering`)).body.revision, 3);
   await stop();
+  // Modify only this test's disposable DB while its native process is stopped.
+  const db = new DatabaseSync(join(data, "practice.sqlite"));
+  const fixture = JSON.parse(db.prepare("SELECT model FROM songs WHERE id=?").get(id).model);
+  fixture.notes[0].id = "MAXIMUM_ID_FIXTURE";
+  fixture.notes[0].midiNote = 108;
+  fixture.notes[0].staff = "treble";
+  fixture.tracks[fixture.notes[0].trackId].staff = "treble";
+  delete fixture.notes[0].fingering;
+  db.prepare("UPDATE songs SET model=? WHERE id=?").run(
+    JSON.stringify(fixture).replace('"MAXIMUM_ID_FIXTURE"', "18446744073709551615"), id);
+  db.close();
   await start();
-  assert.equal((await api(`songs/${id}/fingering`)).body.revision, 3);
+  const endpoint = `songs/${id}/fingering`;
+  for (const invalid of ["-1", "true", "1.0", '"1"']) {
+    assert.equal((await api(endpoint, "PATCH", `{"noteIds":[${invalid}],"finger":3}`, true)).status, 400);
+  }
+  assert.equal((await api(endpoint, "PATCH",
+    '{"noteIds":[18446744073709551615],"finger":3}', true)).status, 200);
+  await generate(id);
+  assert.equal((await terminal(id)).job.state, "completed");
+  await stop();
+  const savedDb = new DatabaseSync(join(data, "practice.sqlite"));
+  const saved = JSON.parse(savedDb.prepare("SELECT model FROM songs WHERE id=?").get(id).model);
+  savedDb.close();
+  assert.equal(saved.notes[0].fingering.finger, 3);
+  assert.equal(saved.notes[0].fingering.source, "manual");
+  await start();
+  assert.equal((await api(`songs/${id}/fingering`)).body.revision, 5);
   assert.equal((await api(`songs/${id}/fingering`)).body.job.state, "idle");
   console.log(
-    "PASS real ArGNN assigned; numeric edits; busy/cancel/stale/trash/original song; transport/live ownership; restart",
+    "PASS real ArGNN assigned; full uint64 PATCH/invalid IDs/C8 anchor; busy/cancel/stale/trash/original song; transport/live ownership; restart",
   );
 } finally {
   await stop();

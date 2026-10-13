@@ -238,3 +238,46 @@ TEST_CASE("Track edits preserve saved digits and invalidate hand mapping revisio
   }
   std::filesystem::remove_all(dir);
 }
+
+TEST_CASE("Fingering commit preserves full uint64 IDs without coercion", "[fingering]") {
+  auto dir = std::filesystem::temp_directory_path() / ("sr-fingering-u64-" +
+      std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+  {
+    Storage storage(dir);
+    auto s = fixture();
+    const uint64_t maximum = UINT64_MAX;
+    s["notes"][0]["id"] = maximum;
+    storage.putSong(s, "original");
+    auto result = resultFor(fixture());
+    result["assignments"][0]["id"] = maximum;
+    auto saved = storage.commitFingering("finger", fingeringFingerprint(storage.song("finger")), result);
+    REQUIRE(saved["notes"][0]["id"].get<uint64_t>() == maximum);
+    REQUIRE(storage.editFingering("finger", {maximum}, 3)["notes"][0]["fingering"]["finger"] == 3);
+    auto baseline = storage.song("finger");
+    for (auto invalid : {json(-1), json(true), json(1.0), json("1")}) {
+      result["assignments"][0]["id"] = invalid;
+      REQUIRE_THROWS(storage.commitFingering("finger", fingeringFingerprint(baseline), result));
+      REQUIRE(storage.song("finger") == baseline);
+    }
+  }
+  std::filesystem::remove_all(dir);
+}
+
+TEST_CASE("Large sequential tip grouping preserves categories and input order", "[fingering]") {
+  auto s = fixture();
+  s["tracks"][0]["staff"] = "treble";
+  s["notes"] = json::array();
+  for (int i = 0; i < 20000; ++i)
+    s["notes"].push_back({{"id", i}, {"trackId", 0}, {"midiNote", 60},
+      {"startTick", i * 120}, {"endTick", i * 120 + 100},
+      {"fingering", {{"finger", 3}, {"source", "generated"}}}});
+  auto reversed = s;
+  std::reverse(reversed["notes"].begin(), reversed["notes"].end());
+  assignFingeringTips(s);
+  assignFingeringTips(reversed);
+  for (size_t i = 0; i < s["notes"].size(); ++i) {
+    const auto expected = i == 0 ? json::array({"phraseStart"}) : json::array();
+    REQUIRE(s["notes"][i]["fingering"]["tips"] == expected);
+    REQUIRE(reversed["notes"][s["notes"].size() - 1 - i]["fingering"]["tips"] == expected);
+  }
+}

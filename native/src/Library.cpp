@@ -18,9 +18,6 @@ bool eligibleFingeringNote(const json &song, const json &note) {
          !(note.contains("channel") && note["channel"] == 9) &&
          !song["tracks"][trackId].value("percussion", false);
 }
-bool validNoteId(const json &value) {
-  return value.is_number_integer() && value.get<int64_t>() >= 0;
-}
 }
 json Storage::song(const std::string &id) {
   std::lock_guard lock(mutex);
@@ -185,7 +182,7 @@ json Storage::commitFingering(const std::string &id,
       if (eligibleFingeringNote(model, model["notes"][i])) eligibleNotes.emplace(model["notes"][i].at("id").get<uint64_t>(), i);
     std::map<uint64_t, json> assignments;
     for (const auto &entry : result["assignments"]) {
-      if (!entry.is_object() || !entry.contains("id") || !validNoteId(entry["id"]) ||
+      if (!entry.is_object() || !entry.contains("id") || !validFingeringNoteId(entry["id"]) ||
           !entry.contains("finger") || !(entry["finger"].is_null() || (entry["finger"].is_number_integer() && entry["finger"].get<int>() >= 1 && entry["finger"].get<int>() <= 5)) ||
           !entry.contains("hand") || !entry["hand"].is_string() ||
           (entry["hand"] != "left" && entry["hand"] != "right") ||

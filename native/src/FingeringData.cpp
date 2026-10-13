@@ -143,27 +143,26 @@ json fingeringRequest(const json &song, const std::string &jobId) {
 }
 
 void assignFingeringTips(json &song) {
-  std::map<std::string, std::vector<Attack>> byHand;
+  std::map<std::string, std::map<int64_t, Attack>> byHand;
   for (auto &note : song["notes"]) {
     if (!eligible(song, note)) continue;
     if (note.contains("fingering")) note["fingering"]["tips"] = json::array();
     const auto hand = resolvedFingeringHand(song, note);
     auto &events = byHand[hand];
     const auto tick = note.at("startTick").get<int64_t>();
-    auto it = std::find_if(events.begin(), events.end(), [tick](const Attack &a) { return a.tick == tick; });
-    if (it == events.end()) { events.push_back({tick, note.at("endTick").get<int64_t>(), {&note}}); }
-    else { it->end = std::max(it->end, note.at("endTick").get<int64_t>()); it->notes.push_back(&note); }
+    auto [it, inserted] = events.try_emplace(tick, Attack{tick, note.at("endTick").get<int64_t>(), {}});
+    it->second.end = std::max(it->second.end, note.at("endTick").get<int64_t>());
+    it->second.notes.push_back(&note);
   }
   const auto ppq = song.value("ppq", uint64_t(480));
   for (auto &[hand, events] : byHand) {
-    std::sort(events.begin(), events.end(), [](const Attack &a, const Attack &b) { return a.tick < b.tick; });
     int64_t depressedUntil = 0;
     bool hasPreviousEvent = false;
     std::optional<double> previousOrigin;
     json *previousNote = nullptr;
     int previousPitch = 0, previousFinger = 0;
     const int direction = hand == "right" ? 1 : -1;
-    for (auto &event : events) {
+    for (auto &[tick, event] : events) {
       if (!hasPreviousEvent || event.tick - depressedUntil >= static_cast<int64_t>(ppq))
         for (auto *note : event.notes)
           if (note->contains("fingering") && !note->at("fingering").value("finger", json(nullptr)).is_null()) addTip(*note, "phraseStart");

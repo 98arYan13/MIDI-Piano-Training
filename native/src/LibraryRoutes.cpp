@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include <sightreading/LibraryRoutes.hpp>
+#include <sightreading/FingeringData.hpp>
 #include <sightreading/Transport.hpp>
 namespace sightreading {
 using json = nlohmann::json;
@@ -72,7 +73,7 @@ void libraryRoutes(httplib::Server &http, Storage &storage, unsigned rate, Finge
             "Select numeric note IDs and a finger or null");
       std::vector<uint64_t> ids;
       for (auto &id : body["noteIds"]) {
-        if (!id.is_number_integer() || id.template get<int64_t>() < 0)
+        if (!validFingeringNoteId(id))
           throw std::invalid_argument("Note IDs must be nonnegative integers");
         ids.push_back(id.template get<uint64_t>());
       }
