@@ -1,0 +1,1 @@
+- [ ] add key press strengh indicator
